@@ -30,7 +30,7 @@ const options = {
           path: '/dashboard',
           name: '首页',
           meta: {
-            icon: 'dashboard'
+            icon: 'home'
           },
 
           component: () => import('@/pages/dashboard/index')

@@ -40,6 +40,7 @@ const {Item, SubMenu} = Menu
 
 export default {
   name: 'IMenu',
+  
   props: {
     options: {
       type: Array,
@@ -128,7 +129,8 @@ export default {
         })
         return vnodes
       }
-      return !icon || icon == 'none' ? null : h(Icon, {props: {type:  icon}})
+      
+      return !icon || icon == 'none' ? null : h(Icon, {props: {type:  icon }})
     },
     renderMenuItem: function (h, menu) {
       return h(

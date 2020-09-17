@@ -7,13 +7,17 @@
     @click="handleClick"
   >
     <a-menu-item :key="item.key" v-for="item in itemList">
-      <a-icon v-if="item.icon" :type="item.icon" />
+      <a-icon v-if="item.icon"  :type="item.icon" />
       <span>{{ item.text }}</span>
     </a-menu-item>
+    
   </a-menu>
+  
 </template>
 
 <script>
+
+
 export default {
   name: 'Contextmenu',
   props: {
@@ -28,6 +32,7 @@ export default {
       default: () => []
     }
   },
+  
   data () {
     return {
       left: 0,

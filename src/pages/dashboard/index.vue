@@ -1,5 +1,7 @@
 <template>
   <div class="analysis">
+
+    <a-icon type="star" theme="filled" />
     <a-row style="margin-top: 0"
            :gutter="[24, 24]">
       <a-col :sm="24"
