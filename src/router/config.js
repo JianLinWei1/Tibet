@@ -7,7 +7,7 @@ const options = {
   routes: [
     {
       path: '/login',
-      name: '登录页',
+      name: '登录',
       component: () => import('@/pages/login')
     },
     {
