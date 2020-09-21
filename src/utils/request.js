@@ -31,7 +31,7 @@ const METHOD = {
  * @returns {Promise<AxiosResponse<T>>}
  */
 async function request (url, method, params) {
-  console.log(url)
+ 
   switch (method) {
     case METHOD.GET:
       return axios.get(url, { params })
@@ -50,7 +50,7 @@ async function request (url, method, params) {
 function setAuthorization (auth, authType = AUTH_TYPE.BEARER) {
   switch (authType) {
     case AUTH_TYPE.BEARER:
-      Cookie.set(xsrfHeaderName, 'Bearer ' + auth.token, { expires: auth.expireAt })
+      Cookie.set(xsrfHeaderName, auth.token, { expires: auth.expireAt })
       break
     case AUTH_TYPE.BASIC:
     case AUTH_TYPE.AUTH1:
@@ -121,6 +121,7 @@ function loadInterceptors (interceptors, options) {
   })
   // 加载响应拦截器
   response.forEach(item => {
+    console.log(item)
     let { onFulfilled, onRejected } = item
     if (!onFulfilled || typeof onFulfilled !== 'function') {
       onFulfilled = response => response

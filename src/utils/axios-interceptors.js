@@ -9,10 +9,11 @@ const resp401 = {
    */
   onFulfilled(response, options) {
     const {message} = options
-    if (response.status === 401) {
-      message.error('无此接口权限')
+    if (response.data.code === -1002 || response.data.code === -1003 || response.data.code === -1001) {
+      message.error('Token Error')
+      return response.data;
     }
-    return response
+    return response.data
   },
   /**
    * 响应出错时执行
@@ -30,7 +31,7 @@ const resp401 = {
 const resp403 = {
   onFulfilled(response, options) {
     const {message} = options
-    if (response.status === 403) {
+    if ( response && response.status === 403) {
       message.error(`请求被拒绝`)
     }
     return response

@@ -101,8 +101,8 @@ export default {
     },
     afterLogin (res) {
       this.logging = false
-      const loginRes = res.data
-      console.log(loginRes)
+      const loginRes = res
+    
       if (loginRes.code >= 0) {
         //const { user, permissions, roles } = loginRes.data
         // this.setUser(user)
@@ -111,10 +111,11 @@ export default {
         setAuthorization({ token: loginRes.data.token })
         // 获取路由配置
         getRoutesConfig().then(result => {
-          const routesConfig = result.data.data
+          console.log(result)
+          const routesConfig = result.data
           loadRoutes({ router: this.$router, store: this.$store, i18n: this.$i18n }, routesConfig)
-          this.$router.push('/dashboard')
-          this.$message.success(loginRes.message, 3)
+          this.$router.push('/index')
+          this.$message.success(loginRes.msg, 3)
         })
       } else {
         this.error = loginRes.msg

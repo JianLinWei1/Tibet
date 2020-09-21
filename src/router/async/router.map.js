@@ -14,13 +14,26 @@ const routerMap = {
   },
   root: {
     path: '/',
-    name: '首页',
+    name: '登录',
     redirect: '/login',
     component: view.tabs
   },
-  dashboard: {
-    name: 'Dashboard',
-    component: view.blank
+  index: {
+      path: '/index',
+      name: 'ces',
+      component: view.tabs,
+      redirect: '/dashboard',
+      children: [
+        {
+          path: '/dashboard',
+          name: '首页',
+          meta: {
+            icon: 'home'
+          },
+
+          component: () => import('@/pages/dashboard/index')
+        }
+      ]
   },
   exp403: {
     authority: '*',
