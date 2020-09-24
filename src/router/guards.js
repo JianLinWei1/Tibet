@@ -10,7 +10,7 @@ import {checkAuthorization} from '@/utils/request'
  * @param options
  */
 const loginGuard = (to, from, next, options) => {
-  console.log("deg")
+  console.log("loginIgnore")
   const {message} = options
   if (!loginIgnore.includes(to) && !checkAuthorization()) {
     message.warning('登录已失效，请重新登录')

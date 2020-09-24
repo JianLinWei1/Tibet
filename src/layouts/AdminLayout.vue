@@ -91,6 +91,7 @@ export default {
       this.toggleCollapse()
     },
     setActivated(route) {
+      
       if (this.layout === 'mix') {
         let matched = route.matched
         matched = matched.slice(0, matched.length - 1)

@@ -5,6 +5,8 @@ const view = {
   page: () => import('@/layouts/PageView')
 }
 
+
+
 // 路由组件注册
 const routerMap = {
   login: {
@@ -18,22 +20,30 @@ const routerMap = {
     redirect: '/login',
     component: view.tabs
   },
-  index: {
-      path: '/index',
-      name: 'ces',
-      component: view.tabs,
-      redirect: '/dashboard',
-      children: [
-        {
-          path: '/dashboard',
-          name: '首页',
-          meta: {
-            icon: 'home'
-          },
-
-          component: () => import('@/pages/dashboard/index')
-        }
-      ]
+  index:{
+    path: '/index',
+    name: '首页',
+    component: () => import('@/pages/dashboard/index')
+  },
+  user:{
+    path:"/user",
+    name:'用户管理',
+    component:()=> import('@/pages/user')
+  },
+  person:{
+    path: '/',
+    name: '人员信息',
+    redirect: '/personList'
+  },
+  personList:{
+    path:"/personList",
+    name:'人员列表',
+    component:()=> import('@/pages/persons/list')
+  },
+  personAdd:{
+    path:"/personAdd",
+    name:'添加人员',
+    component:()=> import('@/pages/persons/add')
   },
   exp403: {
     authority: '*',

@@ -6,6 +6,9 @@ const routesConfig = [
   'login',
   'root',
   "index",
+  "user",
+  "personList",
+  "personAdd",
   {
     router: 'exp404',
     path: '*',
