@@ -1,229 +1,115 @@
 <template>
   <div class="analysis">
+    <a-row style="margin-top: 0" :gutter="[24, 24]">
+      <a-col :sm="24" :md="12" :xl="6">
+        <router-link to="/person" >
+        <a-card style="width: 330px">
+          <svg-icon icon-class="persons" class-name="svgClass"></svg-icon>
+          <div class="box">
+            <div  class="count">9</div>
+            <div class="text">人员数量</div>
+          </div>
+        </a-card>
+        </router-link>
+      </a-col>
+      <a-col :sm="24" :md="12" :xl="6">
+       <a-card style="width: 330px">
+          <svg-icon icon-class="camera" class-name="svgClass"></svg-icon>
+          <div class="box">
+            <div  class="count">9</div>
+            <div class="text">监控数量</div>
+          </div>
+        </a-card>
+      </a-col>
+      <a-col :sm="24" :md="12" :xl="6">
+        <a-card style="width: 330px">
+          <svg-icon icon-class="access" class-name="svgClass"></svg-icon>
+          <div class="box">
+            <div  class="count">9</div>
+            <div class="text">门禁数量</div>
+          </div>
+        </a-card>
+      </a-col>
+      <a-col :sm="24" :md="12" :xl="6">
+       <a-card style="width: 330px">
+          <svg-icon icon-class="car" class-name="svgClass"></svg-icon>
+          <div class="box">
+            <div  class="count">9</div>
+            <div class="text">车道数量</div>
+          </div>
+        </a-card>
+      </a-col>
+    </a-row>
 
-    <a-icon type="star" theme="filled" />
-    <a-row style="margin-top: 0"
-           :gutter="[24, 24]">
-      <a-col :sm="24"
-             :md="12"
-             :xl="6">
-        <chart-card :loading="loading"
-                    :title="$t('totalSales')"
-                    total="￥ 189,345">
-          <a-tooltip :title="$t('introduce')"
-                     slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <div>
-            <trend style="margin-right: 16px"
-                   :term="$t('wow')"
-                   :percent="12"
-                   :is-increase="true"
-                   :scale="0" />
-            <trend :term="$t('dod')"
-                   :target="100"
-                   :value="89"
-                   :scale="0" />
-          </div>
-          <div slot="footer">{{$ta('daily|sales', 'p')}}<span> ￥234.56</span></div>
-        </chart-card>
-      </a-col>
-      <a-col :sm="24"
-             :md="12"
-             :xl="6">
-        <chart-card :loading="loading"
-                    :title="$t('visits')"
-                    total="￥ 189,345">
-          <a-tooltip :title="$t('introduce')"
-                     slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <div>
-            <mini-area />
-          </div>
-          <div slot="footer">{{$ta('daily|visits', 'p')}}<span> 123,4</span></div>
-        </chart-card>
-      </a-col>
-      <a-col :sm="24"
-             :md="12"
-             :xl="6">
-        <chart-card :loading="loading"
-                    :title="$t('payments')"
-                    total="￥ 189,345">
-          <a-tooltip :title="$t('introduce')"
-                     slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <div>
-            <mini-bar />
-          </div>
-          <div slot="footer">{{$t('conversion')}} <span>60%</span></div>
-        </chart-card>
-      </a-col>
-      <a-col :sm="24"
-             :md="12"
-             :xl="6">
-        <chart-card :loading="loading"
-                    :title="$t('operating')"
-                    total="73%">
-          <a-tooltip :title="$t('introduce')"
-                     slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <div>
-            <mini-progress target="90"
-                           percent="78"
-                           color="#13C2C2"
-                           height="8px" />
-          </div>
-          <div slot="footer"
-               style="white-space: nowrap;overflow: hidden">
-            <trend style="margin-right: 16px"
-                   :term="$t('wow')"
-                   :percent="12"
-                   :is-increase="true"
-                   :scale="0" />
-            <trend :term="$t('dod')"
-                   :target="100"
-                   :value="89"
-                   :scale="0" />
-          </div>
-        </chart-card>
-      </a-col>
+    <a-row  :gutter="[24, 24]">
+       <a-col :sm="24" :md="12" :xl="24">
+       <div id="map"></div>
+       </a-col>
     </a-row>
-    <a-card :loading="loading"
-            style="margin-top: 24px"
-            :bordered="false"
-            :body-style="{padding: '24px'}">
-      <div class="salesCard">
-        <a-tabs default-active-key="1"
-                size="large"
-                :tab-bar-style="{marginBottom: '24px', paddingLeft: '16px'}">
-          <div class="extra-wrap"
-               slot="tabBarExtraContent">
-            <div class="extra-item">
-              <a>{{$t('day')}}</a>
-              <a>{{$t('week')}}</a>
-              <a>{{$t('month')}}</a>
-              <a>{{$t('year')}}</a>
-            </div>
-            <a-range-picker :style="{width: '256px'}"></a-range-picker>
-          </div>
-          <a-tab-pane loading="true"
-                      :tab="$t('sales')"
-                      key="1">
-            <a-row>
-              <a-col :xl="16"
-                     :lg="12"
-                     :md="12"
-                     :sm="24"
-                     :xs="24">
-                <bar :title="$ta('stores|sales|trend', 'p')" />
-              </a-col>
-              <a-col :xl="8"
-                     :lg="12"
-                     :md="12"
-                     :sm="24"
-                     :xs="24">
-                <ranking-list :title="$ta('stores|sales|ranking', 'p')"
-                              :list="rankList" />
-              </a-col>
-            </a-row>
-          </a-tab-pane>
-          <a-tab-pane :tab="$t('visits')"
-                      key="2">
-            <a-row>
-              <a-col :xl="16"
-                     :lg="12"
-                     :md="12"
-                     :sm="24"
-                     :xs="24">
-                <bar :title="$ta('visits|trend', 'p')" />
-              </a-col>
-              <a-col :xl="8"
-                     :lg="12"
-                     :md="12"
-                     :sm="24"
-                     :xs="24">
-                <ranking-list :title="$ta('stores|visits|ranking', 'p')"
-                              :list="rankList" />
-              </a-col>
-            </a-row>
-          </a-tab-pane>
-        </a-tabs>
-      </div>
-    </a-card>
-    <a-row style="margin: 0 -12px">
-      <a-col style="padding: 0 12px"
-             :xl="12"
-             :lg="24"
-             :md="24"
-             :sm="24"
-             :xs="24">
-        <a-card :loading="loading"
-                :bordered="false"
-                style="margin-top: 24px"
-                :title="$t('search')">
-          <hot-search />
-        </a-card>
-      </a-col>
-      <a-col style="padding: 0 12px"
-             :xl="12"
-             :lg="24"
-             :md="24"
-             :sm="24"
-             :xs="24">
-        <a-card :loading="loading"
-                :bordered="false"
-                style="margin-top: 24px;"
-                :title="$t('proportion')">
-          <sales-data />
-          <a-radio-group slot="extra"
-                         style="margin: -12px 0">
-            <a-radio-button value="a">{{$t('all')}}</a-radio-button>
-            <a-radio-button value="b">{{$t('online')}}</a-radio-button>
-            <a-radio-button value="c">{{$t('stores')}}</a-radio-button>
-          </a-radio-group>
-        </a-card>
-      </a-col>
-    </a-row>
+   
   </div>
 </template>
 
 <script>
-import ChartCard from '../../components/card/ChartCard'
-import MiniArea from '../../components/chart/MiniArea'
-import MiniBar from '../../components/chart/MiniBar'
-import MiniProgress from '../../components/chart/MiniProgress'
-import Bar from '../../components/chart/Bar'
-import RankingList from '../../components/chart/RankingList'
-
-
-import Trend from '../../components/chart/Trend'
-
-const rankList = []
-
-for (let i = 0; i < 8; i++) {
-  rankList.push({
-    name: '桃源村' + i + '号店',
-    total: 1234.56 - i * 100
-  })
-}
-
+import { Scene, PointLayer } from '@antv/l7';
+import { GaodeMap } from '@antv/l7-maps';
 export default {
-  name: 'Analysis',
-  i18n: require('./i18n'),
-  data () {
+  name: "dashboard",
+  data() {
     return {
-      rankList,
-      loading: true
-    }
+      loading: true,
+    };
   },
-  created () {
-    setTimeout(() => this.loading = !this.loading, 1000)
+
+  created() {
+    setTimeout(() => (this.loading = !this.loading), 1000);
   },
-  components: { Trend, RankingList, Bar, MiniProgress, MiniBar, MiniArea, ChartCard }
-}
+  mounted() {
+    const scene = new Scene({
+  id: 'map',
+  map: new GaodeMap({
+    pitch: 0,
+    style: 'light',
+    center: [ 121.435159, 31.256971 ],
+    zoom: 14.89,
+    minZoom: 10
+  })
+});
+fetch(
+  'https://gw.alipayobjects.com/os/basement_prod/893d1d5f-11d9-45f3-8322-ee9140d288ae.json'
+)
+  .then(res => res.json())
+  .then(data => {
+    const pointLayer = new PointLayer({})
+      .source(data, {
+        parser: {
+          type: 'json',
+          x: 'longitude',
+          y: 'latitude'
+        }
+      })
+      .shape('name', [
+        'circle',
+        'triangle',
+        'square',
+        'pentagon',
+        'hexagon',
+        'octogon',
+        'hexagram',
+        'rhombus',
+        'vesica'
+      ])
+      .size('unit_price', [ 10, 25 ])
+      .color('name', [ '#5B8FF9', '#5CCEA1', '#5D7092', '#F6BD16', '#E86452' ])
+      .style({
+        opacity: 0.3,
+        strokeWidth: 2
+      });
+
+    scene.addLayer(pointLayer);
+  });
+  }
+};
 </script>
 
 <style lang="less" scoped>
@@ -245,5 +131,25 @@ export default {
   .extra-wrap {
     display: none;
   }
+}
+.svgClass {
+  width: 10em;
+  height: 10em;
+  float: left;
+}
+.box{
+  text-align: center;
+    padding: 42px;
+    float: left;
+}
+.text {
+ 
+}
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  height: 500px;
 }
 </style>

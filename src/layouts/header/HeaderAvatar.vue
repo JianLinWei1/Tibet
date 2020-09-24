@@ -1,7 +1,7 @@
 <template>
   <a-dropdown>
     <div class="header-avatar" style="cursor: pointer">
-      <a-avatar class="avatar" size="small" shape="circle" :src="user.avatar"/>
+      <a-avatar class="avatar" size="small" shape="circle" src="https://gw.alipayobjects.com/zos/rmsportal/WhxKECPNujWoWEFNdnJE.png" />
       <span class="name">{{user.name}}</span>
     </div>
     <a-menu :class="['avatar-menu']" slot="overlay">
@@ -39,7 +39,7 @@ export default {
 
 <style lang="less">
   .header-avatar{
-    display: inline-flex;
+    //display: inline-flex;
     .avatar, .name{
       align-self: center;
     }

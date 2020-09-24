@@ -25,15 +25,22 @@ const routerMap = {
     name: '首页',
     component: () => import('@/pages/dashboard/index')
   },
+  account:{
+    path: '/account',
+    name: '人员信息',
+    redirect: '/account',
+    component: view.page
+  },
   user:{
-    path:"/user",
+    path:"/account",
     name:'用户管理',
     component:()=> import('@/pages/user')
   },
   person:{
-    path: '/',
+    path: '/person',
     name: '人员信息',
-    redirect: '/personList'
+    redirect: '/personList',
+    component: view.page
   },
   personList:{
     path:"/personList",

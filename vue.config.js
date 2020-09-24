@@ -2,6 +2,9 @@ let path = require('path')
 const ThemeColorReplacer = require('webpack-theme-color-replacer')
 const { getThemeColors, modifyVars } = require('./src/utils/themeUtil')
 const { resolveCss } = require('./src/utils/theme-color-replacer-extend')
+function resolve (dir) {
+  return path.join(__dirname, dir)
+}
 module.exports = {
   devServer: {
     proxy: {
@@ -40,6 +43,19 @@ module.exports = {
           return args
         })
     }
+
+    //排除icons目录中svg文件处理
+    config.module.rules.delete("svg");
+    //设置svg-sprite-loader处理icons目录中的svg
+    config.module
+      .rule('svg')
+      .test(/\.svg$/)
+      .include.add(resolve('src/assets'))
+      .end()
+      .use('svg-sprite-loader')
+      .loader("svg-sprite-loader")
+      .options({ symbolId: 'icon-[name]' })
+      .end()
   },
   css: {
     loaderOptions: {

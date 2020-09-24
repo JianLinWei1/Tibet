@@ -69,7 +69,7 @@ import CommonLayout from '@/layouts/CommonLayout'
 import { login, getRoutesConfig } from '@/services/user'
 import { setAuthorization } from '@/utils/request'
 import { loadRoutes } from '@/utils/routerUtil'
-// import { mapMutations } from 'vuex'
+ import { mapMutations } from 'vuex'
 
 export default {
   name: 'Login',
@@ -87,7 +87,8 @@ export default {
     }
   },
   methods: {
-    // ...mapMutations('account', ['setUser', 'setPermissions', 'setRoles']),
+    //, 'setPermissions', 'setRoles'
+    ...mapMutations('account', ['setUser']),
     onSubmit (e) {
       e.preventDefault()
       this.form.validateFields((err) => {
@@ -105,7 +106,9 @@ export default {
     
       if (loginRes.code >= 0) {
         //const { user, permissions, roles } = loginRes.data
-        // this.setUser(user)
+        const user = this.form.getFieldValue('name');
+      
+         this.setUser(user)
         // this.setPermissions(permissions)
         // this.setRoles(roles)
         setAuthorization({ token: loginRes.data.token })
