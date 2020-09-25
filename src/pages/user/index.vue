@@ -1,97 +1,91 @@
 <template>
-  <div class="user">
+  <a-card class="user">
     <a-row>
       <a-col :xs="2" :sm="4" :md="6" :lg="8" :xl="10">
-        <a-tree
-          v-model="checkedKeys"
-          :expanded-keys="expandedKeys"
-          :auto-expand-parent="autoExpandParent"
-          :selected-keys="selectedKeys"
-          :tree-data="treeData"
-          @expand="onExpand"
-          @select="onSelect"
-        />
+        <p>组织结构</p>
+        <el-tree
+      :data="data"
+      node-key="id"
+      default-expand-all
+      :expand-on-click-node="false">
+      <span class="custom-tree-node" slot-scope="{ node, data }">
+        <span>{{ node.label }}</span>
+        <span>
+          <el-button
+            type="text"
+            size="mini"
+            @click="() => append(data)">
+            添加下级
+          </el-button>
+          <el-button
+            type="text"
+            size="mini"
+            @click="() => append(data)">
+            删除
+          </el-button>
+        </span>
+      </span>
+    </el-tree>
+      </a-col>
+      <a-col :xs="2" :sm="4" :md="6" :lg="8" :xl="10">
+        <p>账号列表</p>
+        <!-- <a-table
+          :columns="columns"
+          :row-key="(record) => record.login.uuid"
+          :data-source="datalsit"
+          :pagination="pagination"
+          :loading="loading"
+          @change="handleTableChange"
+        >
+          <template slot="name" slot-scope="name">
+            {{ name.first }} {{ name.last }}
+          </template>
+        </a-table>  -->
       </a-col>
     </a-row>
-  </div>
+  </a-card>
 </template>
 
 <script>
-const treeData = [
-  {
-    title: '0-0',
-    key: '0-0',
-    children: [
-      {
-        title: '0-0-0',
-        key: '0-0-0',
-        children: [
-          { title: '0-0-0-0', key: '0-0-0-0' },
-          { title: '0-0-0-1', key: '0-0-0-1' },
-          { title: '0-0-0-2', key: '0-0-0-2' },
-        ],
-      },
-      {
-        title: '0-0-1',
-        key: '0-0-1',
-        children: [
-          { title: '0-0-1-0', key: '0-0-1-0' },
-          { title: '0-0-1-1', key: '0-0-1-1' },
-          { title: '0-0-1-2', key: '0-0-1-2' },
-        ],
-      },
-      {
-        title: '0-0-2',
-        key: '0-0-2',
-      },
-    ],
-  },
-  {
-    title: '0-1',
-    key: '0-1',
-    children: [
-      { title: '0-1-0-0', key: '0-1-0-0' },
-      { title: '0-1-0-1', key: '0-1-0-1' },
-      { title: '0-1-0-2', key: '0-1-0-2' },
-    ],
-  },
-  {
-    title: '0-2',
-    key: '0-2',
-  },
-];
+import {getAccountTree}  from  "@/services/user"
+
 
 export default {
   data() {
+    
     return {
-      expandedKeys: ['0-0-0', '0-0-1'],
-      autoExpandParent: true,
-      checkedKeys: ['0-0-0'],
-      selectedKeys: [],
-      treeData,
+      data:null,
     };
+  },
+  created(){
+    this.getAccountTreeFetch()
   },
   watch: {
     checkedKeys(val) {
-      console.log('onCheck', val);
+      console.log("onCheck", val);
     },
   },
   methods: {
     onExpand(expandedKeys) {
-      console.log('onExpand', expandedKeys);
+      console.log("onExpand", expandedKeys);
       // if not set autoExpandParent to false, if children expanded, parent can not collapse.
       // or, you can remove all expanded children keys.
       this.expandedKeys = expandedKeys;
       this.autoExpandParent = false;
     },
     onCheck(checkedKeys) {
-      console.log('onCheck', checkedKeys);
+      console.log("onCheck", checkedKeys);
       this.checkedKeys = checkedKeys;
     },
     onSelect(selectedKeys, info) {
-      console.log('onSelect', info);
+      console.log("onSelect", info);
       this.selectedKeys = selectedKeys;
     },
+    getAccountTreeFetch(){
+      getAccountTree().then(res =>{
+        console.log(res)
+      })
+    }
   },
 };
 </script>

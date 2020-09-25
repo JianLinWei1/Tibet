@@ -122,6 +122,11 @@ function loadInterceptors (interceptors, options) {
   // 加载响应拦截器
   response.forEach(item => {
     console.log(item)
+    // if(item.code === -1001 || item.code === -1002 || item.code === -1003){
+    //   message.warning('登录已失效，请重新登录')
+    //  next({path: '/login'})
+    //   return
+    // }
     let { onFulfilled, onRejected } = item
     if (!onFulfilled || typeof onFulfilled !== 'function') {
       onFulfilled = response => response

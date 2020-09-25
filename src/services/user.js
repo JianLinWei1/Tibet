@@ -17,6 +17,10 @@ export async function getRoutesConfig () {
   return request("/api/api-auth/getRouter", METHOD.GET)
 }
 
+
+export async function getAccountTree () {
+  return request("/api/api-auth/getAccountTree", METHOD.GET)
+}
 /**
  * 退出登录
  */
@@ -29,5 +33,6 @@ export function logout () {
 export default {
   login,
   logout,
-  getRoutesConfig
+  getRoutesConfig,
+  getAccountTree
 }

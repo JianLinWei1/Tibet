@@ -27,13 +27,13 @@ const routerMap = {
   },
   account:{
     path: '/account',
-    name: '人员信息',
-    redirect: '/account',
-    component: view.page
+    name: '用户管理',
+    redirect: '/user',
+    component: view.blank
   },
   user:{
-    path:"/account",
-    name:'用户管理',
+    path:"/user",
+    name:'用户列表',
     component:()=> import('@/pages/user')
   },
   person:{
