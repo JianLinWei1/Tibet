@@ -8,9 +8,10 @@ const resp401 = {
    * @returns {*}
    */
   onFulfilled(response, options) {
-    const {message} = options
+    //const {message} = options
     if (response.data.code === -1002 || response.data.code === -1003 || response.data.code === -1001) {
-      message.error('Token Error')
+      //message.error(response.data.msg)
+      options.router.push("/login")
       return response.data;
     }
     return response.data

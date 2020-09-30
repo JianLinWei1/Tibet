@@ -17,7 +17,7 @@
             <span>
               <el-button type="text"
                          size="mini"
-                         @click="() => append(data)">
+                         @click="() => addUserClick(data)">
                 添加下级
               </el-button>
               <el-button type="text"
@@ -49,11 +49,22 @@
         </a-table>  -->
       </a-col>
     </a-row>
+    <!--添加下级的组件-->
+    <a-modal
+      title="添加下级"
+      :visible="add_user_visible"
+      :confirm-loading="confirmLoading"
+      @ok="addUserPost"
+      @cancel="add_user_visible = false"
+    >
+      <addUser></addUser>
+    </a-modal>
   </a-card>
 </template>
 
 <script>
 import { getAccountTree } from "@/services/user"
+import addUser from "./add"
 
 
 export default {
@@ -61,7 +72,12 @@ export default {
 
     return {
       data: null,
+      add_user_visible:false,
+      confirmLoading:false
     };
+  },
+  components:{
+     addUser
   },
   created () {
     this.getAccountTreeFetch()
@@ -89,13 +105,20 @@ export default {
     },
     getAccountTreeFetch () {
       getAccountTree().then(res => {
-        console.log(res)
+      
         if (res.code === 0) {
           this.data = res.data
         } else {
           this.$message.error(res.msg);
         }
       })
+    },
+    addUserClick(data){
+      console.log('addUser', data)
+       this.add_user_visible  =  true
+    },
+    addUserPost(){
+      
     }
   },
 };
