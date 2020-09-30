@@ -1,33 +1,39 @@
 <template>
   <a-card class="user">
     <a-row>
-      <a-col :xs="2" :sm="4" :md="6" :lg="8" :xl="10">
+      <a-col :xs="2"
+             :sm="4"
+             :md="6"
+             :lg="8"
+             :xl="10">
         <p>组织结构</p>
-        <el-tree
-      :data="data"
-      node-key="id"
-      default-expand-all
-      :expand-on-click-node="false">
-      <span class="custom-tree-node" slot-scope="{ node, data }">
-        <span>{{ node.label }}</span>
-        <span>
-          <el-button
-            type="text"
-            size="mini"
-            @click="() => append(data)">
-            添加下级
-          </el-button>
-          <el-button
-            type="text"
-            size="mini"
-            @click="() => append(data)">
-            删除
-          </el-button>
-        </span>
-      </span>
-    </el-tree>
+        <el-tree :data="data"
+                 node-key="id"
+                 default-expand-all
+                 :expand-on-click-node="false">
+          <span class="custom-tree-node"
+                slot-scope="{ node, data }">
+            <span>{{ node.label }}</span>
+            <span>
+              <el-button type="text"
+                         size="mini"
+                         @click="() => append(data)">
+                添加下级
+              </el-button>
+              <el-button type="text"
+                         size="mini"
+                         @click="() => append(data)">
+                删除
+              </el-button>
+            </span>
+          </span>
+        </el-tree>
       </a-col>
-      <a-col :xs="2" :sm="4" :md="6" :lg="8" :xl="10">
+      <a-col :xs="2"
+             :sm="4"
+             :md="6"
+             :lg="8"
+             :xl="10">
         <p>账号列表</p>
         <!-- <a-table
           :columns="columns"
@@ -47,43 +53,48 @@
 </template>
 
 <script>
-import {getAccountTree}  from  "@/services/user"
+import { getAccountTree } from "@/services/user"
 
 
 export default {
-  data() {
-    
+  data () {
+
     return {
-      data:null,
+      data: null,
     };
   },
-  created(){
+  created () {
     this.getAccountTreeFetch()
   },
   watch: {
-    checkedKeys(val) {
+    checkedKeys (val) {
       console.log("onCheck", val);
     },
   },
   methods: {
-    onExpand(expandedKeys) {
+    onExpand (expandedKeys) {
       console.log("onExpand", expandedKeys);
       // if not set autoExpandParent to false, if children expanded, parent can not collapse.
       // or, you can remove all expanded children keys.
       this.expandedKeys = expandedKeys;
       this.autoExpandParent = false;
     },
-    onCheck(checkedKeys) {
+    onCheck (checkedKeys) {
       console.log("onCheck", checkedKeys);
       this.checkedKeys = checkedKeys;
     },
-    onSelect(selectedKeys, info) {
+    onSelect (selectedKeys, info) {
       console.log("onSelect", info);
       this.selectedKeys = selectedKeys;
     },
-    getAccountTreeFetch(){
-      getAccountTree().then(res =>{
+    getAccountTreeFetch () {
+      getAccountTree().then(res => {
         console.log(res)
+        if (res.code === 0) {
+          this.data = res.data
+        } else {
+          this.$message.error(res.msg);
+        }
       })
     }
   },
