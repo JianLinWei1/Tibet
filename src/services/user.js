@@ -26,6 +26,11 @@ export async function addUser (data) {
     data
   )
 }
+export async function delUserByParentId (params) {
+  return request("/api/api-auth/delUserByParentId", METHOD.POST,
+    params
+  )
+}
 
 
 /**

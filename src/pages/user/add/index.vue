@@ -13,7 +13,7 @@
       <a-form-model-item ref="passwd"
                          label="密码"
                          prop="passwd">
-        <a-input v-model="form.passwd" />
+        <a-input  type="password" v-model="form.passwd" />
       </a-form-model-item>
       <a-form-model-item ref="nickName"
                          label="昵称(用于显示级联结构)"
@@ -73,7 +73,7 @@ export default {
         if (valid) {
           this.form.parentId = this.parentId
           addUser(this.form).then(res => {
-            console.log(res)
+           
             if (res.code === 0) {
               this.$message.success("添加成功")
               this.$emit("frech")
