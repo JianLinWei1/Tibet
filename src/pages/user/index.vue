@@ -50,14 +50,15 @@
       </a-col>
     </a-row>
     <!--添加下级的组件-->
-    <a-modal
-      title="添加下级"
-      :visible="add_user_visible"
-      :confirm-loading="confirmLoading"
-      @ok="addUserPost"
-      @cancel="add_user_visible = false"
-    >
-      <addUser></addUser>
+    <a-modal title="添加下级"
+             :visible="add_user_visible"
+             :confirm-loading="confirmLoading"
+             :footer="null"
+             @cancel="add_user_visible =  false">
+      <addUser @frech="getAccountTreeFetch"
+               @closed="add_user_visible = false"
+               :parentId="parentId"
+               :add_user_visible="add_user_visible"></addUser>
     </a-modal>
   </a-card>
 </template>
@@ -72,12 +73,13 @@ export default {
 
     return {
       data: null,
-      add_user_visible:false,
-      confirmLoading:false
+      add_user_visible: false,
+      confirmLoading: false,
+      parentId: null,
     };
   },
-  components:{
-     addUser
+  components: {
+    addUser
   },
   created () {
     this.getAccountTreeFetch()
@@ -105,7 +107,7 @@ export default {
     },
     getAccountTreeFetch () {
       getAccountTree().then(res => {
-      
+
         if (res.code === 0) {
           this.data = res.data
         } else {
@@ -113,13 +115,11 @@ export default {
         }
       })
     },
-    addUserClick(data){
-      console.log('addUser', data)
-       this.add_user_visible  =  true
+    addUserClick (data) {
+
+      this.add_user_visible = true
+      this.parentId = data.id
     },
-    addUserPost(){
-      
-    }
   },
 };
 </script>

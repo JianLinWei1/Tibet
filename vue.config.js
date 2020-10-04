@@ -5,6 +5,7 @@ const { resolveCss } = require('./src/utils/theme-color-replacer-extend')
 function resolve (dir) {
   return path.join(__dirname, dir)
 }
+
 module.exports = {
   devServer: {
     proxy: {
