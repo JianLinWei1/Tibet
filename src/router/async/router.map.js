@@ -29,7 +29,7 @@ const routerMap = {
     path: '/account',
     name: '用户管理',
     redirect: '/user',
-    component: view.blank
+    component: view.page
   },
   user:{
     path:"/user",
