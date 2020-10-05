@@ -32,6 +32,10 @@ export async function delUserByParentId (params) {
   )
 }
 
+export async function getAddUserTree () {
+  return request("/api/api-auth/getAddUserTree", METHOD.GET)
+}
+
 
 /**
  * 退出登录

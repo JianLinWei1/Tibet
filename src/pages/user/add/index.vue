@@ -13,13 +13,25 @@
       <a-form-model-item ref="passwd"
                          label="密码"
                          prop="passwd">
-        <a-input  type="password" v-model="form.passwd" />
+        <a-input type="password"
+                 v-model="form.passwd" />
       </a-form-model-item>
       <a-form-model-item ref="nickName"
                          label="昵称(用于显示级联结构)"
                          prop="nickName">
         <a-input v-model="form.nickName" />
       </a-form-model-item>
+      <a-form-model-item ref="permission"
+                         label="菜单权限"
+                         prop="permission">
+        <a-tree-select v-model="routers"
+                       style="width: 100%"
+                       :tree-data="treeData"
+                       tree-checkable
+                       :show-checked-strategy="TreeSelect.SHOW_PARENT"
+                       search-placeholder="请选择" />
+      </a-form-model-item>
+
       <a-form-model-item ref="description"
                          label="描述"
                          prop="description">
@@ -41,14 +53,16 @@
   </div>
 </template>
 <script>
-import { addUser } from "@/services/user"
+import { addUser, getAddUserTree } from "@/services/user"
 
 export default {
+
   data () {
     return {
       labelCol: { span: 8 },
       wrapperCol: { span: 14 },
       form: {},
+      routers: {},
       rules: {
         userName: [
           { required: true, message: '请输入账号', trigger: 'blur' },
@@ -66,6 +80,9 @@ export default {
     };
   },
   props: ['parentId'],
+  created () {
+    this.getAddUserTree()
+  },
   methods: {
     onSubmit () {
 
@@ -73,7 +90,7 @@ export default {
         if (valid) {
           this.form.parentId = this.parentId
           addUser(this.form).then(res => {
-           
+
             if (res.code === 0) {
               this.$message.success("添加成功")
               this.$emit("frech")
@@ -92,6 +109,15 @@ export default {
     resetForm () {
       this.$refs.ruleForm.resetFields();
     },
+
+    getAddUserTree () {
+      getAddUserTree().then(res => {
+        console.log(res)
+        if (res.code === 0) {
+          this.routers = res.data
+        }
+      })
+    }
   },
 };
 
