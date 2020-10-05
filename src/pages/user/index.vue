@@ -10,10 +10,12 @@
         <el-tree :data="data"
                  node-key="id"
                  default-expand-all
+                 
                  :expand-on-click-node="false">
           <span class="custom-tree-node"
                 slot-scope="{ node, data }">
-            <span>{{ node.label }}</span>
+            <svg-icon icon-class="user1" class-name="svgClass"></svg-icon>
+            <span class-name="svgClass">{{ node.label }}</span>
             <span>
               <el-button type="text"
                          size="mini"
@@ -133,3 +135,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+.svgClass{
+  margin-right: 10px;
+}
+</style>

@@ -24,11 +24,11 @@
       <a-form-model-item ref="permission"
                          label="菜单权限"
                          prop="permission">
-        <a-tree-select v-model="routers"
+        <a-tree-select v-model="form.routerIds"
                        style="width: 100%"
                        :tree-data="treeData"
                        tree-checkable
-                       :show-checked-strategy="TreeSelect.SHOW_PARENT"
+                       :show-checked-strategy="SHOW_PARENT"
                        search-placeholder="请选择" />
       </a-form-model-item>
 
@@ -54,7 +54,8 @@
 </template>
 <script>
 import { addUser, getAddUserTree } from "@/services/user"
-
+import { TreeSelect } from 'ant-design-vue';
+const SHOW_PARENT = TreeSelect.SHOW_PARENT;
 export default {
 
   data () {
@@ -62,7 +63,8 @@ export default {
       labelCol: { span: 8 },
       wrapperCol: { span: 14 },
       form: {},
-      routers: {},
+      treeData:[],
+      SHOW_PARENT,
       rules: {
         userName: [
           { required: true, message: '请输入账号', trigger: 'blur' },
@@ -85,10 +87,11 @@ export default {
   },
   methods: {
     onSubmit () {
-
+       
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
           this.form.parentId = this.parentId
+           
           addUser(this.form).then(res => {
 
             if (res.code === 0) {
@@ -114,7 +117,7 @@ export default {
       getAddUserTree().then(res => {
         console.log(res)
         if (res.code === 0) {
-          this.routers = res.data
+          this.treeData = res.data
         }
       })
     }

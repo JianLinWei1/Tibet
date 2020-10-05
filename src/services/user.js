@@ -21,9 +21,9 @@ export async function getRoutesConfig () {
 export async function getAccountTree () {
   return request("/api/api-auth/getAccountTree", METHOD.GET)
 }
-export async function addUser (data) {
+export async function addUser (data , params) {
   return request("/api/api-auth/addUser", METHOD.POST,
-    data
+    data ,params
   )
 }
 export async function delUserByParentId (params) {
