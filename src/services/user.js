@@ -23,7 +23,7 @@ export async function getAccountTree () {
 }
 export async function addUser (data , params) {
   return request("/api/api-auth/addUser", METHOD.POST,
-    data ,params
+    params
   )
 }
 export async function delUserByParentId (params) {
