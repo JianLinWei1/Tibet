@@ -1,6 +1,5 @@
 <template>
   <div class="standard-table">
-    
     <a-table
       :bordered="bordered"
       :loading="loading"
@@ -11,177 +10,206 @@
       :expandedRowKeys="expandedRowKeys"
       :expandedRowRender="expandedRowRender"
       @change="onChange"
-      :rowSelection="selectedRows ? {selectedRowKeys: selectedRowKeys, onChange: updateSelect} : undefined"
+      :rowSelection="
+        selectedRows
+          ? { selectedRowKeys: selectedRowKeys, onChange: updateSelect }
+          : undefined
+      "
     >
-      <template slot-scope="text, record, index" :slot="slot" v-for="slot in Object.keys($scopedSlots).filter(key => key !== 'expandedRowRender') ">
-        <slot :name="slot" v-bind="{text, record, index}"></slot>
+      <template
+        slot-scope="text, record, index"
+        :slot="slot"
+        v-for="slot in Object.keys($scopedSlots).filter(
+          (key) => key !== 'expandedRowRender'
+        )"
+      >
+        <slot :name="slot" v-bind="{ text, record, index }"></slot>
       </template>
       <template :slot="slot" v-for="slot in Object.keys($slots)">
         <slot :name="slot"></slot>
       </template>
-      <template slot-scope="record, index, indent, expanded" :slot="$scopedSlots.expandedRowRender ? 'expandedRowRender' : ''">
-        <slot v-bind="{record, index, indent, expanded}" :name="$scopedSlots.expandedRowRender ? 'expandedRowRender' : ''"></slot>
+      <template
+        slot-scope="record, index, indent, expanded"
+        :slot="$scopedSlots.expandedRowRender ? 'expandedRowRender' : ''"
+      >
+        <slot
+          v-bind="{ record, index, indent, expanded }"
+          :name="$scopedSlots.expandedRowRender ? 'expandedRowRender' : ''"
+        ></slot>
       </template>
+      <viewer slot="photo" slot-scope="text">
+        <img ref="img" width="100" :src="'/api/api-auth/' + text" />
+      </viewer>
     </a-table>
   </div>
 </template>
 
 <script>
-import {queryPersonsList} from "@/services/person"
+
 const columns = [
   {
     title: "ID",
     dataIndex: "id",
+    width: 100,
   },
   {
     title: "姓名",
     dataIndex: "name",
     scopedSlots: { customRender: "name" },
+    width: 100,
   },
   {
     title: "身份证号",
     dataIndex: "idCard",
+    width: 100,
   },
- {
+  {
     title: "门禁卡号",
     dataIndex: "accessId",
-    sorter: true
+
+    width: 100,
   },
   {
     title: "车牌号",
     dataIndex: "carId",
+    width: 100,
   },
   {
     title: "电话",
     dataIndex: "phone",
+    width: 100,
   },
   {
     title: "照片",
     dataIndex: "photo",
+    width: 100,
+    scopedSlots: { customRender: "photo" },
   },
   {
     title: "角色",
     dataIndex: "role",
+    width: 100,
   },
   {
     title: "生效时间",
     dataIndex: "starTime",
-    sorter: true
+
+    width: 100,
   },
   {
     title: "失效时间",
     dataIndex: "invalidTime",
-    sorter: true
+
+    width: 100,
   },
   {
     title: "注册时间",
     dataIndex: "createTime",
-    sorter: true
+
+    width: 100,
   },
   {
     title: "备注",
     dataIndex: "content",
   },
-  
+
   {
     title: "操作",
+
     scopedSlots: { customRender: "action" },
   },
 ];
 export default {
-  name: 'StandardTable',
+  name: "StandardTable",
   props: {
     bordered: Boolean,
     loading: [Boolean, Object],
-    
+
     dataSource: Array,
     rowKey: {
       type: [String, Function],
-      default: 'key'
+      default: "id",
     },
     pagination: {
       type: [Object, Boolean],
-      default: true
+      default: true,
     },
     selectedRows: Array,
     expandedRowKeys: Array,
-    expandedRowRender: Function
+    expandedRowRender: Function,
   },
-  data () {
+  data() {
     return {
       needTotalList: [],
       columns: columns,
-      page:{
-        page:1,
-        limit:10
-      }
-      
-    }
+    };
+  },
+  created() {
+    // this.needTotalList = this.initTotalList(this.columns)
+  },
+  beforeMount() {
+   
   },
   methods: {
-    queryPersonsList(){
-      queryPersonsList(this.page).then(res =>{
-        console.log(res)
-      })
+    updateSelect(selectedRowKeys, selectedRows) {
+      this.$emit("update:selectedRows", selectedRows);
+      this.$emit("selectedRowChange", selectedRowKeys, selectedRows);
     },
-    updateSelect (selectedRowKeys, selectedRows) {
-      this.$emit('update:selectedRows', selectedRows)
-      this.$emit('selectedRowChange', selectedRowKeys, selectedRows)
-    },
-    initTotalList (columns) {
-      const totalList = columns.filter(item => item.needTotal)
-        .map(item => {
+    initTotalList(columns) {
+      const totalList = columns
+        .filter((item) => item.needTotal)
+        .map((item) => {
           return {
             ...item,
-            total: 0
-          }
-        })
-      return totalList
+            total: 0,
+          };
+        });
+      return totalList;
     },
     onClear() {
-      this.updateSelect([], [])
-      this.$emit('clear')
+      this.updateSelect([], []);
+      this.$emit("clear");
     },
-    onChange(pagination, filters, sorter, {currentDataSource}) {
-      this.$emit('change', pagination, filters, sorter, {currentDataSource})
-    }
+    onChange(pagination, filters, sorter, { currentDataSource }) {
+      this.$emit("change", pagination, filters, sorter, { currentDataSource });
+    },
+   
   },
-  created () {
-   // this.needTotalList = this.initTotalList(this.columns)
-   this.queryPersonsList()
-  },
+
   watch: {
-    selectedRows (selectedRows) {
-      this.needTotalList = this.needTotalList.map(item => {
+    selectedRows(selectedRows) {
+      this.needTotalList = this.needTotalList.map((item) => {
         return {
           ...item,
           total: selectedRows.reduce((sum, val) => {
-            return sum + val[item.dataIndex]
-          }, 0)
-        }
-      })
-    }
+            return sum + val[item.dataIndex];
+          }, 0),
+        };
+      });
+    },
   },
   computed: {
     selectedRowKeys() {
-      return this.selectedRows.map(record => {
-        return (typeof this.rowKey === 'function') ? this.rowKey(record) : record[this.rowKey]
-      })
-    }
-  }
-}
+      return this.selectedRows.map((record) => {
+        return typeof this.rowKey === "function"
+          ? this.rowKey(record)
+          : record[this.rowKey];
+      });
+    },
+  },
+};
 </script>
 
 <style scoped lang="less">
-.standard-table{
-  .alert{
+.standard-table {
+  .alert {
     margin-bottom: 16px;
-    .message{
-      a{
+    .message {
+      a {
         font-weight: 600;
       }
     }
-    .clear{
+    .clear {
       float: right;
     }
   }

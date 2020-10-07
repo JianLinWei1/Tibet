@@ -11,7 +11,12 @@ import Plugins from '@/plugins'
 import { initI18n } from '@/utils/i18n'
 import bootstrap from '@/bootstrap'
 import { Tree ,Button } from 'element-ui';
-
+import Viewer from 'v-viewer'
+import 'viewerjs/dist/viewer.css'
+Vue.use(Viewer)
+Viewer.setDefaults({
+  Options: { 'inline': true, 'button': true, 'navbar': true, 'title': true, 'toolbar': true, 'tooltip': true, 'movable': true, 'zoomable': true, 'rotatable': true, 'scalable': true, 'transition': true, 'fullscreen': true, 'keyboard': true, 'url': 'data-source' }
+})
 const router = initRouter(store.state.setting.asyncRoutes)
 const i18n = initI18n('CN', 'US')
 

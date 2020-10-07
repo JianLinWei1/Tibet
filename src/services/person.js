@@ -6,6 +6,6 @@ export async function insertPerson ( params) {
     )
   }
 
-  export async function get () {
-    return request("/api/api-persons/get", METHOD.GET)
+  export async function queryPersonsList (data) {
+    return request("/api/api-persons/queryPersonsList", METHOD.POST, data)
   }
