@@ -7,8 +7,12 @@ const routesConfig = [
   'root',
   "index",
   "user",
+  "person",
   "personList",
   "personAdd",
+  "camera",
+  "cameraAdd",
+  "cameraList",
   {
     router: 'exp404',
     path: '*',

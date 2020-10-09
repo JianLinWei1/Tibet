@@ -52,6 +52,22 @@ const routerMap = {
     name:'添加人员',
     component:()=> import('@/pages/persons/add')
   },
+  camera:{
+    path: '/camera',
+    name: '摄像机管理',
+    redirect: '/cameraAdd',
+    component: view.page
+  },
+  cameraAdd:{
+    path:"/cameraAdd",
+    name:'添加摄像机',
+    component:()=> import('@/pages/camera/cameraAdd')
+  },
+  cameraList:{
+    path:"/cameraList",
+    name:'摄像机列表',
+    component:()=> import('@/pages/camera/cameraList')
+  },
   exp403: {
     authority: '*',
     name: 'exp403',

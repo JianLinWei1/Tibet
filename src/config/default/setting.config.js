@@ -25,9 +25,5 @@ module.exports = {
     name: 'slide',                     //动画效果，支持的动画效果可参考 ./animate.config.js
     direction: 'left'                   //动画方向，切换页面时动画的方向，参考 ./animate.config.js
   },
-  /*  footerLinks: [                        //页面底部链接，{link: '链接地址', name: '名称/显示文字', icon: '图标，支持 ant design vue 图标库'}
-     {link: 'https://pro.ant.design', name: 'Pro首页'},
-     {link: 'https://github.com/iczer/vue-antd-admin', icon: 'github'},
-     {link: 'https://ant.design', name: 'Ant Design'}
-   ], */
+  
 }
