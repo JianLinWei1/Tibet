@@ -10,7 +10,7 @@
                 :labelCol="{ span: 5 }"
                 :wrapperCol="{ span: 18, offset: 1 }"
               >
-                <a-input v-model="form.id" placeholder="请输入" />
+                <a-input v-model="form.id" placeholder="请输入(精确查询)" />
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
@@ -69,7 +69,7 @@
     </div>
     <div>
       <div class="operator">
-        <a-button ghost type="danger">批量删除</a-button>
+        <a-button @click="delList" ghost type="danger">批量删除</a-button>
       </div>
       <standard-table
         :bordered="true"
@@ -77,29 +77,34 @@
         :pagination="pagination"
         :dataSource="dataSource"
         :selectedRows.sync="selectedRows"
-        @clear="onClear"
+       
         @change="onChange"
         @selectedRowChange="onSelectChange"
       >
-        <div slot="action" slot-scope="{ record }">
-          <a style="margin-right: 8px"> <a-icon type="edit" />编辑 </a>
-          <a @click="deleteRecord(record.key)">
+        <div slot="action" slot-scope="{record}">
+          <a style="margin-right: 8px"  @click="editRecord(record)"> <a-icon type="edit"  />编辑 </a>
+          <a @click="deleteRecord(record.id)">
             <a-icon type="delete" />删除
           </a>
         </div>
        
       </standard-table>
     </div>
+    <!---->
+     <a-modal width="50%" :footer="null" v-model="visible" title="编辑" >
+      <edit :form="editFrom"></edit>
+    </a-modal>
   </a-card>
 </template>
 
 <script>
 import StandardTable from "./table/StandardTable";
-import { queryPersonsList } from "@/services/person";
+import { queryPersonsList ,delPerson } from "@/services/person";
+import edit from "./edit"
 
 export default {
   name: "QueryList",
-  components: { StandardTable },
+  components: { StandardTable ,edit},
   data() {
     return {
       advanced: true,
@@ -107,7 +112,7 @@ export default {
       selectedRows: [],
       form:{
       },
-      
+      editFrom:{},
       pagination:{
         current:1,
         total:0,
@@ -116,12 +121,13 @@ export default {
         pageSizeOptions: ['10', '20', '30', '40'],
         showTotal: total => `共 ${total} 条`,
         showSizeChange: (current, pageSize) => this.pageSize = pageSize,
-      }
+      },
+      visible:false
     };
   },
-  authorize: {
-    deleteRecord: "delete",
-  },
+  // authorize: {
+  //   deleteRecord: "delete",
+  // },
   created() {
     this.queryPersonsList();
   },
@@ -131,7 +137,7 @@ export default {
       this.form.page = this.pagination.current
       this.form.limit = this.pagination.pageSize
       queryPersonsList(this.form).then((res) => {
-        console.log(res);
+        //console.log(res);
         if (res.code === 0) {
           this.dataSource = res.data;
           this.pagination.total = res.count
@@ -140,32 +146,58 @@ export default {
         }
       });
     },
-    deleteRecord(key) {
-      this.dataSource = this.dataSource.filter((item) => item.key !== key);
-      this.selectedRows = this.selectedRows.filter((item) => item.key !== key);
-    },
+   
     toggleAdvanced() {
       this.advanced = !this.advanced;
     },
-    remove() {
-      this.dataSource = this.dataSource.filter(
-        (item) =>
-          this.selectedRows.findIndex((row) => row.key === item.key) === -1
-      );
-      this.selectedRows = [];
-    },
+  
     onClear() {
-      this.$message.info("您清空了勾选的所有行");
+      
     },
-    onStatusTitleClick() {
-      this.$message.info("你点击了状态栏表头");
+     deleteRecord(key) {
+     
+      let data = []
+      data.push(key)
+      
+      delPerson(data).then(res =>{
+        if (res.code === 0) {
+          this.$message.success("删除成功")
+          this.dataSource = this.dataSource.filter((item) => item.id !== key)
+         // this.selectedRows = this.selectedRows.filter((item) => item.id !== key);
+        } else {
+          this.$message.error(res.msg);
+        }
+      })
+      
     },
+    editRecord(key){
+      console.log(key)
+      this.visible = true
+      this.editFrom = key
+    },
+    
     onChange(page) {
       this.pagination = page
      this.queryPersonsList()
     },
     onSelectChange() {
-      this.$message.info("选中行改变了");
+      console.log(this.selectedRows)
+     
+    },
+    delList(){
+      let data =[]
+      this.selectedRows.forEach(item =>{
+        data.push(item.id)
+      })
+
+     delPerson(data).then(res =>{
+        if (res.code === 0) {
+          this.$message.success("删除成功")
+          this.queryPersonsList()
+        } else {
+          this.$message.error(res.msg);
+        }
+      })
     },
   
     handleMenuClick(e) {

@@ -40,6 +40,7 @@
       <viewer slot="photo" slot-scope="text">
         <img ref="img" width="100" :src="'/api/api-auth/' + text" />
       </viewer>
+      
     </a-table>
   </div>
 </template>
@@ -173,6 +174,7 @@ export default {
     onChange(pagination, filters, sorter, { currentDataSource }) {
       this.$emit("change", pagination, filters, sorter, { currentDataSource });
     },
+    
    
   },
 

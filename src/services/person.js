@@ -9,3 +9,11 @@ export async function insertPerson ( params) {
   export async function queryPersonsList (data) {
     return request("/api/api-persons/queryPersonsList", METHOD.POST, data)
   }
+
+  export async function editPerson (data) {
+    return request("/api/api-persons/editPerson", METHOD.POST, data)
+  }
+
+  export async function delPerson (data) {
+    return request("/api/api-persons/delPerson", METHOD.POST, data)
+  }
