@@ -68,6 +68,22 @@ const routerMap = {
     name:'摄像机列表',
     component:()=> import('@/pages/camera/cameraList')
   },
+  access:{
+    path: '/access',
+    name: '门禁管理',
+    redirect: '/accessAdd',
+    component: view.page
+  },
+  accessAdd:{
+    path:"/accessAdd",
+    name:'添加门禁',
+    component:()=> import('@/pages/camera/cameraAdd')
+  },
+  accessList:{
+    path:"/accessList",
+    name:'门禁列表',
+    component:()=> import('@/pages/camera/cameraList')
+  },
   exp403: {
     authority: '*',
     name: 'exp403',

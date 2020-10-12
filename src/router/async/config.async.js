@@ -13,6 +13,9 @@ const routesConfig = [
   "camera",
   "cameraAdd",
   "cameraList",
+  "access",
+  "accessAdd",
+  "accessList",
   {
     router: 'exp404',
     path: '*',
