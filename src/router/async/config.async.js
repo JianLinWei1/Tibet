@@ -16,6 +16,12 @@ const routesConfig = [
   "access",
   "accessAdd",
   "accessList",
+  "car",
+  "carAdd",
+  "carList",
+  "system",
+  "systemConfig",
+  "systemLog",
   {
     router: 'exp404',
     path: '*',

@@ -77,12 +77,45 @@ const routerMap = {
   accessAdd:{
     path:"/accessAdd",
     name:'添加门禁',
-    component:()=> import('@/pages/camera/cameraAdd')
+    component:()=> import('@/pages/access/accessAdd')
   },
   accessList:{
     path:"/accessList",
     name:'门禁列表',
-    component:()=> import('@/pages/camera/cameraList')
+    component:()=> import('@/pages/access/accessList')
+  },
+ 
+  car:{
+    path: '/car',
+    name: '车辆道闸管理',
+    redirect: '/carAdd',
+    component: view.page
+  },
+  carAdd:{
+    path:"/carAdd",
+    name:'添加车辆道闸',
+    component:()=> import('@/pages/car/carAdd')
+  },
+  carList:{
+    path:"/carList",
+    name:'车辆道闸列表',
+    component:()=> import('@/pages/car/carList')
+  },
+  system:{
+    path: '/system',
+    name: '系统管理',
+    redirect: '/systemConfig',
+    component: view.page
+  },
+  systemConfig:{
+    path:"/systemConfig",
+    name:'系统管理',
+    component:()=> import('@/pages/system/systemConfig')
+  },
+  systemLog:{
+    path:"/systemLog",
+    name:'车辆道闸列表',
+    component:()=> import('@/pages/system/systemLog')
   },
   exp403: {
     authority: '*',
