@@ -4,6 +4,7 @@
     <a-input-search style="padding:20px"
       placeholder="请输入门禁控制器服务地址ip"
       enter-button="搜索门禁控制器"
+      v-model="searchIP"
       size="large"
       @search="onSearch"
     />
@@ -28,7 +29,7 @@
 <script>
 
 import Cookie from "js-cookie";
-import { insertPerson } from "@/services/person.js";
+import { searchDevice } from "@/services/access.js";
 export default {
   data() {
     return {
@@ -36,6 +37,7 @@ export default {
       visible: false,
       token: null,
       spinning:false,
+      searchIP:"49.4.85.77",
       columns: [
         {
           title: '设备序列号',
@@ -87,6 +89,17 @@ export default {
   methods: {
     onSearch() {
       this.spinning = true;
+      let params = {
+        ip:this.searchIP
+      }
+      searchDevice(params).then(res =>{
+        console.log(res)
+        this.spinning = false
+      }).catch(err =>{
+        console.log(err)
+        this.spinning =false
+      })
+
     },
     handleChange(info) {
       const status = info.file.status;
@@ -108,13 +121,13 @@ export default {
     submit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          insertPerson(this.form).then((res) => {
-            if (res.code === 0) {
-              this.$message.success("添加成功");
-            } else {
-              this.$message.error(res.msg);
-            }
-          });
+          // insertPerson(this.form).then((res) => {
+          //   if (res.code === 0) {
+          //     this.$message.success("添加成功");
+          //   } else {
+          //     this.$message.error(res.msg);
+          //   }
+          // });
         } else {
           this.$message.error("请按要求输入");
           return false;
