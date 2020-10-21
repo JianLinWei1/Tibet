@@ -1,5 +1,6 @@
 <template>
   <div>
+     <a-spin :spinning="spinning" tip="正在下发中.....">
     <a-form-model
       ref="ruleForm"
       :model="issueFrom"
@@ -16,7 +17,7 @@
       <a-form-model-item label="下发人员" prop="name">
         <a-select
           mode="multiple"
-          label-in-value
+          
           v-model="issueFrom.pids"
           placeholder="根据姓名搜索人员"
           style="width: 100%"
@@ -26,7 +27,7 @@
           
         >
           <a-spin v-if="fetching" slot="notFoundContent" size="small" />
-          <a-select-option v-for="d in data" :key="d.id">
+          <a-select-option v-for="d in data" :key="d.id" :value="d.id" >
             {{ d.name }}
           </a-select-option>
         </a-select>
@@ -39,10 +40,10 @@
       </a-form-model-item> -->
       <a-form-model-item label="门号" prop="passwd">
         <a-select v-model="issueFrom.doors"  mode="tags" style="width: 100%" placeholder="选择门号">
-          <a-select-option value=1> 1号门 </a-select-option>
-          <a-select-option value=2> 2号门 </a-select-option>
-          <a-select-option value=3> 3号门 </a-select-option>
-          <a-select-option value=4> 4号门 </a-select-option>
+          <a-select-option value="1"> 1号门 </a-select-option>
+          <a-select-option value="2"> 2号门 </a-select-option>
+          <a-select-option value="3"> 3号门 </a-select-option>
+          <a-select-option value="4"> 4号门 </a-select-option>
         </a-select>
       </a-form-model-item>
 
@@ -54,10 +55,12 @@
         <a-button style="margin-left: 8px">重置</a-button>
       </a-form-model-item>
     </a-form-model>
+     </a-spin>
   </div>
 </template>
 <script>
-import { queryPersonsList } from "@/services/access.js";
+import { queryPersonsList ,issuedPerson} from "@/services/access.js";
+
 
 export default {
   props: {
@@ -71,6 +74,7 @@ export default {
       data: [],
       value: ['1'],
       fetching: false,
+      spinning:false,
       rules: {
         photo: [{ required: true, message: "必填！", trigger: "blur" }],
         role: [{ required: true, message: "必填！", trigger: "blur" }],
@@ -81,10 +85,21 @@ export default {
   methods: {
     submit() {
       console.log(this.issueFrom)
+      this.issueFrom.advId = this.issueFrom.id
+      this.issueFrom.advName = this.issueFrom.name
+      this.spinning = true
+      issuedPerson(this.issueFrom).then(res =>{
+      this.spinning = false
+        if(res.code == 0){
+          this.$message.success("下发成功")
+        }else{
+          this.$message.error(JSON.stringify(res.data))
+        }
+      })
 
     },
     fetchUser(value) {
-      console.log("fetching user", value);
+      
 
       this.data = [];
       this.fetching = true;
@@ -92,8 +107,9 @@ export default {
       queryPersonsList({name:value}).then((res) => {
         if(res.code === 0){
             this.data = res.data
-            this.fetching = false
+            console.log("fetching user", res.data);
         }
+        this.fetching = false
       });
     },
     handleChange(value) {

@@ -23,3 +23,8 @@ export async function searchDevice ( params) {
     )
   }
   
+  export async function issuedPerson ( params) {
+    return request(url+"/issuedPerson", METHOD.POST,
+      params
+    )
+  }
