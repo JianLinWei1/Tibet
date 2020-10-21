@@ -1,19 +1,25 @@
 import { request, METHOD } from '@/utils/request'
+let url ="/api/api-access/access"
 
 export async function searchDevice ( params) {
-    return request("/api/api-access/access/searchDevice", METHOD.GET,
+    return request(url+"/searchDevice", METHOD.GET,
       params
     )
   }
 
-  export async function queryPersonsList (data) {
-    return request("/api/api-persons/queryPersonsList", METHOD.POST, data)
+  export async function addDevice (data) {
+    return request(url+"/addDevice", METHOD.POST, data)
   }
 
-  export async function editPerson (data) {
-    return request("/api/api-persons/editPerson", METHOD.POST, data)
+  export async function listDevice ( params) {
+    return request(url+"/listDevice", METHOD.GET,
+      params
+    )
   }
 
-  export async function delPerson (data) {
-    return request("/api/api-persons/delPerson", METHOD.POST, data)
+  export async function queryPersonsList ( params) {
+    return request(url+"/queryPersonsList", METHOD.POST,
+      params
+    )
   }
+  

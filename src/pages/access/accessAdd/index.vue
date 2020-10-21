@@ -1,143 +1,183 @@
 <template>
   <a-spin :spinning="spinning" tip="正在搜索门禁控制器请稍后.....">
-  <a-card :body-style="{ padding: '24px 32px' }" :bordered="false">
-    <a-input-search style="padding:20px"
-      placeholder="请输入门禁控制器服务地址ip"
-      enter-button="搜索门禁控制器"
-      v-model="searchIP"
-      size="large"
-      @search="onSearch"
-    />
-    <a-table bordered :data-source="dataSource" :columns="columns">
-      
-      <div slot="action" slot-scope="{record}">
-          <a style="margin-right: 8px"  @click="editRecord(record)"> <a-icon type="edit"  />编辑 </a>
-          <a @click="deleteRecord(record.id)">
-            <a-icon type="delete" />删除
-          </a>
+    <a-card :body-style="{ padding: '24px 32px' }" :bordered="false">
+      <a-input-search
+        style="padding: 20px"
+        placeholder="请输入门禁控制器服务地址ip"
+        enter-button="搜索门禁控制器"
+        v-model="searchIP"
+        size="large"
+        @search="onSearch"
+      />
+      <a-table
+        bordered
+        :row-key="(row) => row.sn"
+        :data-source="dataSource"
+        :pagination="pagination"
+        :columns="columns"
+      >
+        <div slot="action" slot-scope="record">
+          <a style="margin-right: 8px" @click="addRecord(record)">
+            <a-icon type="plus" />添加</a
+          >
+          <a style="margin-right: 8px" @click="issue(record)">
+            <a-icon type="vertical-align-bottom" />发卡</a
+          >
+          <a style="margin-right: 8px" @click="delRecord(record.id)">
+            <a-icon type="delete" />删除</a
+          >
         </div>
-    </a-table>
 
-  
-     
-   
-  </a-card>
- </a-spin>
-  
+        <template slot="name" slot-scope="text,record">
+          <div class="editable-cell">
+            <div class="editable-cell-input-wrapper">
+              <a-input  v-model="record.name" />
+            </div>
+          </div>
+        </template>
+      </a-table>
+    </a-card>
+
+    <!---->
+     <a-modal width="50%" :footer="null" v-model="visible" title="下发卡号" >
+      <issued :issueFrom="issueFrom"></issued>
+    </a-modal>
+  </a-spin>
 </template>
 
 <script>
-
 import Cookie from "js-cookie";
-import { searchDevice } from "@/services/access.js";
+import { searchDevice, addDevice, listDevice } from "@/services/access.js";
+import issued from "../issued"
 export default {
   data() {
     return {
       form: {},
       visible: false,
       token: null,
-      spinning:false,
-      searchIP:"49.4.85.77",
+      spinning: false,
+      searchIP: "49.4.85.77",
+      dataSource: null,
+      issueFrom: {},
+      pagination: {},
       columns: [
         {
-          title: '设备序列号',
-          dataIndex: 'SN',
-          width: '20%',
+          title: "ID",
+          dataIndex: "id",
+          width: "20%",
+          key: "id",
         },
         {
-          title: 'IP地址',
-          dataIndex: 'IP',
+          title: "设备序列号",
+          dataIndex: "sn",
+          width: "20%",
+          key: "sn",
         },
         {
-          title: '网关',
-          dataIndex: 'GATEIPAddress',
+          title: "IP地址",
+          dataIndex: "ip",
         },
         {
-          title: '子网掩码',
-          dataIndex: 'NetMask',
+          title: "网关",
+          dataIndex: "gateipaddress",
         },
         {
-          title: 'MAC地址',
-          dataIndex: 'MAC',
+          title: "子网掩码",
+          dataIndex: "netMask",
         },
         {
-          title: '设备类型',
-          dataIndex: 'DeviceType',
-        },
-        
-        
-        {
-          title: '版本',
-          dataIndex: 'Ver',
+          title: "MAC地址",
+          dataIndex: "mac",
         },
         {
-          title: '操作',
-         
-          scopedSlots: { customRender: 'action' },
+          title: "设备类型",
+          dataIndex: "deviceType",
+        },
+
+        {
+          title: "版本",
+          dataIndex: "ver",
+        },
+        {
+          title: "自定义名称",
+          dataIndex: "name",
+          scopedSlots: { customRender: "name" },
+        },
+        {
+          title: "操作",
+
+          scopedSlots: { customRender: "action" },
         },
       ],
       fileList: [],
     };
   },
   components: {
-    
+    issued
   },
   created() {
     this.token = Cookie.get("token");
+    this.listDevice();
   },
   computed: {},
   methods: {
     onSearch() {
       this.spinning = true;
       let params = {
-        ip:this.searchIP
-      }
-      searchDevice(params).then(res =>{
-        console.log(res)
-        this.spinning = false
-      }).catch(err =>{
-        console.log(err)
-        this.spinning =false
-      })
-
+        ip: this.searchIP,
+      };
+      searchDevice(params)
+        .then((res) => {
+          console.log(res);
+          this.spinning = false;
+          if (res.code === 0) {
+            this.dataSource = res.data;
+          } else {
+            this.$message.error(res.msg);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          this.spinning = false;
+        });
     },
-    handleChange(info) {
-      const status = info.file.status;
-      const res = info.file.response;
-      this.fileList = [];
-
-      this.fileList.push(info.fileList[info.fileList.length - 1]);
-      if (status === "done") {
+    addRecord(record) {
+     
+      addDevice(record).then((res) => {
         if (res.code === 0) {
-          this.$message.success(`${info.file.name} 上传成功`);
-          this.form.photo = res.data;
+          this.$message.success("添加成功");
+          this.listDevice()
         } else {
           this.$message.error(res.msg);
         }
-      } else if (status === "error") {
-        this.$message.error(`${info.file.name} 上传失败`);
-      }
-    },
-    submit() {
-      this.$refs.ruleForm.validate((valid) => {
-        if (valid) {
-          // insertPerson(this.form).then((res) => {
-          //   if (res.code === 0) {
-          //     this.$message.success("添加成功");
-          //   } else {
-          //     this.$message.error(res.msg);
-          //   }
-          // });
-        } else {
-          this.$message.error("请按要求输入");
-          return false;
-        }
       });
+    },
+    issue(record){
+      this.issueFrom = record
+      
+      this.visible= true
+    },
+    handleTableChange(pagination) {
+      console.log(pagination);
+    },
+    listDevice() {
+      listDevice({ page: 0, limit: 10 }).then((res) => {
+       
+        if (res.code === 0) this.dataSource = res.data;
+      });
+    },
+
+    onCellChange(key, dataIndex, value) {
+      const dataSource = [...this.dataSource];
+      const target = dataSource.find((item) => item.key === key);
+      if (target) {
+        target[dataIndex] = value;
+        this.dataSource = dataSource;
+      }
     },
   },
 };
 </script>
 
 <style scoped>
-
 </style>

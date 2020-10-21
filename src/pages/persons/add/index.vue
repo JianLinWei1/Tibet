@@ -16,6 +16,9 @@
       <a-form-model-item label="门禁卡号" prop="accessId">
         <a-input v-model="form.accessId" placeholder="门禁卡号" />
       </a-form-model-item>
+      <a-form-model-item label="门禁密码" prop="accessPw">
+        <a-input v-model="form.accessPw" placeholder="门禁卡号" />
+      </a-form-model-item>
       <a-form-model-item label="车牌号" prop="carId">
         <a-input v-model="form.carId" placeholder="车牌号" />
       </a-form-model-item>
