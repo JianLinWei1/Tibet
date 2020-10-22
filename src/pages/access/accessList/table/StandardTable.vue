@@ -37,9 +37,9 @@
           :name="$scopedSlots.expandedRowRender ? 'expandedRowRender' : ''"
         ></slot>
       </template>
-      <viewer slot="photo" slot-scope="text">
-        <img ref="img" width="100" :src="'/api/api-auth/' + text" />
-      </viewer>
+      <div slot="doors" slot-scope="text">
+       <span v-for="t in text" :key="t">{{t}}号门||</span>
+      </div>
       
     </a-table>
   </div>
@@ -51,69 +51,45 @@ const columns = [
   {
     title: "ID",
     dataIndex: "id",
-    width: 100,
+    width: 180,
   },
   {
-    title: "姓名",
+    title: "人员ID",
+    dataIndex: "pid",
+    width: 180,
+  },
+  {
+    title: "人员姓名",
     dataIndex: "name",
-    scopedSlots: { customRender: "name" },
-    width: 100,
-  },
-  {
-    title: "身份证号",
-    dataIndex: "idCard",
     width: 100,
   },
   {
     title: "门禁卡号",
     dataIndex: "accessId",
 
-    width: 100,
+    width: 180,
   },
   {
-    title: "车牌号",
-    dataIndex: "carId",
-    width: 100,
+    title: "门禁密码",
+    dataIndex: "accessPw",
+    width: 180,
   },
   {
-    title: "电话",
-    dataIndex: "phone",
-    width: 100,
+    title: "门禁IP",
+    dataIndex: "ip",
+    width: 180,
   },
   {
-    title: "照片",
-    dataIndex: "photo",
-    width: 100,
-    scopedSlots: { customRender: "photo" },
+    title: "门禁名称",
+    dataIndex: "advName",
+    width: 180,
   },
   {
-    title: "角色",
-    dataIndex: "role",
-    width: 100,
+    title: "门号权限",
+    dataIndex: "doors",
+    width: 180,
+     scopedSlots: { customRender: "doors" },
   },
-  {
-    title: "生效时间",
-    dataIndex: "starTime",
-
-    width: 100,
-  },
-  {
-    title: "失效时间",
-    dataIndex: "invalidTime",
-
-    width: 100,
-  },
-  {
-    title: "注册时间",
-    dataIndex: "createTime",
-
-    width: 100,
-  },
-  {
-    title: "备注",
-    dataIndex: "content",
-  },
-
   {
     title: "操作",
 

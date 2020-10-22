@@ -9,11 +9,11 @@
       :wrapperCol="{ span: 10 }"
     >
       <a-form-model-item ref="ip" label="IP" prop="ip">
-        <a-input disabled v-model="issueFrom.ip" placeholder="请输入姓名" />
+        <a-input disabled v-model="issueFrom.ip" placeholder="ip" />
       </a-form-model-item>
-      <a-form-model-item label="设备名称" prop="name">
+      <!-- <a-form-model-item label="设备名称" prop="name">
         <a-input disabled v-model="issueFrom.name" placeholder="设备名称" />
-      </a-form-model-item>
+      </a-form-model-item> -->
       <a-form-model-item label="下发人员" prop="name">
         <a-select
           mode="multiple"

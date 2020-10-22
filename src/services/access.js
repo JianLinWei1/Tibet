@@ -28,3 +28,16 @@ export async function searchDevice ( params) {
       params
     )
   }
+
+  export async function listAccessPersons ( params) {
+    return request(url+"/listAccessPersons", METHOD.POST,
+      params
+    )
+  }
+
+  
+  export async function DelAccessPerson ( params) {
+    return request(url+"/DelAccessPerson", METHOD.POST,
+      params
+    )
+  }
