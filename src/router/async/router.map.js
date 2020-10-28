@@ -81,7 +81,7 @@ const routerMap = {
   },
   accessList:{
     path:"/accessList",
-    name:'门禁列表',
+    name:'发卡记录',
     component:()=> import('@/pages/access/accessList')
   },
  
@@ -93,13 +93,18 @@ const routerMap = {
   },
   carAdd:{
     path:"/carAdd",
-    name:'添加车辆道闸',
+    name:'道闸管理',
     component:()=> import('@/pages/car/carAdd')
   },
   carList:{
     path:"/carList",
-    name:'车辆道闸列表',
+    name:'下发列表',
     component:()=> import('@/pages/car/carList')
+  },
+  carRecordList:{
+    path:"/carRecordList",
+    name:'车辆记录',
+    component:()=> import('@/pages/car/carRecordList')
   },
   system:{
     path: '/system',

@@ -19,6 +19,7 @@ const routesConfig = [
   "car",
   "carAdd",
   "carList",
+  "carRecordList",
   "system",
   "systemConfig",
   "systemLog",
