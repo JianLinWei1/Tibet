@@ -57,9 +57,24 @@ const columns = [
     width: 180,
   },
   {
+    title: "本地登录用户",
+    dataIndex: "user_name",
+    width: 80,
+  },
+   {
+    title: "本地登录密码",
+    dataIndex: "pass_wd",
+    width: 80,
+  },
+{
+    title: "本地端口",
+    dataIndex: "port",
+    width: 80,
+  },
+  {
     title: "IP",
     dataIndex: "ipaddr",
-    width: 100,
+    width: 180,
   },
   {
     title: "通道数",
@@ -82,7 +97,7 @@ export default {
     dataSource: Array,
     rowKey: {
       type: [String, Function],
-      default: "id",
+      default: "serialno",
     },
     pagination: {
       type: [Object, Boolean],
