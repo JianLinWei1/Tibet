@@ -36,3 +36,15 @@ export async function saveParkPersonInfo ( params) {
       params
     )
 }
+
+export async function listParkingPerson ( params) {
+    return request(url+"/listParkingPerson", METHOD.POST,
+      params
+    )
+}
+
+export async function delParkingPerson ( params) {
+    return request(url+"/delParkingPerson", METHOD.POST,
+      params
+    )
+}

@@ -11,7 +11,10 @@
                   :labelCol="{ span: 5 }"
                   :wrapperCol="{ span: 18, offset: 1 }"
                 >
-                  <a-input v-model="form.ipaddr" placeholder="请输入(精确查询)" />
+                  <a-input
+                    v-model="form.ipaddr"
+                    placeholder="请输入(精确查询)"
+                  />
                 </a-form-item>
               </a-col>
               <a-col :md="8" :sm="24">
@@ -46,7 +49,7 @@
           @selectedRowChange="onSelectChange"
         >
           <div slot="action" slot-scope="{ record }">
-               <a style="margin-right: 8px" @click="issuedRecord(record)">
+            <a style="margin-right: 8px" @click="issuedRecord(record)">
               <a-icon type="arrow-down" />下发白名单
             </a>
             <a style="margin-right: 8px" @click="editRecord(record)">
@@ -58,7 +61,7 @@
           </div>
         </standard-table>
       </div>
-<!--编辑-->
+      <!--编辑-->
       <a-modal v-model="visible" title="编辑" :footer="null">
         <a-form-model
           ref="ruleForm"
@@ -87,7 +90,7 @@
 
           <a-form-model-item label="绑定账号" prop="userId">
             <a-select
-            show-search
+              show-search
               mode="default"
               v-model="recordFrom.userId"
               placeholder="搜索"
@@ -131,9 +134,9 @@
           >
             <a-input disabled v-model="issuedFrom.device_name" />
           </a-form-model-item>
-          <a-form-model-item label="选择人员" prop="personId">
+          <a-form-model-item label="选择人员" prop="personIds">
             <a-select
-            show-search
+              show-search
               mode="multiple"
               v-model="issuedFrom.personIds"
               placeholder="搜索"
@@ -143,19 +146,43 @@
               @search="fetchPerson"
             >
               <a-spin v-if="fetching" slot="notFoundContent" size="small" />
-              <a-select-option v-for="d in issuedData" :key="d.id" :value="d.id">
+              <a-select-option
+                v-for="d in issuedData"
+                :key="d.id"
+                :value="d.id"
+              >
                 {{ d.name }}
               </a-select-option>
             </a-select>
           </a-form-model-item>
-           <!-- <a-form-model-item ref="carId" label="车牌号" prop="carId">
-            <a-input
-              disabled
-              v-model="issuedFrom.carId"
-              placeholder="请输入车牌号"
+          <a-form-model-item label="是否有效" prop="enable">
+            <a-select style="width: 120px" v-model="issuedFrom.enable">
+              <a-select-option value="0"> 无效 </a-select-option>
+              <a-select-option value="1"> 有效 </a-select-option>
+            </a-select>
+          </a-form-model-item>
+          <a-form-model-item label="是否未黑名单" prop="need_alarm">
+            <a-select style="width: 120px" v-model="issuedFrom.need_alarm">
+              <a-select-option value="0"> 否 </a-select-option>
+              <a-select-option value="1"> 是 </a-select-option>
+            </a-select>
+          </a-form-model-item>
+          <a-form-model-item label="生效日期">
+            <a-date-picker
+              v-model="issuedFrom.enable_time"
+              valueFormat="YYYY-MM-DD HH:mm:ss"
+              show-time
+              placeholder="选择生效日期"
             />
-          </a-form-model-item> -->
-
+          </a-form-model-item>
+          <a-form-model-item label="失效日期">
+            <a-date-picker
+              v-model="issuedFrom.overdue_time"
+              valueFormat="YYYY-MM-DD HH:mm:ss"
+              show-time
+              placeholder="选择失效日期"
+            />
+          </a-form-model-item>
           <a-form-model-item
             style="margin-top: 24px"
             :wrapperCol="{ span: 10, offset: 7 }"
@@ -171,7 +198,14 @@
 
 <script>
 import StandardTable from "./table/StandardTable";
-import { listParking,delParkInfo, getUserIdByName,saveParkInfo ,getPersonByName ,saveParkPersonInfo} from "@/services/parking";
+import {
+  listParking,
+  delParkInfo,
+  getUserIdByName,
+  saveParkInfo,
+  getPersonByName,
+  saveParkPersonInfo,
+} from "@/services/parking";
 
 export default {
   name: "QueryList",
@@ -194,12 +228,16 @@ export default {
       },
       visible: false,
       spinning: false,
-      rules: {},
+      rules: {
+        enable: [{ required: true, message: "必填！", trigger: "blur" }],
+        need_alarm: [{ required: true, message: "必填！", trigger: "blur" }],
+        personIds: [{ required: true, message: "必填！", trigger: "blur" }],
+      },
       fetching: false,
       data: [],
-      issuedvisible:false,
-      issuedFrom:{},
-      issuedData:[]
+      issuedvisible: false,
+      issuedFrom: {},
+      issuedData: [],
     };
   },
   // authorize: {
@@ -235,24 +273,24 @@ export default {
       let data = [];
       data.push(key);
       this.spinning = true;
-        delParkInfo(data).then((res) => {
-        console.log(res)
-        if(res.code === 0){
-          this.$message.success("删除成功")
-        }else{
-          this.$message.error("删除失败："+res.data)
+      delParkInfo(data).then((res) => {
+        console.log(res);
+        if (res.code === 0) {
+          this.$message.success("删除成功");
+        } else {
+          this.$message.error("删除失败：" + res.data);
         }
-        this.listParking()
-        this.spinning = false
+        this.listParking();
+        this.spinning = false;
       });
     },
     editRecord(key) {
       this.visible = true;
       this.recordFrom = key;
     },
-    issuedRecord(key){
-      this.issuedvisible = true
-      this.issuedFrom = key
+    issuedRecord(key) {
+      this.issuedvisible = true;
+      this.issuedFrom = key;
     },
 
     onChange(page) {
@@ -267,15 +305,15 @@ export default {
       this.selectedRows.forEach((item) => {
         data.push(item.serialno);
       });
-        delParkInfo(data).then((res) => {
-        console.log(res)
-        if(res.code === 0){
-          this.$message.success("删除成功")
-        }else{
-          this.$message.error("删除失败："+res.data)
+      delParkInfo(data).then((res) => {
+        console.log(res);
+        if (res.code === 0) {
+          this.$message.success("删除成功");
+        } else {
+          this.$message.error("删除失败：" + res.data);
         }
-        this.listParking()
-        this.spinning = false
+        this.listParking();
+        this.spinning = false;
       });
     },
 
@@ -289,52 +327,59 @@ export default {
       this.fetching = true;
 
       getUserIdByName({ userName: value }).then((res) => {
-          console.log(res)
+        console.log(res);
         if (res.code === 0) {
           this.data = res.data;
           console.log("fetching user", res.data);
-        }else{
-            this.$message.error("搜索异常")
+        } else {
+          this.$message.error("搜索异常");
         }
         this.fetching = false;
       });
     },
-    fetchPerson(value){
+    fetchPerson(value) {
       this.issuedData = [];
       this.fetching = true;
 
       getPersonByName({ name: value }).then((res) => {
-          console.log(res)
+        console.log(res);
         if (res.code === 0) {
           this.issuedData = res.data;
           console.log("fetching user", res.data);
-        }else{
-            this.$message.error("搜索异常")
+        } else {
+          this.$message.error("搜索异常");
         }
         this.fetching = false;
       });
     },
     submit() {
       this.spinning = true;
-       saveParkInfo(this.recordFrom).then(res =>{
-      this.spinning = false
-        if(res.code == 0){
-          this.$message.success("提交成功")
-        }else{
-          this.$message.error(JSON.stringify(res.data))
+      saveParkInfo(this.recordFrom).then((res) => {
+        this.spinning = false;
+        if (res.code == 0) {
+          this.$message.success("提交成功");
+        } else {
+          this.$message.error(JSON.stringify(res.data));
         }
-      })
+      });
     },
-      submit2() {
-      this.spinning = true;
-       saveParkPersonInfo(this.issuedFrom).then(res =>{
-      this.spinning = false
-        if(res.code == 0){
-          this.$message.success("提交成功")
-        }else{
-          this.$message.error(JSON.stringify(res.data))
+    submit2() {
+      this.$refs.ruleForm.validate((valid) => {
+        if (valid) {
+          this.spinning = true;
+          saveParkPersonInfo(this.issuedFrom).then((res) => {
+            this.spinning = false;
+            if (res.code == 0) {
+              this.$message.success("提交成功");
+            } else {
+              this.$message.error(JSON.stringify(res.data));
+            }
+          });
+        } else {
+          this.$message.error("请按要求输入");
+          return false;
         }
-      })
+      });
     },
   },
 };
