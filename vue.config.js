@@ -37,6 +37,7 @@ module.exports = {
   },
   chainWebpack: config => {
     // 生产环境下关闭css压缩的 colormin 项，因为此项优化与主题色替换功能冲突
+   
     if (process.env.NODE_ENV === 'production') {
       config.plugin('optimize-css')
         .tap(args => {
@@ -68,7 +69,8 @@ module.exports = {
       }
     }
   },
-  publicPath: process.env.NODE_ENV === 'production' ? '/vue-antd-admin/' : '/',
+  
+  publicPath:  '/',
   outputDir: 'dist',
   assetsDir: 'static',
   productionSourceMap: false

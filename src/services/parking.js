@@ -48,3 +48,15 @@ export async function delParkingPerson ( params) {
       params
     )
 }
+
+export async function listParkingResult ( params) {
+    return request(url+"/listParkingResult", METHOD.POST,
+      params
+    )
+}
+
+export async function delParkingResult ( params) {
+    return request(url+"/delParkingResult", METHOD.POST,
+      params
+    )
+}
