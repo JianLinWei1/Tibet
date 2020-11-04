@@ -38,8 +38,13 @@
         ></slot>
       </template>
       <viewer slot="photo" slot-scope="text">
-        <img ref="img" width="100" :src="'/api/api-auth/' + text" />
+        <img ref="img" v-if="text !== null" width="100" :src="'/api/api-auth/' + text" />
       </viewer>
+      <div slot="role" slot-scope="text">
+        <span v-if="text === 1">普通人员</span>
+         <span v-if="text === 2">白名单人员</span>
+          <span v-if="text === 3">黑名单人员</span>
+      </div>
       
     </a-table>
   </div>
@@ -90,6 +95,7 @@ const columns = [
     title: "角色",
     dataIndex: "role",
     width: 100,
+    scopedSlots: { customRender: "role" },
   },
   {
     title: "生效时间",

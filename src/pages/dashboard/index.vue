@@ -43,7 +43,8 @@
 
     <a-row  :gutter="[24, 24]">
        <a-col :sm="24" :md="12" :xl="24">
-       <div id="map"></div>
+       <!-- <div id="map"></div> -->
+       <img  width="100%" height="600" src="@/assets/img/1.png" />
        </a-col>
     </a-row>
    

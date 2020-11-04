@@ -7,6 +7,9 @@
       :labelCol="{ span: 7 }"
       :wrapperCol="{ span: 10 }"
     >
+    <a-form-model-item ref="id" label="人员编号ID" prop="id">
+        <a-input v-model="form.id" placeholder="ID" />
+      </a-form-model-item>
       <a-form-model-item ref="name" label="姓名" prop="name">
         <a-input v-model="form.name" placeholder="请输入姓名" />
       </a-form-model-item>
@@ -32,6 +35,7 @@
           action="/api/api-auth/upload"
           :file-list="fileList"
           @change="handleChange"
+          :beforeUpload="beforeUpload"
           :headers="{ token: token }"
         >
           <p class="ant-upload-drag-icon">
@@ -39,10 +43,11 @@
           </p>
           <p class="ant-upload-text">点击或者拖拽上传</p>
         </a-upload-dragger>
-        <a @click="takePhoto">拍照上传</a>
+        <!-- <a @click="takePhoto">拍照上传</a> -->
+        <img v-if="form.photo" :src="'api/api-auth/' + form.photo" />
       </a-form-model-item>
       <a-form-model-item label="角色" prop="role">
-        <a-radio-group v-model="form.role">
+        <a-radio-group default-value="2" v-model="form.role">
           <a-radio value="1"> 普通人员 </a-radio>
           <a-radio value="2"> 白名单人员 </a-radio>
           <a-radio value="3"> 黑名单人员 </a-radio>
@@ -79,6 +84,7 @@
     <a-modal v-model="visible" :footer="null" title="拍照上传">
       <camera></camera>
     </a-modal>
+    <!-- -->
   </a-card>
 </template>
 
@@ -94,6 +100,7 @@ export default {
       token: null,
       rules: {
         name: [{ required: true, message: "必填！", trigger: "blur" }],
+        id: [{ required: true, message: "必填！", trigger: "blur" }],
         // idCard: [{ required: true, message: "必填！", trigger: "blur" },
         //       { pattern: new RegExp( /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/),
         //        message: '请输入正确身份证号码', trigger: 'blur' }],
@@ -102,10 +109,11 @@ export default {
         // phone: [{ required: true, message: "必填！", trigger: "blur" },
         //       { pattern: new RegExp(/^1(3|4|5|6|7|8|9)\d{9}$/),
         //        message: '请输入正确手机号', trigger: 'blur' }],
-        photo: [{ required: true, message: "必填！", trigger: "blur" }],
-        role: [{ required: true, message: "必填！", trigger: "blur" }],
+        // photo: [{ required: true, message: "必填！", trigger: "blur" }],
+        //role: [{ required: true, message: "必填！", trigger: "blur" }],
       },
       fileList: [],
+      img: null,
     };
   },
   components: {
@@ -129,6 +137,7 @@ export default {
         if (res.code === 0) {
           this.$message.success(`${info.file.name} 上传成功`);
           this.form.photo = res.data;
+          
         } else {
           this.$message.error(res.msg);
         }
@@ -151,6 +160,18 @@ export default {
           return false;
         }
       });
+    },
+
+    beforeUpload(file) {
+      return new Promise((resolve, reject) => {
+     if (file.size / 1024 > 500) {
+        this.$message.info("上传文件过大");
+         reject()
+      
+      }else {
+        resolve()
+      }
+    })
     },
   },
 };
