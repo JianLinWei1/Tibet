@@ -34,6 +34,7 @@ const routerMap = {
   user:{
     path:"/user",
     name:'用户列表',
+    authority:'3',
     component:()=> import('@/pages/user')
   },
   person:{
@@ -45,6 +46,7 @@ const routerMap = {
   personList:{
     path:"/personList",
     name:'人员列表',
+    authority:'6',
     component:()=> import('@/pages/persons/list')
   },
   personAdd:{
@@ -77,11 +79,13 @@ const routerMap = {
   accessAdd:{
     path:"/accessAdd",
     name:'添加门禁',
+    authority:'11',
     component:()=> import('@/pages/access/accessAdd')
   },
   accessList:{
     path:"/accessList",
     name:'发卡记录',
+    authority:'12',
     component:()=> import('@/pages/access/accessList')
   },
  
@@ -94,16 +98,19 @@ const routerMap = {
   carAdd:{
     path:"/carAdd",
     name:'道闸管理',
+    authority:'14',
     component:()=> import('@/pages/car/carAdd')
   },
   carList:{
     path:"/carList",
     name:'下发列表',
+    authority:'15',
     component:()=> import('@/pages/car/carList')
   },
   carRecordList:{
     path:"/carRecordList",
     name:'车辆记录',
+    authority:'19',
     component:()=> import('@/pages/car/carRecordList')
   },
   system:{
@@ -114,12 +121,13 @@ const routerMap = {
   },
   systemConfig:{
     path:"/systemConfig",
-    name:'系统管理',
+    name:'系统配置',
     component:()=> import('@/pages/system/systemConfig')
   },
   systemLog:{
     path:"/systemLog",
-    name:'车辆道闸列表',
+    name:'系统日志',
+    authority:'18',
     component:()=> import('@/pages/system/systemLog')
   },
   exp403: {

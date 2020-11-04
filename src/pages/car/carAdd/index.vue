@@ -49,13 +49,13 @@
           @selectedRowChange="onSelectChange"
         >
           <div slot="action" slot-scope="{ record }">
-            <a style="margin-right: 8px" @click="issuedRecord(record)">
+            <a style="margin-right: 8px"  v-auth:permission ="`issued`" @click="issuedRecord(record)">
               <a-icon type="arrow-down" />下发白名单
             </a>
-            <a style="margin-right: 8px" @click="editRecord(record)">
+            <a style="margin-right: 8px" v-auth:permission ="`edit`" @click="editRecord(record)">
               <a-icon type="edit" />编辑
             </a>
-            <a @click="deleteRecord(record.serialno)">
+            <a @click="deleteRecord(record.serialno)" v-auth:permission ="`del`">
               <a-icon type="delete" />删除
             </a>
           </div>
@@ -240,9 +240,20 @@ export default {
       issuedData: [],
     };
   },
-  // authorize: {
-  //   deleteRecord: "delete",
-  // },
+  authorize: {
+    issuedRecord: {
+      check: "issued", 
+      type: "permission",
+    },
+     editRecord: {
+      check: "edit", 
+      type: "permission",
+    },
+     deleteRecord: {
+      check: "del", 
+      type: "permission",
+    },
+  },
   created() {
     this.listParking();
   },

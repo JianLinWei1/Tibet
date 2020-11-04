@@ -7,7 +7,7 @@
       <h1>{{config[type].title}}</h1>
       <div class="desc">{{config[type].desc}}</div>
       <div class="action">
-        <a-button type="primary" @click="backHome">返回首页</a-button>
+        <a-button type="primary" @click="backHome">返回登录</a-button>
       </div>
     </div>
   </div>
@@ -27,7 +27,7 @@ export default {
   methods: {
     backHome() {
       if (this.homeRoute) {
-        this.$router.push(this.homeRoute)
+        this.$router.push("/login")
       }
       this.$emit('backHome', this.type)
     }

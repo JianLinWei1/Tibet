@@ -33,7 +33,7 @@
     </div>
     <div>
       <div class="operator">
-        <a-button @click="delList" ghost type="danger">批量删除</a-button>
+        <a-button @click="delList"  v-auth:permission ="`del`" ghost type="danger">批量删除</a-button>
       </div>
       <standard-table
         :bordered="true"
@@ -45,7 +45,7 @@
       >
         <div slot="action" slot-scope="{ record }">
           <!-- <a style="margin-right: 8px"  @click="editRecord(record)"> <a-icon type="edit"  />编辑 </a> -->
-          <a @click="deleteRecord(record.id)"> <a-icon type="delete" />删除 </a>
+          <a @click="deleteRecord(record.id)" v-auth:permission ="`del`"> <a-icon type="delete" />删除 </a>
         </div>
       </standard-table>
     </div>
@@ -85,9 +85,16 @@ export default {
       spinning:false
     };
   },
-  // authorize: {
-  //   deleteRecord: "delete",
-  // },
+   authorize: {
+     deleteRecord: {
+      check: "del", 
+      type: "permission",
+    },
+    delList:{
+        check: "del", 
+      type: "permission",
+    }
+  },
   created() {
     this.listAccessPersons();
   },

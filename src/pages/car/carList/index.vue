@@ -35,7 +35,7 @@
       </div>
       <div>
         <div class="operator">
-          <a-button @click="delList" ghost type="danger">批量删除</a-button>
+          <a-button @click="delList" v-auth:permission ="`del`" ghost type="danger">批量删除</a-button>
         </div>
         <standard-table
           :bordered="true"
@@ -46,8 +46,7 @@
           @selectedRowChange="onSelectChange"
         >
           <div slot="action" slot-scope="{ record }">
-            
-            <a @click="deleteRecord(record.id)">
+            <a @click="deleteRecord(record.id)" v-auth:permission ="`del`">
               <a-icon type="delete" />删除
             </a>
           </div>
@@ -59,7 +58,7 @@
 
 <script>
 import StandardTable from "./table/StandardTable";
-import { listParkingPerson ,delParkingPerson} from "@/services/parking";
+import { listParkingPerson, delParkingPerson } from "@/services/parking";
 
 export default {
   name: "QueryList",
@@ -85,14 +84,22 @@ export default {
       rules: {},
       fetching: false,
       data: [],
-      issuedvisible:false,
-      issuedFrom:{},
-      issuedData:[]
+      issuedvisible: false,
+      issuedFrom: {},
+      issuedData: [],
     };
   },
-  // authorize: {
-  //   deleteRecord: "delete",
-  // },
+  authorize: {
+    
+    deleteRecord: {
+      check: "del",
+      type: "permission",
+    },
+    delList:{
+       check: "del",
+      type: "permission",
+    }
+  },
   created() {
     this.listParkingPerson();
   },
@@ -123,24 +130,24 @@ export default {
       let data = [];
       data.push(key);
       this.spinning = true;
-        delParkingPerson(data).then((res) => {
-        console.log(res)
-        if(res.code === 0){
-          this.$message.success("删除成功")
-        }else{
-          this.$message.error("删除失败："+res.data)
+      delParkingPerson(data).then((res) => {
+        console.log(res);
+        if (res.code === 0) {
+          this.$message.success("删除成功");
+        } else {
+          this.$message.error("删除失败：" + res.data);
         }
-        this.listParkingPerson()
-        this.spinning = false
+        this.listParkingPerson();
+        this.spinning = false;
       });
     },
     editRecord(key) {
       this.visible = true;
       this.recordFrom = key;
     },
-    issuedRecord(key){
-      this.issuedvisible = true
-      this.issuedFrom = key
+    issuedRecord(key) {
+      this.issuedvisible = true;
+      this.issuedFrom = key;
     },
 
     onChange(page) {
@@ -155,15 +162,15 @@ export default {
       this.selectedRows.forEach((item) => {
         data.push(item.id);
       });
-        delParkingPerson(data).then((res) => {
-        console.log(res)
-        if(res.code === 0){
-          this.$message.success("删除成功")
-        }else{
-          this.$message.error("删除失败："+res.data)
+      delParkingPerson(data).then((res) => {
+        console.log(res);
+        if (res.code === 0) {
+          this.$message.success("删除成功");
+        } else {
+          this.$message.error("删除失败：" + res.data);
         }
-        this.listParkingPerson()
-        this.spinning = false
+        this.listParkingPerson();
+        this.spinning = false;
       });
     },
 
@@ -172,9 +179,6 @@ export default {
         this.remove();
       }
     },
- 
-  
-     
   },
 };
 </script>

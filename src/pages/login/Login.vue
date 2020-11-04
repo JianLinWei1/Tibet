@@ -66,7 +66,7 @@
 
 <script>
 import CommonLayout from '@/layouts/CommonLayout'
-import { login, getRoutesConfig } from '@/services/user'
+import { login, getRoutesConfig ,getUserPermission } from '@/services/user'
 import { setAuthorization } from '@/utils/request'
 import { loadRoutes } from '@/utils/routerUtil'
  import { mapMutations } from 'vuex'
@@ -88,7 +88,7 @@ export default {
   },
   methods: {
     //, 'setPermissions', 'setRoles'
-    ...mapMutations('account', ['setUser']),
+    ...mapMutations('account', ['setUser','setPermissions']),
     onSubmit (e) {
       e.preventDefault()
       this.form.validateFields((err) => {
@@ -109,7 +109,11 @@ export default {
         const user = this.form.getFieldValue('name');
       
          this.setUser(user)
-        // this.setPermissions(permissions)
+       getUserPermission().then(res =>{
+          console.log("p",res)
+          this.setPermissions(res.data)
+       })
+        
         // this.setRoles(roles)
         setAuthorization({ token: loginRes.data.token })
         // 获取路由配置
