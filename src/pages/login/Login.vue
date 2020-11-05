@@ -3,61 +3,85 @@
     <div class="logincontent">
       <div class="top">
         <div class="header">
-          <img alt="logo"
-               class="logo"
-               src="@/assets/img/logo.png" />
-          <span class="title">{{systemName}}</span>
+          <img alt="logo" class="logo" src="@/assets/img/logo.png" />
+          <span class="title">{{ systemName }}</span>
         </div>
-
       </div>
       <div class="login">
-        <a-form @submit="onSubmit"
-                :form="form">
-          <a-tabs size="large"
-                  :tabBarStyle="{textAlign: 'center'}"
-                  style="padding: 0 2px;">
-            <a-tab-pane tab="账户密码登录"
-                        key="1">
-              <a-alert type="error"
-                       :closable="false"
-                       v-show="error"
-                       :message="error"
-                       showIcon
-                       style="margin-bottom: 24px;" />
+        <a-form @submit="onSubmit" :form="form">
+          <a-tabs
+            size="large"
+            :tabBarStyle="{ textAlign: 'center' }"
+            style="padding: 0 2px"
+          >
+            <a-tab-pane tab="账户密码登录" key="1">
+              <a-alert
+                type="error"
+                :closable="false"
+                v-show="error"
+                :message="error"
+                showIcon
+                style="margin-bottom: 24px"
+              />
               <a-form-item>
-                <a-input autocomplete="autocomplete"
-                         size="large"
-                         placeholder="admin"
-                         v-decorator="['name', {rules: [{ required: true, message: '请输入账户名', whitespace: true}]}]">
-                  <a-icon slot="prefix"
-                          type="user" />
+                <a-input
+                  autocomplete="autocomplete"
+                  size="large"
+                  placeholder="admin"
+                  v-decorator="[
+                    'name',
+                    {
+                      rules: [
+                        {
+                          required: true,
+                          message: '请输入账户名',
+                          whitespace: true,
+                        },
+                      ],
+                    },
+                  ]"
+                >
+                  <a-icon slot="prefix" type="user" />
                 </a-input>
               </a-form-item>
               <a-form-item>
-                <a-input size="large"
-                         placeholder="admin"
-                         autocomplete="autocomplete"
-                         type="password"
-                         v-decorator="['password', {rules: [{ required: true, message: '请输入密码', whitespace: true}]}]">
-                  <a-icon slot="prefix"
-                          type="lock" />
+                <a-input
+                  size="large"
+                  placeholder="admin"
+                  autocomplete="autocomplete"
+                  type="password"
+                  v-decorator="[
+                    'password',
+                    {
+                      rules: [
+                        {
+                          required: true,
+                          message: '请输入密码',
+                          whitespace: true,
+                        },
+                      ],
+                    },
+                  ]"
+                >
+                  <a-icon slot="prefix" type="lock" />
                 </a-input>
               </a-form-item>
             </a-tab-pane>
-
           </a-tabs>
           <!-- <div>
           <a-checkbox :checked="true">自动登录</a-checkbox>
           <a style="float: right">忘记密码</a>
         </div> -->
           <a-form-item>
-            <a-button :loading="logging"
-                      style="width: 100%;margin-top: 24px"
-                      size="large"
-                      htmlType="submit"
-                      type="primary">登录</a-button>
+            <a-button
+              :loading="logging"
+              style="width: 100%; margin-top: 24px"
+              size="large"
+              htmlType="submit"
+              type="primary"
+              >登录</a-button
+            >
           </a-form-item>
-
         </a-form>
       </div>
     </div>
@@ -65,71 +89,78 @@
 </template>
 
 <script>
-import CommonLayout from '@/layouts/CommonLayout'
-import { login, getRoutesConfig ,getUserPermission } from '@/services/user'
-import { setAuthorization } from '@/utils/request'
-import { loadRoutes } from '@/utils/routerUtil'
- import { mapMutations } from 'vuex'
+import CommonLayout from "@/layouts/CommonLayout";
+import { login, getRoutesConfig, getUserPermission } from "@/services/user";
+import { setAuthorization } from "@/utils/request";
+import { loadRoutes } from "@/utils/routerUtil";
+import { mapMutations } from "vuex";
 
 export default {
-  name: 'Login',
+  name: "Login",
   components: { CommonLayout },
-  data () {
+  data() {
     return {
       logging: false,
-      error: '',
-      form: this.$form.createForm(this)
-    }
+      error: "",
+      form: this.$form.createForm(this),
+    };
   },
   computed: {
-    systemName () {
-      return this.$store.state.setting.systemName
-    }
+    systemName() {
+      return this.$store.state.setting.systemName;
+    },
   },
   methods: {
     //, 'setPermissions', 'setRoles'
-    ...mapMutations('account', ['setUser','setPermissions']),
-    onSubmit (e) {
-      e.preventDefault()
+    ...mapMutations("account", ["setUser", "setPermissions"]),
+    onSubmit(e) {
+      e.preventDefault();
       this.form.validateFields((err) => {
         if (!err) {
-          this.logging = true
-          const name = this.form.getFieldValue('name')
-          const password = this.form.getFieldValue('password')
-          login(name, password).then(this.afterLogin)
+          this.logging = true;
+          const name = this.form.getFieldValue("name");
+          const password = this.form.getFieldValue("password");
+          login(name, password).then(this.afterLogin);
         }
-      })
+      });
     },
-    afterLogin (res) {
-      this.logging = false
-      const loginRes = res
-    
+    afterLogin(res) {
+      this.logging = false;
+      const loginRes = res;
+
       if (loginRes.code >= 0) {
         //const { user, permissions, roles } = loginRes.data
-        const user = this.form.getFieldValue('name');
-      
-         this.setUser(user)
-       getUserPermission().then(res =>{
-          console.log("p",res)
-          this.setPermissions(res.data)
-       })
-        
-        // this.setRoles(roles)
-        setAuthorization({ token: loginRes.data.token })
-        // 获取路由配置
-        getRoutesConfig().then(result => {
-          console.log(result)
-          const routesConfig = result.data
-          loadRoutes({ router: this.$router, store: this.$store, i18n: this.$i18n }, routesConfig)
-          this.$router.push('/index')
-          this.$message.success(loginRes.msg, 3)
-        })
+        const user = this.form.getFieldValue("name");
+
+        this.setUser(user);
+          setAuthorization({ token: loginRes.data.token });
+        this.$message.info("正在获取权限");
+        getUserPermission().then((res) => {
+          if (res.code === 0) {
+            this.setPermissions(res.data);
+            // this.setRoles(roles)
+          
+            // 获取路由配置
+            getRoutesConfig().then((result) => {
+              console.log(result);
+              const routesConfig = result.data;
+              loadRoutes(
+                { router: this.$router, store: this.$store, i18n: this.$i18n },
+                routesConfig
+              );
+              this.$router.push("/index");
+              this.$message.success(loginRes.msg, 3);
+            });
+          } else {
+            this.$message.error("权限获取失败");
+          }
+        });
       } else {
-        this.error = loginRes.msg
+        this.error = loginRes.msg;
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>

@@ -8,7 +8,25 @@
                       size="large"
                       @search="onSearch" /> -->
 
-      <a-button type="primary" size="large" icon="search" v-auth:permission ="`search`" @click="onSearch"> 搜索门禁控制器 </a-button>
+      <a-button
+        type="primary"
+        size="large"
+        icon="search"
+        v-auth:permission="`search`"
+        @click="onSearch"
+      >
+        搜索门禁控制器
+      </a-button>
+      <a-button
+        type="primary"
+        size="large"
+        icon="plus"
+        style="margin-left: 10px"
+        v-auth:permission="`search`"
+        @click="manual = true"
+      >
+        手动添加控制器
+      </a-button>
       <a-table
         bordered
         :row-key="(row) => row.sn"
@@ -17,10 +35,19 @@
         :columns="columns"
       >
         <div slot="action" slot-scope="record">
-          <a style="margin-right: 8px" v-auth:permission ="`add`" @click="addRecord(record)">
-            <a-icon   type="plus" />添加
+          <a
+            style="margin-right: 8px"
+            v-auth:permission="`add`"
+            @click="addRecord(record)"
+            v-if="!record.id"
+          >
+            <a-icon type="plus" />添加
           </a>
-          <a style="margin-right: 8px" v-auth:permission ="`issued`" @click="issue(record)">
+          <a
+            style="margin-right: 8px"
+            v-auth:permission="`issued`"
+            @click="issue(record)"
+          >
             <a-icon type="vertical-align-bottom" />发卡
           </a>
           <!-- <a style="margin-right: 8px" @click="delRecord(record.id)">
@@ -42,6 +69,52 @@
     <a-modal width="50%" :footer="null" v-model="visible" title="下发卡号">
       <issued :issueFrom="issueFrom"></issued>
     </a-modal>
+    <!-- -->
+    <a-modal width="50%" :footer="null" v-model="manual" title="手动添加控制器">
+      <a-form-model
+        ref="ruleForm"
+        :model="manualFrom"
+        :labelCol="{ span: 7 }"
+        :wrapperCol="{ span: 10 }"
+      >
+        <a-form-model-item ref="sn" label="设备序列号" prop="sn">
+          <a-input v-model="manualFrom.sn" />
+        </a-form-model-item>
+        <a-form-model-item ref="ip" label="IP" prop="ip">
+          <a-input v-model="manualFrom.ip" />
+        </a-form-model-item>
+        <a-form-model-item
+          ref="gateipaddress"
+          label="网关"
+          prop="gateipaddress"
+        >
+          <a-input v-model="manualFrom.gateipaddress" />
+        </a-form-model-item>
+        <a-form-model-item ref="netMask" label="子网掩码" prop="netMask">
+          <a-input v-model="manualFrom.netMask" />
+        </a-form-model-item>
+        <a-form-model-item ref="mac" label="MAC地址" prop="mac">
+          <a-input v-model="manualFrom.mac" />
+        </a-form-model-item>
+        <a-form-model-item ref="deviceType" label="设备类型" prop="deviceType">
+          <a-input v-model="manualFrom.deviceType" />
+        </a-form-model-item>
+        <a-form-model-item ref="ver" label="版本" prop="ver">
+          <a-input v-model="manualFrom.ver" />
+        </a-form-model-item>
+        <a-form-model-item ref="name" label="名称" prop="name">
+          <a-input v-model="manualFrom.name" />
+        </a-form-model-item>
+
+        <a-form-model-item
+          style="margin-top: 24px"
+          :wrapperCol="{ span: 10, offset: 7 }"
+        >
+          <a-button type="primary" @click="manualAdd">提交</a-button>
+          <a-button style="margin-left: 8px">重置</a-button>
+        </a-form-model-item>
+      </a-form-model>
+    </a-modal>
   </a-spin>
 </template>
 
@@ -59,6 +132,7 @@ export default {
       searchIP: "",
       dataSource: null,
       issueFrom: {},
+      manualFrom: {},
       pagination: {},
       columns: [
         {
@@ -110,6 +184,7 @@ export default {
         },
       ],
       fileList: [],
+      manual: false,
     };
   },
   components: {
@@ -117,15 +192,15 @@ export default {
   },
   authorize: {
     onSearch: {
-      check: "search", 
+      check: "search",
       type: "permission",
     },
-     addRecord: {
-      check: "add", 
+    addRecord: {
+      check: "add",
       type: "permission",
     },
     issue: {
-      check: "issued", 
+      check: "issued",
       type: "permission",
     },
   },
@@ -157,6 +232,16 @@ export default {
     },
     addRecord(record) {
       addDevice(record).then((res) => {
+        if (res.code === 0) {
+          this.$message.success("添加成功");
+          this.listDevice();
+        } else {
+          this.$message.error(res.msg);
+        }
+      });
+    },
+    manualAdd() {
+      addDevice(this.manualFrom).then((res) => {
         if (res.code === 0) {
           this.$message.success("添加成功");
           this.listDevice();
