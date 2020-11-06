@@ -88,6 +88,12 @@ const routerMap = {
     authority:'12',
     component:()=> import('@/pages/access/accessList')
   },
+  accessRecordList:{
+    path:"/accessRecordList",
+    name:'刷卡记录',
+    authority:'40',
+    component:()=> import('@/pages/access/accessRecordList')
+  },
  
   car:{
     path: '/car',

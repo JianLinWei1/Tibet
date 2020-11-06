@@ -16,6 +16,7 @@ const routesConfig = [
   "access",
   "accessAdd",
   "accessList",
+  "accessRecordList",
   "car",
   "carAdd",
   "carList",

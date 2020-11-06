@@ -1,29 +1,35 @@
 <template>
   <a-card>
-    <a-spin :spinning="spinning" tip="请稍候....">
+    <a-spin :spinning="spinning" tip="正在删除....">
       <div :class="advanced ? 'search' : null">
         <a-form layout="horizontal">
           <div :class="advanced ? null : 'fold'">
             <a-row>
               <a-col :md="8" :sm="24">
                 <a-form-item
-                  label="IP"
+                  label="门禁卡号"
                   :labelCol="{ span: 5 }"
                   :wrapperCol="{ span: 18, offset: 1 }"
                 >
-                  <a-input
-                    v-model="form.ipaddr"
-                    placeholder="请输入(精确查询)"
-                  />
+                  <a-input v-model="form.icCard" placeholder="请输入" />
                 </a-form-item>
               </a-col>
               <a-col :md="8" :sm="24">
                 <a-form-item
-                  label="车牌"
+                  label="姓名"
                   :labelCol="{ span: 5 }"
                   :wrapperCol="{ span: 18, offset: 1 }"
                 >
-                  <a-input v-model="form.plateid" placeholder="请输入" />
+                  <a-input v-model="form.name" placeholder="请输入" />
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item
+                  label="设备名称"
+                  :labelCol="{ span: 5 }"
+                  :wrapperCol="{ span: 18, offset: 1 }"
+                >
+                  <a-input v-model="form.dvName" placeholder="请输入" />
                 </a-form-item>
               </a-col>
             </a-row>
@@ -38,7 +44,13 @@
       </div>
       <div>
         <div class="operator">
-          <a-button @click="delList" v-auth:permission ="`del`" ghost type="danger">批量删除</a-button>
+          <a-button
+            @click="delList"
+            v-auth:permission="`del`"
+            ghost
+            type="danger"
+            >批量删除</a-button
+          >
           <a-button
             @click="exportRecords"
             v-auth:permission="`export`"
@@ -47,6 +59,7 @@
             >导出</a-button
           >
         </div>
+
         <standard-table
           :bordered="true"
           :pagination="pagination"
@@ -56,27 +69,20 @@
           @selectedRowChange="onSelectChange"
         >
           <div slot="action" slot-scope="{ record }">
-          
-            <a @click="deleteRecord(record.id)" v-auth:permission ="`del`">
+            <!-- <a style="margin-right: 8px"  @click="editRecord(record)"> <a-icon type="edit"  />编辑 </a> -->
+            <a @click="deleteRecord(record.id)" v-auth:permission="`del`">
               <a-icon type="delete" />删除
             </a>
           </div>
         </standard-table>
       </div>
-
-     
     </a-spin>
   </a-card>
 </template>
 
 <script>
 import StandardTable from "./table/StandardTable";
-import {
-listParkingResult,
-delParkingResult,
-exportRecords
- 
-} from "@/services/parking";
+import { listRecords, delRecords, exportRecords } from "@/services/access";
 
 export default {
   name: "QueryList",
@@ -87,7 +93,7 @@ export default {
       dataSource: [],
       selectedRows: [],
       form: {},
-      recordFrom: {},
+      issueFrom: {},
       pagination: {
         current: 0,
         total: 0,
@@ -101,13 +107,13 @@ export default {
       spinning: false,
     };
   },
-   authorize: {
-     deleteRecord: {
-      check: "del", 
+  authorize: {
+    deleteRecord: {
+      check: "del",
       type: "permission",
     },
-    delList:{
-       check: "del", 
+    delList: {
+      check: "del",
       type: "permission",
     },
     exportRecords: {
@@ -116,13 +122,13 @@ export default {
     },
   },
   created() {
-    this.listParkingResult();
+    this.listRecords();
   },
   methods: {
-    listParkingResult() {
+    listRecords() {
       this.form.page = this.pagination.current;
       this.form.limit = this.pagination.pageSize;
-      listParkingResult(this.form).then((res) => {
+      listRecords(this.form).then((res) => {
         if (res.code === 0) {
           this.dataSource = res.data;
           this.pagination.total = res.count;
@@ -133,7 +139,7 @@ export default {
     },
     search() {
       this.form.id = null;
-      this.listParkingResult();
+      this.listRecords();
     },
 
     toggleAdvanced() {
@@ -145,29 +151,27 @@ export default {
       let data = [];
       data.push(key);
       this.spinning = true;
-      delParkingResult(data).then((res) => {
+      delRecords(data).then((res) => {
         console.log(res);
         if (res.code === 0) {
           this.$message.success("删除成功");
         } else {
           this.$message.error("删除失败：" + res.data);
         }
-        this.listParkingResult();
+        this.listRecords();
         this.spinning = false;
       });
     },
+
     editRecord(key) {
+      console.log(key);
       this.visible = true;
-      this.recordFrom = key;
-    },
-    issuedRecord(key) {
-      this.issuedvisible = true;
-      this.issuedFrom = key;
+      this.issueFrom = key;
     },
 
     onChange(page) {
       this.pagination = page;
-      this.listParkingResult();
+      this.listRecords();
     },
     onSelectChange() {
       console.log(this.selectedRows);
@@ -177,14 +181,14 @@ export default {
       this.selectedRows.forEach((item) => {
         data.push(item.id);
       });
-      delParkingResult(data).then((res) => {
+      delRecords(data).then((res) => {
         console.log(res);
         if (res.code === 0) {
           this.$message.success("删除成功");
         } else {
           this.$message.error("删除失败：" + res.data);
         }
-        this.listParkingResult();
+        this.listRecords();
         this.spinning = false;
       });
     },

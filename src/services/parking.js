@@ -60,3 +60,9 @@ export async function delParkingResult ( params) {
       params
     )
 }
+
+export async function exportRecords ( params) {
+  return request(url+"/exportRecords", METHOD.POST,
+    params
+  )
+}

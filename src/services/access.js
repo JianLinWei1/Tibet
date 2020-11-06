@@ -41,3 +41,22 @@ export async function searchDevice ( params) {
       params
     )
   }
+
+    
+  export async function listRecords ( params) {
+    return request(url+"/listRecords", METHOD.POST,
+      params
+    )
+  }
+
+  export async function delRecords ( params) {
+    return request(url+"/delRecords", METHOD.POST,
+      params
+    )
+  }
+
+  export async function exportRecords ( params) {
+    return request(url+"/exportRecords", METHOD.POST,
+      params
+    )
+  }
