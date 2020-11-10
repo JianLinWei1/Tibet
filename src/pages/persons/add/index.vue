@@ -95,7 +95,9 @@ import { insertPerson } from "@/services/person.js";
 export default {
   data() {
     return {
-      form: {},
+      form: {
+        role:2
+      },
       visible: false,
       token: null,
       rules: {

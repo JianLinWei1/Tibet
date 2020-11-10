@@ -29,7 +29,6 @@
                        show-checked-strategy="SHOW_ALL"
                        search-placeholder="请选择" @select="change" /> -->
         <a-tree
-         
           checkable
           :auto-expand-parent="autoExpandParent"
           :tree-data="treeData"
@@ -61,7 +60,7 @@ export default {
       form: {},
       treeData: [],
       SHOW_PARENT,
-       autoExpandParent: true,
+      autoExpandParent: true,
       rules: {
         userName: [{ required: true, message: "请输入账号", trigger: "blur" }],
         passwd: [
@@ -89,8 +88,10 @@ export default {
           addUser(this.form).then((res) => {
             if (res.code === 0) {
               this.$message.success("添加成功");
-              this.$emit("frech");
-              this.$emit("closed");
+              setTimeout(() => {
+                this.$emit("frech");
+                this.$emit("closed");
+              }, 500);
             } else {
               this.$message.error(res.msg);
             }
@@ -114,9 +115,9 @@ export default {
       });
     },
     change(value, label) {
-      this.form.routerIds=null
+      this.form.routerIds = null;
       let checkedKeysResult = [...value, ...label.halfCheckedKeys];
-      this.form.routerIds =checkedKeysResult
+      this.form.routerIds = checkedKeysResult;
     },
   },
 };

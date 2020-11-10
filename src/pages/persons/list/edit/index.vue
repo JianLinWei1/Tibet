@@ -36,13 +36,13 @@
           </p>
           <p class="ant-upload-text">点击或者拖拽上传</p>
         </a-upload-dragger>
-      
+      <img v-if="form.photo" width="200" :src="'api/api-auth/' + form.photo" />
       </a-form-model-item>
       <a-form-model-item label="角色" prop="role">
-        <a-radio-group v-model="form.role">
-          <a-radio value="1"> 普通人员 </a-radio>
-          <a-radio value="2"> 白名单人员 </a-radio>
-          <a-radio value="3"> 黑名单人员 </a-radio>
+        <a-radio-group default-value="2" v-model="form.role">
+          <a-radio :value="1"> 普通人员 </a-radio>
+          <a-radio :value="2"> 白名单人员 </a-radio>
+          <a-radio :value="3"> 黑名单人员 </a-radio>
         </a-radio-group>
       </a-form-model-item>
       <a-form-model-item label="生效日期">
@@ -90,17 +90,18 @@ export default {
       visible: false,
       token: null,
       rules: {
-        name: [{ required: true, message: "必填！", trigger: "blur" }],
-        idCard: [{ required: true, message: "必填！", trigger: "blur" },
-              { pattern: new RegExp( /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/),
-               message: '请输入正确身份证号码', trigger: 'blur' }],
+         name: [{ required: true, message: "必填！", trigger: "blur" }],
+        id: [{ required: true, message: "必填！", trigger: "blur" }],
+        // idCard: [{ required: true, message: "必填！", trigger: "blur" },
+        //       { pattern: new RegExp( /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/),
+        //        message: '请输入正确身份证号码', trigger: 'blur' }],
         accessId: [{ required: true, message: "必填！", trigger: "blur" }],
-        carId: [{ required: true, message: "必填！", trigger: "blur" }],
-        phone: [{ required: true, message: "必填！", trigger: "blur" },
-              { pattern: new RegExp(/^1(3|4|5|6|7|8|9)\d{9}$/),
-               message: '请输入正确手机号', trigger: 'blur' }],
-        photo: [{ required: true, message: "必填！", trigger: "blur" }],
-        role: [{ required: true, message: "必填！", trigger: "blur" }],
+        // carId: [{ required: true, message: "必填！", trigger: "blur" }],
+        // phone: [{ required: true, message: "必填！", trigger: "blur" },
+        //       { pattern: new RegExp(/^1(3|4|5|6|7|8|9)\d{9}$/),
+        //        message: '请输入正确手机号', trigger: 'blur' }],
+        // photo: [{ required: true, message: "必填！", trigger: "blur" }],
+        //role: [{ required: true, message: "必填！", trigger: "blur" }],
       },
       fileList: [],
     };

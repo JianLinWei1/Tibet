@@ -27,7 +27,7 @@ export async function addUser (params) {
   )
 }
 export async function delUserByParentId (params) {
-  return request("/api/api-auth/delUserByParentId", METHOD.POST,
+  return request("/api/api-auth/delUserByParentId", METHOD.GET,
     params
   )
 }

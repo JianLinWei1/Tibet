@@ -37,7 +37,7 @@
           :name="$scopedSlots.expandedRowRender ? 'expandedRowRender' : ''"
         ></slot>
       </template>
-      <viewer slot="photo" slot-scope="text">
+      <viewer slot="photo" style="width:10%" slot-scope="text">
         <img ref="img" v-if="text !== null" width="100" :src="'/api/api-auth/' + text" />
       </viewer>
       <div slot="role" slot-scope="text">

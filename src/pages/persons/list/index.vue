@@ -186,6 +186,7 @@ export default {
       console.log(key)
       this.visible = true
       this.editFrom = key
+      
     },
     
     onChange(page) {

@@ -121,7 +121,9 @@ export default {
     },
     getAccountTreeFetch() {
       getAccountTree().then((res) => {
+        
         if (res.code === 0) {
+      
           this.data = res.data;
         } else {
           this.$message.error(res.msg);
@@ -133,12 +135,16 @@ export default {
       this.parentId = data.id;
     },
     delUser(data) {
-      let params = new URLSearchParams();
-      params.append("parentId", data.id);
-      delUserByParentId(params).then((res) => {
+      // let params = new URLSearchParams();
+      // params.append("parentId", data.id);
+     
+      delUserByParentId({parentId:data.id}).then((res) => {
         if (res.code === 0) {
           this.$message.success("删除成功");
-          this.getAccountTreeFetch();
+          setTimeout(() => {
+            this.getAccountTreeFetch();
+          }, 500); 
+          
         } else {
           this.$message.error(res.msg);
         }

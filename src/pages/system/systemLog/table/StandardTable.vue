@@ -67,6 +67,12 @@ const columns = [
 
     width: 200,
   },
+  {
+    title: "时间",
+    dataIndex: "time",
+
+    width: 200,
+  },
   
   {
     title: "操作",
