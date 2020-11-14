@@ -7,7 +7,7 @@
       :labelCol="{ span: 7 }"
       :wrapperCol="{ span: 10 }"
     >
-    <a-form-model-item ref="id" label="人员编号ID" prop="id">
+      <a-form-model-item ref="id" label="人员编号ID" prop="id">
         <a-input v-model="form.id" placeholder="ID" />
       </a-form-model-item>
       <a-form-model-item ref="name" label="姓名" prop="name">
@@ -18,6 +18,11 @@
       </a-form-model-item>
       <a-form-model-item label="门禁卡号" prop="accessId">
         <a-input v-model="form.accessId" placeholder="门禁卡号" />
+        <div>
+        <a-button type="link"> 发卡 </a-button>
+         <a-button type="link"> 读卡 </a-button>
+          <a-button type="link"> 回收 </a-button>
+        </div>
       </a-form-model-item>
       <a-form-model-item label="门禁密码" prop="accessPw">
         <a-input v-model="form.accessPw" placeholder="门禁卡号" />
@@ -96,7 +101,7 @@ export default {
   data() {
     return {
       form: {
-        role:2
+        role: 2,
       },
       visible: false,
       token: null,
@@ -139,7 +144,6 @@ export default {
         if (res.code === 0) {
           this.$message.success(`${info.file.name} 上传成功`);
           this.form.photo = res.data;
-          
         } else {
           this.$message.error(res.msg);
         }
@@ -166,14 +170,13 @@ export default {
 
     beforeUpload(file) {
       return new Promise((resolve, reject) => {
-     if (file.size / 1024 > 500) {
-        this.$message.info("上传文件过大");
-         reject()
-      
-      }else {
-        resolve()
-      }
-    })
+        if (file.size / 1024 > 500) {
+          this.$message.info("上传文件过大");
+          reject();
+        } else {
+          resolve();
+        }
+      });
     },
   },
 };
