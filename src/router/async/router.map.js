@@ -20,122 +20,143 @@ const routerMap = {
     redirect: '/login',
     component: view.tabs
   },
-  index:{
+  index: {
     path: '/index',
     name: '首页',
     component: () => import('@/pages/dashboard/index')
   },
-  account:{
+  account: {
     path: '/account',
     name: '用户管理',
     redirect: '/user',
     component: view.page
   },
-  user:{
-    path:"/user",
-    name:'用户列表',
-    authority:'3',
-    component:()=> import('@/pages/user')
+  user: {
+    path: "/user",
+    name: '用户列表',
+    authority: '3',
+    component: () => import('@/pages/user')
   },
-  person:{
+  person: {
     path: '/person',
     name: '人员信息',
     redirect: '/personList',
     component: view.page
   },
-  personList:{
-    path:"/personList",
-    name:'人员列表',
-    authority:'6',
-    component:()=> import('@/pages/persons/list')
+  personList: {
+    path: "/personList",
+    name: '人员列表',
+    authority: '6',
+    component: () => import('@/pages/persons/list')
   },
-  personAdd:{
-    path:"/personAdd",
-    name:'添加人员',
-    component:()=> import('@/pages/persons/add')
+  personAdd: {
+    path: "/personAdd",
+    name: '添加人员',
+    component: () => import('@/pages/persons/add')
   },
-  camera:{
+  camera: {
     path: '/camera',
     name: '摄像机管理',
     redirect: '/cameraAdd',
     component: view.page
   },
-  cameraAdd:{
-    path:"/cameraAdd",
-    name:'添加摄像机',
-    component:()=> import('@/pages/camera/cameraAdd')
+  cameraAdd: {
+    path: "/cameraAdd",
+    name: '添加摄像机',
+    component: () => import('@/pages/camera/cameraAdd')
   },
-  cameraList:{
-    path:"/cameraList",
-    name:'摄像机列表',
-    component:()=> import('@/pages/camera/cameraList')
+  cameraList: {
+    path: "/cameraList",
+    name: '摄像机列表',
+    component: () => import('@/pages/camera/cameraList')
   },
-  access:{
+  access: {
     path: '/access',
     name: '门禁管理',
     redirect: '/accessAdd',
     component: view.page
   },
-  accessAdd:{
-    path:"/accessAdd",
-    name:'添加门禁',
-    authority:'11',
-    component:()=> import('@/pages/access/accessAdd')
+  accessAdd: {
+    path: "/accessAdd",
+    name: '添加门禁',
+    authority: '11',
+    component: () => import('@/pages/access/accessAdd')
   },
-  accessList:{
-    path:"/accessList",
-    name:'发卡记录',
-    authority:'12',
-    component:()=> import('@/pages/access/accessList')
+  accessList: {
+    path: "/accessList",
+    name: '发卡记录',
+    authority: '12',
+    component: () => import('@/pages/access/accessList')
   },
-  accessRecordList:{
-    path:"/accessRecordList",
-    name:'刷卡记录',
-    authority:'40',
-    component:()=> import('@/pages/access/accessRecordList')
+  accessRecordList: {
+    path: "/accessRecordList",
+    name: '刷卡记录',
+    authority: '40',
+    component: () => import('@/pages/access/accessRecordList')
   },
- 
-  car:{
+
+  car: {
     path: '/car',
     name: '车辆道闸管理',
     redirect: '/carAdd',
     component: view.page
   },
-  carAdd:{
-    path:"/carAdd",
-    name:'道闸管理',
-    authority:'14',
-    component:()=> import('@/pages/car/carAdd')
+  carAdd: {
+    path: "/carAdd",
+    name: '道闸管理',
+    authority: '14',
+    component: () => import('@/pages/car/carAdd')
   },
-  carList:{
-    path:"/carList",
-    name:'下发列表',
-    authority:'15',
-    component:()=> import('@/pages/car/carList')
+  carList: {
+    path: "/carList",
+    name: '下发列表',
+    authority: '15',
+    component: () => import('@/pages/car/carList')
   },
-  carRecordList:{
-    path:"/carRecordList",
-    name:'车辆记录',
-    authority:'19',
-    component:()=> import('@/pages/car/carRecordList')
+  carRecordList: {
+    path: "/carRecordList",
+    name: '车辆记录',
+    authority: '19',
+    component: () => import('@/pages/car/carRecordList')
   },
-  system:{
+  system: {
     path: '/system',
     name: '系统管理',
     redirect: '/systemConfig',
     component: view.page
   },
-  systemConfig:{
-    path:"/systemConfig",
-    name:'系统配置',
-    component:()=> import('@/pages/system/systemConfig')
+  attence: {
+    path: '/attence',
+    name: '考勤管理',
+    redirect: '/attenceConfig',
+    component: view.page
   },
-  systemLog:{
-    path:"/systemLog",
-    name:'系统日志',
-    authority:'18',
-    component:()=> import('@/pages/system/systemLog')
+  attenceConfig: {
+    path: "/attenceConfig",
+    name: '考勤配置',
+    authority: '18',
+    component: () => import('@/pages/attence/config')
+
   },
+  attenceReport: {
+    path: "/attenceReport",
+    name: '考勤报表',
+    authority: '18',
+    component: () => import('@/pages/attence/report')
+
+  },
+  systemConfig: {
+    path: "/systemConfig",
+    name: '系统配置',
+    component: () => import('@/pages/system/systemConfig')
+  },
+  systemLog: {
+    path: "/systemLog",
+    name: '系统日志',
+    authority: '18',
+    component: () => import('@/pages/system/systemLog')
+  },
+
   exp403: {
     authority: '*',
     name: 'exp403',

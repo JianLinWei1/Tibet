@@ -1,5 +1,5 @@
 import routerMap from './router.map'
-import {parseRoutes} from '@/utils/routerUtil'
+import { parseRoutes } from '@/utils/routerUtil'
 
 // 异步路由配置
 const routesConfig = [
@@ -21,9 +21,13 @@ const routesConfig = [
   "carAdd",
   "carList",
   "carRecordList",
+  "attence",
+  "attenceConfig",
+  "attenceReport",
   "system",
   "systemConfig",
   "systemLog",
+
   {
     router: 'exp404',
     path: '*',
