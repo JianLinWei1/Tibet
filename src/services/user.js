@@ -40,6 +40,10 @@ export async function getUserPermission () {
   return request("/api/api-auth/getUserPermission", METHOD.GET)
 }
 
+export async function getUserById (params) {
+  return request("/api/api-auth/getUserById", METHOD.GET, params)
+}
+
 
 /**
  * 退出登录

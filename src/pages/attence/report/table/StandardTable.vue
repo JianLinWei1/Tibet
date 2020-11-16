@@ -31,10 +31,10 @@
         <slot v-bind="{ record, index, indent, expanded }"
               :name="$scopedSlots.expandedRowRender ? 'expandedRowRender' : ''"></slot>
       </template>
-      <div slot="doors"
+      <div slot="times"
            slot-scope="text">
         <span v-for="t in text"
-              :key="t">{{t}}号门||</span>
+              :key="t">{{t +"~"}}</span>
       </div>
 
     </a-table>
@@ -61,6 +61,7 @@ const columns = [
     title: "日期范围",
     dataIndex: "times",
     width: 180,
+    scopedSlots: { customRender: "times" },
   },
   {
     title: "考勤时间",
@@ -89,7 +90,7 @@ export default {
     dataSource: Array,
     rowKey: {
       type: [String, Function],
-      default: "id",
+      default: "name",
     },
     pagination: {
       type: [Object, Boolean],

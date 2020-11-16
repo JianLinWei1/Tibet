@@ -153,6 +153,11 @@ export default {
       console.log(this.form)
       getAttenceReport(this.form).then(res => {
         console.log(res)
+        if (res.code === 0) {
+          this.dataSource = res.data
+        } else {
+          this.$message.info("生成失败")
+        }
       })
 
     },
