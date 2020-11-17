@@ -1,44 +1,37 @@
 <template>
   <div class="standard-table">
-    <a-table
-      :bordered="bordered"
-      :loading="loading"
-      :columns="columns"
-      :dataSource="dataSource"
-      :rowKey="rowKey"
-      :pagination="pagination"
-      :expandedRowKeys="expandedRowKeys"
-      :expandedRowRender="expandedRowRender"
-      @change="onChange"
-      :rowSelection="
+    <a-table :bordered="bordered"
+             :loading="loading"
+             :columns="columns"
+             :dataSource="dataSource"
+             :rowKey="rowKey"
+             :pagination="pagination"
+             :expandedRowKeys="expandedRowKeys"
+             :expandedRowRender="expandedRowRender"
+             @change="onChange"
+             :rowSelection="
         selectedRows
           ? { selectedRowKeys: selectedRowKeys, onChange: updateSelect }
           : undefined
-      "
-    >
-      <template
-        slot-scope="text, record, index"
-        :slot="slot"
-        v-for="slot in Object.keys($scopedSlots).filter(
+      ">
+      <template slot-scope="text, record, index"
+                :slot="slot"
+                v-for="slot in Object.keys($scopedSlots).filter(
           (key) => key !== 'expandedRowRender'
-        )"
-      >
-        <slot :name="slot" v-bind="{ text, record, index }"></slot>
+        )">
+        <slot :name="slot"
+              v-bind="{ text, record, index }"></slot>
       </template>
-      <template :slot="slot" v-for="slot in Object.keys($slots)">
+      <template :slot="slot"
+                v-for="slot in Object.keys($slots)">
         <slot :name="slot"></slot>
       </template>
-      <template
-        slot-scope="record, index, indent, expanded"
-        :slot="$scopedSlots.expandedRowRender ? 'expandedRowRender' : ''"
-      >
-        <slot
-          v-bind="{ record, index, indent, expanded }"
-          :name="$scopedSlots.expandedRowRender ? 'expandedRowRender' : ''"
-        ></slot>
+      <template slot-scope="record, index, indent, expanded"
+                :slot="$scopedSlots.expandedRowRender ? 'expandedRowRender' : ''">
+        <slot v-bind="{ record, index, indent, expanded }"
+              :name="$scopedSlots.expandedRowRender ? 'expandedRowRender' : ''"></slot>
       </template>
-   
-      
+
     </a-table>
   </div>
 </template>
@@ -68,12 +61,18 @@ const columns = [
     width: 200,
   },
   {
+    title: "操作",
+    dataIndex: "action",
+
+    width: 200,
+  },
+  {
     title: "时间",
     dataIndex: "time",
 
     width: 200,
   },
-  
+
   {
     title: "操作",
 
@@ -99,24 +98,24 @@ export default {
     expandedRowKeys: Array,
     expandedRowRender: Function,
   },
-  data() {
+  data () {
     return {
       needTotalList: [],
       columns: columns,
     };
   },
-  created() {
+  created () {
     // this.needTotalList = this.initTotalList(this.columns)
   },
-  beforeMount() {
-   
+  beforeMount () {
+
   },
   methods: {
-    updateSelect(selectedRowKeys, selectedRows) {
+    updateSelect (selectedRowKeys, selectedRows) {
       this.$emit("update:selectedRows", selectedRows);
       this.$emit("selectedRowChange", selectedRowKeys, selectedRows);
     },
-    initTotalList(columns) {
+    initTotalList (columns) {
       const totalList = columns
         .filter((item) => item.needTotal)
         .map((item) => {
@@ -127,19 +126,19 @@ export default {
         });
       return totalList;
     },
-    onClear() {
+    onClear () {
       this.updateSelect([], []);
       this.$emit("clear");
     },
-    onChange(pagination, filters, sorter, { currentDataSource }) {
+    onChange (pagination, filters, sorter, { currentDataSource }) {
       this.$emit("change", pagination, filters, sorter, { currentDataSource });
     },
-    
-   
+
+
   },
 
   watch: {
-    selectedRows(selectedRows) {
+    selectedRows (selectedRows) {
       this.needTotalList = this.needTotalList.map((item) => {
         return {
           ...item,
@@ -151,7 +150,7 @@ export default {
     },
   },
   computed: {
-    selectedRowKeys() {
+    selectedRowKeys () {
       return this.selectedRows.map((record) => {
         return typeof this.rowKey === "function"
           ? this.rowKey(record)

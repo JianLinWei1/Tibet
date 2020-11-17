@@ -44,6 +44,11 @@ export async function getUserById (params) {
   return request("/api/api-auth/getUserById", METHOD.GET, params)
 }
 
+export async function updateUser (params) {
+  return request("/api/api-auth/updateUser", METHOD.POST,
+    params
+  )
+}
 
 /**
  * 退出登录

@@ -75,7 +75,7 @@
         <img v-if="form.photo"
              :src="'api/api-auth/' + form.photo" />
       </a-form-model-item>
-      <a-form-model-item label="角色"
+      <!--   <a-form-model-item label="角色"
                          prop="role">
         <a-radio-group default-value="2"
                        v-model="form.role">
@@ -95,7 +95,7 @@
                        valueFormat="YYYY-MM-DD HH:mm:ss"
                        show-time
                        placeholder="选择失效日期" />
-      </a-form-model-item>
+      </a-form-model-item> -->
       <a-form-model-item label="备注">
         <a-input v-model="form.content"
                  placeholder="备注" />
@@ -124,9 +124,7 @@ import { insertPerson } from "@/services/person.js";
 export default {
   data () {
     return {
-      form: {
-        role: 2,
-      },
+      form: {},
       visible: false,
       token: null,
       rules: {
@@ -145,7 +143,7 @@ export default {
       },
       fileList: [],
       img: null,
-      websoket: new WebSocket("ws://49.4.85.77:50050"),
+      websoket: new WebSocket("ws://127.0.0.1:50050"),
       loading: false
     };
   },

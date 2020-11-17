@@ -57,7 +57,7 @@
   </div>
 </template>
 <script>
-import { addUser, getAddUserTree } from "@/services/user";
+import { addUser, getAddUserTree, updateUser } from "@/services/user";
 import { TreeSelect } from "ant-design-vue";
 const SHOW_PARENT = TreeSelect.SHOW_PARENT;
 export default {
@@ -95,17 +95,30 @@ export default {
         if (valid) {
           this.form.parentId = this.parentId;
 
-          addUser(this.form).then((res) => {
-            if (res.code === 0) {
-              this.$message.success("添加成功");
-              setTimeout(() => {
-                this.$emit("frech");
-                this.$emit("closed");
-              }, 500);
-            } else {
-              this.$message.error(res.msg);
-            }
-          });
+          if (this.form.id !== null || this.form.id !== undefined)
+            updateUser(this.form).then(res => {
+              if (res.code === 0) {
+                this.$message.success("编辑成功");
+                setTimeout(() => {
+                  this.$emit("frech");
+                  this.$emit("closed");
+                }, 500);
+              } else {
+                this.$message.error(res.msg);
+              }
+            })
+          else
+            addUser(this.form).then((res) => {
+              if (res.code === 0) {
+                this.$message.success("添加成功");
+                setTimeout(() => {
+                  this.$emit("frech");
+                  this.$emit("closed");
+                }, 500);
+              } else {
+                this.$message.error(res.msg);
+              }
+            });
         } else {
           this.$message.error("请按要求输入");
           return false;
