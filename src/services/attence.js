@@ -1,5 +1,5 @@
 import { request, METHOD } from '@/utils/request'
-let url = "/api/api-attence"
+let url = "/api/main"
 
 export async function getDeviceTree (params) {
   return request(url + "/getDeviceTree", METHOD.GET,

@@ -1,5 +1,5 @@
 import { request, METHOD } from '@/utils/request'
-let url = "/api/api-access/access"
+let url = "/api/main/access"
 
 export async function searchDevice (params) {
   return request(url + "/searchDevice", METHOD.GET,

@@ -6,46 +6,47 @@ import { request, METHOD, removeAuthorization } from '@/utils/request'
  * @param password 账户密码
  * @returns {Promise<AxiosResponse<T>>}
  */
+var path = "/api/main"
 export async function login (name, password) {
-  return request("/api/api-auth/login", METHOD.POST, {
+  return request(path + "/login", METHOD.POST, {
     userName: name,
     passwd: password
   })
 }
 
 export async function getRoutesConfig () {
-  return request("/api/api-auth/getRouter", METHOD.GET)
+  return request(path + "/getRouter", METHOD.GET)
 }
 
 
 export async function getAccountTree () {
-  return request("/api/api-auth/getAccountTree", METHOD.GET)
+  return request(path + "/getAccountTree", METHOD.GET)
 }
 export async function addUser (params) {
-  return request("/api/api-auth/addUser", METHOD.POST,
+  return request(path + "/addUser", METHOD.POST,
     params
   )
 }
 export async function delUserByParentId (params) {
-  return request("/api/api-auth/delUserByParentId", METHOD.GET,
+  return request(path + "/delUserByParentId", METHOD.GET,
     params
   )
 }
 
 export async function getAddUserTree () {
-  return request("/api/api-auth/getAddUserTree", METHOD.GET)
+  return request(path + "/getAddUserTree", METHOD.GET)
 }
 
 export async function getUserPermission () {
-  return request("/api/api-auth/getUserPermission", METHOD.GET)
+  return request(path + "/getUserPermission", METHOD.GET)
 }
 
 export async function getUserById (params) {
-  return request("/api/api-auth/getUserById", METHOD.GET, params)
+  return request(path + "/getUserById", METHOD.GET, params)
 }
 
 export async function updateUser (params) {
-  return request("/api/api-auth/updateUser", METHOD.POST,
+  return request(path + "/updateUser", METHOD.POST,
     params
   )
 }
