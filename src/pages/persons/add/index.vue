@@ -220,10 +220,11 @@ export default {
 
       this.websoket.onmessage = function (mes) {
         console.log("Mes", mes.data)
-        if (mes.data.code === 0)
-          that.form.accessId = mes.uid
+        let data = JSON.parse(mes.data)
+        if (data.code === 0)
+          that.form.accessId = data.uid
         else
-          that.$message.info("读卡失败" + mes.data)
+          that.$message.info("读卡失败" + JSON.stringify(data))
         that.loading = false
       }
       var obj = {

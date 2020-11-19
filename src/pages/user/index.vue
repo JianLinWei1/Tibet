@@ -62,7 +62,8 @@
                :parentId="parentId"
                :form="form"
                :visible="add_user_visible"
-               :title="title"></addUser>
+               :title="title"
+               :action="action"></addUser>
     </a-modal>
 
   </a-card>
@@ -82,7 +83,8 @@ export default {
       datalsit: null,
       loading: false,
       title: "添加下级",
-      form: {}
+      form: {},
+      action:1,
     };
   },
   components: {
@@ -137,17 +139,19 @@ export default {
     addUserClick (data) {
       this.add_user_visible = true;
       this.parentId = data.id;
+      
+      this.action =1 ;
+      this.form ={}
     },
     editUserClick (data) {
-
       this.title = "编辑"
-
+      this.form ={}
       getUserById({ id: data.id }).then(res => {
-
-
         if (res.code === 0) {
           this.add_user_visible = true;
           this.form = res.data
+          console.log("ooo" ,this.form)
+          this.action = 2;
         } else {
           this.$message.error("获取信息失败")
         }
