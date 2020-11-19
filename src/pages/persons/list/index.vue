@@ -103,7 +103,7 @@
              :footer="null"
              v-model="visible"
              title="编辑">
-      <edit :form="editFrom"></edit>
+      <edit :action="action" :form="editFrom"></edit>
     </a-modal>
   </a-card>
 </template>
@@ -111,7 +111,7 @@
 <script>
 import StandardTable from "./table/StandardTable";
 import { queryPersonsList, delPerson } from "@/services/person";
-import edit from "./edit"
+import edit from "../add/index2"
 
 export default {
   name: "QueryList",
@@ -133,7 +133,8 @@ export default {
         showTotal: total => `共 ${total} 条`,
         showSizeChange: (current, pageSize) => this.pageSize = pageSize,
       },
-      visible: false
+      visible: false,
+      action:0
     };
   },
 
@@ -197,7 +198,7 @@ export default {
       console.log(key)
       this.visible = true
       this.editFrom = key
-
+      this.action = 2
     },
 
     onChange (page) {

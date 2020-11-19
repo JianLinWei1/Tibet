@@ -78,7 +78,7 @@ const routerMap = {
   },
   accessAdd: {
     path: "/accessAdd",
-    name: '添加门禁',
+    name: '门禁设备',
     authority: '11',
     component: () => import('@/pages/access/accessAdd')
   },

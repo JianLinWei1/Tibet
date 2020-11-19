@@ -30,10 +30,11 @@
                        search-placeholder="请选择" @select="change" /> -->
         <a-tree
           checkable
+          v-if="treeData.length>0"
           v-model="form.routerIds"
           :auto-expand-parent="autoExpandParent"
           :tree-data="treeData"
-          @check="change"
+        
         />
       </a-form-model-item>
 
@@ -135,9 +136,16 @@ export default {
     },
 
     change(value, label) {
+      console.log("kk" ,value)
       this.form.routerIds = null;
       let checkedKeysResult = [...value, ...label.halfCheckedKeys];
       this.form.routerIds = checkedKeysResult;
+    },
+  },
+   watch: {
+    checkedKeys (info) {
+      console.log('onCheck', info);
+      this.form.sns = info
     },
   },
 };

@@ -37,7 +37,7 @@
         <img ref="img"
              v-if="text !== null"
              width="100"
-             :src="'/api/api-auth/' + text" />
+             :src="'/api/main/' + text" />
       </viewer>
       <div slot="role"
            slot-scope="text">
