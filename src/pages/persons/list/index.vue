@@ -103,7 +103,8 @@
              :footer="null"
              v-model="visible"
              title="编辑">
-      <edit :action="action" :form="editFrom"></edit>
+      <edit :action="action"
+            :form="editFrom"></edit>
     </a-modal>
   </a-card>
 </template>
@@ -134,7 +135,7 @@ export default {
         showSizeChange: (current, pageSize) => this.pageSize = pageSize,
       },
       visible: false,
-      action:0
+      action: 0
     };
   },
 
@@ -188,6 +189,8 @@ export default {
           this.$message.success("删除成功")
           this.dataSource = this.dataSource.filter((item) => item.id !== key)
           // this.selectedRows = this.selectedRows.filter((item) => item.id !== key);
+        } else if (res.code === -2) {
+          this.$message.info(res.msg);
         } else {
           this.$message.error(res.msg);
         }

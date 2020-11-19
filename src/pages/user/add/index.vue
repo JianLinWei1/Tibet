@@ -1,26 +1,29 @@
 <template>
   <div>
-    <a-form-model
-      ref="ruleForm"
-      :model="form"
-      :rules="rules"
-      :label-col="labelCol"
-      :wrapper-col="wrapperCol"
-    >
-      <a-form-model-item ref="userName" label="账号" prop="userName">
+    <a-form-model ref="ruleForm"
+                  :model="form"
+                  :rules="rules"
+                  :label-col="labelCol"
+                  :wrapper-col="wrapperCol">
+      <a-form-model-item ref="userName"
+                         label="账号"
+                         prop="userName">
         <a-input v-model="form.userName" />
       </a-form-model-item>
-      <a-form-model-item ref="passwd" label="密码" prop="passwd">
-        <a-input type="password" v-model="form.passwd" />
+      <a-form-model-item ref="passwd"
+                         label="密码"
+                         prop="passwd">
+        <a-input type="password"
+                 v-model="form.passwd" />
       </a-form-model-item>
-      <a-form-model-item
-        ref="nickName"
-        label="昵称(用于显示级联结构)"
-        prop="nickName"
-      >
+      <a-form-model-item ref="nickName"
+                         label="昵称(用于显示级联结构)"
+                         prop="nickName">
         <a-input v-model="form.nickName" />
       </a-form-model-item>
-      <a-form-model-item ref="permission" label="菜单权限" prop="permission">
+      <a-form-model-item ref="permission"
+                         label="菜单权限"
+                         prop="permission">
         <!-- <a-tree-select 
                        style="width: 100%"
                        :tree-data="treeData"
@@ -28,22 +31,24 @@
                       
                        show-checked-strategy="SHOW_ALL"
                        search-placeholder="请选择" @select="change" /> -->
-        <a-tree
-          checkable
-          v-if="treeData.length>0"
-          v-model="form.routerIds"
-          :auto-expand-parent="autoExpandParent"
-          :tree-data="treeData"
-        
-        />
+        <a-tree checkable
+                v-model="form.routerIds"
+                :check-strictly="true"
+                v-if="treeData.length>0"
+                :auto-expand-parent="autoExpandParent"
+                :tree-data="treeData" />
       </a-form-model-item>
 
-      <a-form-model-item ref="description" label="描述" prop="description">
+      <a-form-model-item ref="description"
+                         label="描述"
+                         prop="description">
         <a-input v-model="form.description" />
       </a-form-model-item>
       <a-form-model-item :wrapper-col="{ span: 14, offset: 14 }">
         <a-button @click="resetForm"> 重置 </a-button>
-        <a-button type="primary" style="margin-left: 10px" @click="onSubmit">
+        <a-button type="primary"
+                  style="margin-left: 10px"
+                  @click="onSubmit">
           提交
         </a-button>
       </a-form-model-item>
@@ -55,7 +60,7 @@ import { addUser, getAddUserTree, updateUser } from "@/services/user";
 import { TreeSelect } from "ant-design-vue";
 const SHOW_PARENT = TreeSelect.SHOW_PARENT;
 export default {
-  data() {
+  data () {
     return {
       labelCol: { span: 8 },
       wrapperCol: { span: 14 },
@@ -76,17 +81,19 @@ export default {
       },
     };
   },
-  props: { parentId: String, form: Object, checkedKeys: Array, action: Number },
-  created() {
+  props: { parentId: String, form: Object, action: Number },
+  created () {
     console.log(this.form);
     this.getAddUserTree();
   },
   methods: {
-    onSubmit() {
+    onSubmit () {
       // console.log(JSON.stringify(this.form));
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-        
+          console.log(this.form.routerIds)
+          this.$message.info("正在提交数据请稍后..")
+          this.form.routerIds = this.form.routerIds.checked
 
           if (this.action == 2) {
             updateUser(this.form).then((res) => {
@@ -96,20 +103,20 @@ export default {
                   this.$emit("frech");
                   this.$emit("closed");
                 }, 500);
-               
+
               } else {
                 this.$message.error(res.msg);
               }
             });
           } else {
-              this.form.parentId = this.parentId;
+            this.form.parentId = this.parentId;
             addUser(this.form).then((res) => {
               if (res.code === 0) {
                 this.$message.success("添加成功");
                 setTimeout(() => {
                   this.$emit("frech");
                   this.$emit("closed");
-                 
+
                 }, 500);
               } else {
                 this.$message.error(res.msg);
@@ -122,11 +129,11 @@ export default {
         }
       });
     },
-    resetForm() {
+    resetForm () {
       this.$refs.ruleForm.resetFields();
     },
 
-    getAddUserTree() {
+    getAddUserTree () {
       getAddUserTree().then((res) => {
         console.log(res);
         if (res.code === 0) {
@@ -134,19 +141,16 @@ export default {
         }
       });
     },
+    /*    onCheck (checkedkey, info) {
+         console.log(checkedkey, info)
+         //this.form.routerIds = null;
+         let checkedKeysResult = [...checkedkey, ...info.halfCheckedKeys];
+         this._routerIds = checkedKeysResult;
+         console.log(this._routerIds)
+   
+       }, */
 
-    change(value, label) {
-      console.log("kk" ,value)
-      this.form.routerIds = null;
-      let checkedKeysResult = [...value, ...label.halfCheckedKeys];
-      this.form.routerIds = checkedKeysResult;
-    },
   },
-   watch: {
-    checkedKeys (info) {
-      console.log('onCheck', info);
-      this.form.sns = info
-    },
-  },
+
 };
 </script>
