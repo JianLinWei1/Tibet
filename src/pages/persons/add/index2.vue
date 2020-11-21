@@ -7,7 +7,7 @@
       :labelCol="{ span: 7 }"
       :wrapperCol="{ span: 10 }"
     >
-      <a-form-model-item ref="id" label="人员编号ID" prop="id">
+      <a-form-model-item ref="id"  label="人员编号ID" prop="id">
         <a-input v-model="form.id" placeholder="ID" />
       </a-form-model-item>
       <a-form-model-item ref="name" label="姓名" prop="name">

@@ -14,7 +14,7 @@
           
          
          
-          <header-avatar class="header-item"/>
+          <header-avatar  class="header-item"/>
           <!-- <a-dropdown class="lang header-item"  >
             <div>
               <a-icon type="global"/> {{langAlias}}
@@ -25,6 +25,7 @@
           </a-dropdown> -->
       </div>
     </div>
+   
   </a-layout-header>
 </template>
 
@@ -45,7 +46,8 @@ export default {
         {key: 'HK', name: '繁體中文', alias: '繁體'},
         {key: 'US', name: 'English', alias: 'English'}
       ],
-      searchActive: false
+      searchActive: false,
+      visible:false
     }
   },
   computed: {
@@ -75,7 +77,8 @@ export default {
       this.$emit('menuSelect', obj)
     },
     ...mapMutations('setting', ['setLang'])
-  }
+  },
+ 
 }
 </script>
 

@@ -54,6 +54,11 @@ const routerMap = {
     name: '添加人员',
     component: () => import('@/pages/persons/add')
   },
+  department: {
+    path: "/department",
+    name: '部门管理',
+    component: () => import('@/pages/persons/add')
+  },
   camera: {
     path: '/camera',
     name: '摄像机管理',

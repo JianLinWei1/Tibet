@@ -51,6 +51,13 @@ export async function updateUser (params) {
   )
 }
 
+export async function updatePw (params) {
+  return request(path + "/updatePw", METHOD.POST,
+    params
+  )
+}
+
+
 /**
  * 退出登录
  */

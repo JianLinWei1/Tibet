@@ -10,6 +10,7 @@ const routesConfig = [
   "person",
   "personList",
   "personAdd",
+  "department",
   "camera",
   "cameraAdd",
   "cameraList",

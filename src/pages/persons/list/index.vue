@@ -202,6 +202,7 @@ export default {
       this.visible = true
       this.editFrom = key
       this.action = 2
+      this.editFrom.oid = key.id
     },
 
     onChange (page) {
