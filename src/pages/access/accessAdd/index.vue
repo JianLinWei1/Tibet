@@ -26,7 +26,7 @@
         手动添加控制器
       </a-button>
       <a-table bordered
-               :row-key="(row) => row.sn"
+               :row-key="(row) => row.id"
                :data-source="dataSource"
                :pagination="pagination"
                :columns="columns">
@@ -75,17 +75,17 @@
                     :model="manualFrom"
                     :labelCol="{ span: 7 }"
                     :wrapperCol="{ span: 10 }">
-        <a-form-model-item ref="sn"
+        <!--   <a-form-model-item ref="sn"
                            label="设备序列号"
                            prop="sn">
           <a-input v-model="manualFrom.sn" />
-        </a-form-model-item>
+        </a-form-model-item> -->
         <a-form-model-item ref="ip"
                            label="IP"
                            prop="ip">
           <a-input v-model="manualFrom.ip" />
         </a-form-model-item>
-        <a-form-model-item ref="gateipaddress"
+        <!--  <a-form-model-item ref="gateipaddress"
                            label="网关"
                            prop="gateipaddress">
           <a-input v-model="manualFrom.gateipaddress" />
@@ -109,7 +109,7 @@
                            label="版本"
                            prop="ver">
           <a-input v-model="manualFrom.ver" />
-        </a-form-model-item>
+        </a-form-model-item> -->
         <a-form-model-item ref="name"
                            label="名称"
                            prop="name">
@@ -253,7 +253,7 @@ export default {
       })
     },
     addRecord (record) {
-      this.suLoad = true
+
       addDevice(record).then((res) => {
 
         if (res.code === 0) {
@@ -262,10 +262,11 @@ export default {
         } else {
           this.$message.error(res.msg);
         }
-        this.suLoad = false
+
       });
     },
     manualAdd () {
+      this.suLoad = true
       addDevice(this.manualFrom).then((res) => {
         if (res.code === 0) {
           this.$message.success("添加成功");
@@ -273,6 +274,7 @@ export default {
         } else {
           this.$message.error(res.msg);
         }
+        this.suLoad = false
       });
     },
     issue (record) {

@@ -76,7 +76,8 @@
                         :dataSource="dataSource"
                         :selectedRows.sync="selectedRows"
                         @change="onChange"
-                        @selectedRowChange="onSelectChange">
+                        @selectedRowChange="onSelectChange"
+                        :loading="listloading">
           <div slot="action"
                slot-scope="{ record }">
             <!-- <a style="margin-right: 8px"  @click="editRecord(record)"> <a-icon type="edit"  />编辑 </a> -->
@@ -118,6 +119,7 @@ export default {
       visible: false,
       spinning: false,
       departments: [],
+      listloading: false
     };
   },
   authorize: {
@@ -142,7 +144,9 @@ export default {
     })
   },
   methods: {
+
     listRecords () {
+      this.listloading = true;
       this.form.page = this.pagination.current;
       this.form.limit = this.pagination.pageSize;
       listRecords(this.form).then((res) => {
@@ -152,6 +156,7 @@ export default {
         } else {
           this.$message.error(res.msg);
         }
+        this.listloading = false
       });
     },
     search () {
