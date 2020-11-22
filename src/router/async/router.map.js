@@ -57,7 +57,8 @@ const routerMap = {
   department: {
     path: "/department",
     name: '部门管理',
-    component: () => import('@/pages/persons/add')
+    authority: '48',
+    component: () => import('@/pages/persons/department')
   },
   camera: {
     path: '/camera',
@@ -146,7 +147,7 @@ const routerMap = {
   attenceReport: {
     path: "/attenceReport",
     name: '考勤报表',
-    authority: '18',
+    authority: '46',
     component: () => import('@/pages/attence/report')
 
   },

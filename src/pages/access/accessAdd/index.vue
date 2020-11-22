@@ -119,7 +119,8 @@
         <a-form-model-item style="margin-top: 24px"
                            :wrapperCol="{ span: 10, offset: 7 }">
           <a-button type="primary"
-                    @click="manualAdd">提交</a-button>
+                    @click="manualAdd"
+                    :loading="suLoad">提交</a-button>
           <a-button style="margin-left: 8px">重置</a-button>
         </a-form-model-item>
       </a-form-model>
@@ -194,6 +195,7 @@ export default {
       ],
       fileList: [],
       manual: false,
+      suLoad: false
     };
   },
   components: {
@@ -251,13 +253,16 @@ export default {
       })
     },
     addRecord (record) {
+      this.suLoad = true
       addDevice(record).then((res) => {
+
         if (res.code === 0) {
           this.$message.success("添加成功");
           this.listDevice();
         } else {
           this.$message.error(res.msg);
         }
+        this.suLoad = false
       });
     },
     manualAdd () {

@@ -36,6 +36,11 @@
         <span v-for="t in text"
               :key="t">{{t +"~"}}</span>
       </div>
+      <div slot="timeList"
+           slot-scope="text">
+        <span v-for="t in text"
+              :key="t">{{t +"  ,  "}}</span>
+      </div>
 
     </a-table>
   </div>
@@ -67,6 +72,7 @@ const columns = [
     title: "考勤时间",
     dataIndex: "timeList",
     width: 180,
+    scopedSlots: { customRender: "timeList" },
   },
 
   {

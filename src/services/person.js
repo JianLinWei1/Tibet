@@ -18,3 +18,7 @@ export async function editPerson (data) {
 export async function delPerson (data) {
   return request(url + "/delPerson", METHOD.POST, data)
 }
+
+export async function exportPerson (data) {
+  return request(url + "/exportPerson", METHOD.POST, data)
+}

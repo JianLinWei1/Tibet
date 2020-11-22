@@ -25,3 +25,10 @@ export async function getAttenceReport (params) {
     params
   )
 }
+
+export async function exportAttenceReport (params) {
+  return request(url + "/exportAttenceReport", METHOD.POST,
+    params
+  )
+}
+

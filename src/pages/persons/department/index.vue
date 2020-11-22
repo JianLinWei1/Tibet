@@ -6,63 +6,28 @@
           <a-row>
             <a-col :md="8"
                    :sm="24">
-              <a-form-item label="ID"
-                           :labelCol="{ span: 5 }"
-                           :wrapperCol="{ span: 18, offset: 1 }">
-                <a-input v-model="form.id"
-                         placeholder="请输入(精确查询)" />
-              </a-form-item>
-            </a-col>
-            <a-col :md="8"
-                   :sm="24">
-              <a-form-item label="姓名"
+              <a-form-item label="部门名称"
                            :labelCol="{ span: 5 }"
                            :wrapperCol="{ span: 18, offset: 1 }">
                 <a-input v-model="form.name"
-                         placeholder="请输入" />
+                         placeholder="部门名称" />
               </a-form-item>
             </a-col>
             <a-col :md="8"
                    :sm="24">
-              <a-form-item label="身份证号"
+              <a-form-item label="属于机构"
                            :labelCol="{ span: 5 }"
                            :wrapperCol="{ span: 18, offset: 1 }">
-                <a-input v-model="form.idCard"
+                <a-input v-model="form.nickName"
                          placeholder="请输入" />
               </a-form-item>
             </a-col>
-          </a-row>
-          <a-row v-if="advanced">
-            <a-col :md="8"
-                   :sm="24">
-              <a-form-item label="门禁卡号"
-                           :labelCol="{ span: 5 }"
-                           :wrapperCol="{ span: 18, offset: 1 }">
-                <a-input v-model="form.accessId"
-                         placeholder="请输入" />
-              </a-form-item>
-            </a-col>
-            <a-col :md="8"
-                   :sm="24">
-              <a-form-item label="部门"
-                           :labelCol="{ span: 5 }"
-                           :wrapperCol="{ span: 18, offset: 1 }">
-                <a-select v-model="form.department "
-                          style="width: 120px">
-                  <a-select-option v-for="(i,index) in departments"
-                                   :value="i.name"
-                                   :key="index">
-                    {{i.name}}
-                  </a-select-option>
-                </a-select>
-              </a-form-item>
 
-            </a-col>
           </a-row>
         </div>
         <span style="float: right; margin-top: 3px">
           <a-button type="primary"
-                    @click="queryPersonsList">查询</a-button>
+                    @click=" getList">查询</a-button>
           <a-button style="margin-left: 8px"
                     @click="form={}">重置</a-button>
           <a @click="toggleAdvanced"
@@ -75,21 +40,19 @@
     </div>
     <div>
       <div class="operator">
+        <a-button v-auth:permission="`add`"
+                  type="primary"
+                  @click="visible= true ; title ='添加部门'">添加部门</a-button>
         <a-button @click="delList"
                   v-auth:permission="`del`"
                   ghost
                   type="danger">批量删除</a-button>
 
-        <a-button @click="exportRecords"
-                  v-auth:permission="`export`"
-                  style="margin-left: 10px"
-                  type="primary">导出</a-button>
       </div>
       <standard-table :bordered="true"
                       :pagination="pagination"
                       :dataSource="dataSource"
                       :selectedRows.sync="selectedRows"
-                      :loading="tbLoad"
                       @change="onChange"
                       @selectedRowChange="onSelectChange">
         <div slot="action"
@@ -111,22 +74,34 @@
     <a-modal width="50%"
              :footer="null"
              v-model="visible"
-             title="编辑">
-      <edit :action="action"
-            :form="editFrom"></edit>
+             :title="title">
+      <a-form-model ref="ruleForm"
+                    :model="saveForm"
+                    :rules="rules">
+        <a-form-model-item label="部门名称"
+                           prop="name">
+          <a-input v-model="saveForm.name"
+                   autocomplete="off" />
+        </a-form-model-item>
+        <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
+          <a-button type="primary"
+                    @click="submitForm('ruleForm')">
+            提交
+          </a-button>
+        </a-form-model-item>
+      </a-form-model>
     </a-modal>
   </a-card>
 </template>
 
 <script>
 import StandardTable from "./table/StandardTable";
-import { queryPersonsList, delPerson, exportPerson } from "@/services/person";
-import edit from "../add/index2"
-import { getList } from "@/services/department";
+import { insert, getList, del } from "@/services/department";
+
 
 export default {
   name: "QueryList",
-  components: { StandardTable, edit },
+  components: { StandardTable },
   data () {
     return {
       advanced: true,
@@ -136,7 +111,7 @@ export default {
       },
       editFrom: {},
       pagination: {
-        current: 1,
+        current: 0,
         total: 0,
         pageSize: 10,
         showSizeChanger: true,
@@ -146,17 +121,16 @@ export default {
       },
       visible: false,
       action: 0,
-      departments: [],
-      tbLoad: false
+      rules: {
+        name: [{ required: true, message: "必填", trigger: "blur" }]
+      },
+      title: "添加部门",
+      saveForm: {}
     };
   },
 
   created () {
-    this.queryPersonsList();
-    getList({ page: 0, limit: 100 }).then(res => {
-      if (res.code === 0)
-        this.departments = res.data
-    })
+    this.getList();
   },
   authorize: {
     editRecord: {
@@ -170,18 +144,14 @@ export default {
     delList: {
       check: "del",
       type: "permission",
-    },
-    exportRecords: {
-      check: "export",
-      type: "permission",
-    },
+    }
   },
   methods: {
-    queryPersonsList () {
-      this.tbLoad = true
+    getList () {
+
       this.form.page = this.pagination.current
       this.form.limit = this.pagination.pageSize
-      queryPersonsList(this.form).then((res) => {
+      getList(this.form).then((res) => {
         //console.log(res);
         if (res.code === 0) {
           this.dataSource = res.data;
@@ -189,7 +159,6 @@ export default {
         } else {
           this.$message.error(res.msg);
         }
-        this.tbLoad = false
       });
     },
 
@@ -205,7 +174,7 @@ export default {
       let data = []
       data.push(key)
 
-      delPerson(data).then(res => {
+      del(data).then(res => {
         if (res.code === 0) {
           this.$message.success("删除成功")
           this.dataSource = this.dataSource.filter((item) => item.id !== key)
@@ -221,14 +190,13 @@ export default {
     editRecord (key) {
       console.log(key)
       this.visible = true
-      this.editFrom = key
-      this.action = 2
-      this.editFrom.oid = key.id
+      this.saveForm = key
+      this.title = "编辑"
     },
 
     onChange (page) {
       this.pagination = page
-      this.queryPersonsList()
+      this.getList()
     },
     onSelectChange () {
       console.log(this.selectedRows)
@@ -240,10 +208,10 @@ export default {
         data.push(item.id)
       })
 
-      delPerson(data).then(res => {
+      del(data).then(res => {
         if (res.code === 0) {
           this.$message.success("删除成功")
-          this.queryPersonsList()
+          this.getList()
         } else {
           this.$message.error(res.msg);
         }
@@ -255,23 +223,26 @@ export default {
         this.remove();
       }
     },
+    submitForm () {
+      this.$refs.ruleForm.validate((valid) => {
+        if (valid) {
 
-    exportRecords () {
+          this.$message.info("正在提交数据请稍后..")
+          insert(this.saveForm).then((res) => {
+            if (res.code === 0) {
+              this.$message.success("添加成功");
+              this.getList();
 
-      if (this.selectedRows.length <= 0) {
-        this.$message.info("请勾选数据");
-        return
-      }
-      exportPerson(this.selectedRows).then((res) => {
-
-        if (res.code === 0) {
-          this.$message.success("导出成功")
-          window.location.href = "/api/main/download?filename=" + res.data
+            } else {
+              this.$message.error(res.msg);
+            }
+          })
         } else {
-          this.$message.error(res.msg)
+          this.$message.error("请按要求输入");
+          return false;
         }
       });
-    },
+    }
   },
 };
 </script>

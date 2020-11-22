@@ -44,11 +44,28 @@
                            placeholder="请输入" />
                 </a-form-item>
               </a-col>
+              <a-col :md="8"
+                     :sm="24">
+                <a-form-item label="部门"
+                             :labelCol="{ span: 5 }"
+                             :wrapperCol="{ span: 18, offset: 1 }">
+                  <a-select v-model="form.department "
+                            style="width: 120px">
+                    <a-select-option v-for="(i,index) in departments"
+                                     :value="i.name"
+                                     :key="index">
+                      {{i.name}}
+                    </a-select-option>
+
+                  </a-select>
+                </a-form-item>
+              </a-col>
             </a-row>
           </div>
           <span style="float: right; margin-top: 3px">
             <a-button type="primary"
-                      @click="search">查询</a-button>
+                      @click="search"
+                      :loading="searchLoad">查询</a-button>
             <a-button style="margin-left: 8px"
                       @click="form = {}">重置</a-button>
           </span>
@@ -91,6 +108,7 @@
 import StandardTable from "./table/StandardTable";
 import { listAccessPersons, DelAccessPerson } from "@/services/access";
 import issued from "../issued";
+import { getList } from "@/services/department";
 
 export default {
   name: "QueryList",
@@ -112,7 +130,9 @@ export default {
         showSizeChange: (current, pageSize) => (this.pageSize = pageSize),
       },
       visible: false,
-      spinning: false
+      spinning: false,
+      departments: [],
+      searchLoad: false
     };
   },
   authorize: {
@@ -127,6 +147,10 @@ export default {
   },
   created () {
     this.listAccessPersons();
+    getList({ page: 0, limit: 100 }).then(res => {
+      if (res.code === 0)
+        this.departments = res.data
+    })
   },
   methods: {
     listAccessPersons () {
@@ -139,10 +163,12 @@ export default {
         } else {
           this.$message.error(res.msg);
         }
+        this.searchLoad = false
       });
     },
     search () {
       this.form.id = null;
+      this.searchLoad = true;
       this.listAccessPersons();
     },
 

@@ -2,6 +2,7 @@ import axios from 'axios'
 import Cookie from 'js-cookie'
 
 
+
 const xsrfHeaderName = 'token'
 
 axios.defaults.timeout = 50000
@@ -30,14 +31,14 @@ const METHOD = {
  * @param params 请求参数
  * @returns {Promise<AxiosResponse<T>>}
  */
-async function request (url, method,params) {
- 
+async function request (url, method, params) {
+
   switch (method) {
     case METHOD.GET:
       return axios.get(url, { params })
     case METHOD.POST:
       return axios.post(url, params)
-      
+
     default:
       return axios.get(url, { params })
   }
@@ -122,7 +123,7 @@ function loadInterceptors (interceptors, options) {
   })
   // 加载响应拦截器
   response.forEach(item => {
-   
+
     // if(item.code === -1001 || item.code === -1002 || item.code === -1003){
     //   message.warning('登录已失效，请重新登录')
     //  next({path: '/login'})
@@ -131,7 +132,7 @@ function loadInterceptors (interceptors, options) {
     let { onFulfilled, onRejected } = item
     if (!onFulfilled || typeof onFulfilled !== 'function') {
       onFulfilled = response => response
-      
+
     }
     if (!onRejected || typeof onRejected !== 'function') {
       onRejected = error => Promise.reject(error)

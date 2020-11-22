@@ -59,7 +59,8 @@
           </div>
           <span style="float: right; margin-top: 3px">
             <a-button type="primary"
-                      @click="search">生成报表</a-button>
+                      @click="search"
+                      :loading="loading">生成报表</a-button>
             <a-button style="margin-left: 8px"
                       @click="form = {}">重置</a-button>
           </span>
@@ -67,9 +68,8 @@
       </div>
       <div>
         <div class="operator">
-          <a-button @click="delList"
-                    v-auth:permission="`del`"
-                    ghost
+          <a-button @click="exportRecords"
+                    v-auth:permission="`export`"
                     type="primary">导出</a-button>
         </div>
         <standard-table :bordered="true"
@@ -95,7 +95,8 @@
 
 <script>
 import StandardTable from "./table/StandardTable";
-import { getAttenceReport } from "@/services/attence";
+import { getAttenceReport, exportAttenceReport } from "@/services/attence";
+
 
 
 export default {
@@ -120,7 +121,8 @@ export default {
         showSizeChange: (current, pageSize) => (this.pageSize = pageSize),
       },
       visible: false,
-      spinning: false
+      spinning: false,
+      loading: false
     };
   },
   authorize: {
@@ -128,8 +130,8 @@ export default {
       check: "del",
       type: "permission",
     },
-    delList: {
-      check: "del",
+    exportRecords: {
+      check: "export",
       type: "permission",
     }
   },
@@ -151,6 +153,7 @@ export default {
     },
     search () {
       console.log(this.form)
+      this.loading = true;
       getAttenceReport(this.form).then(res => {
         console.log(res)
         if (res.code === 0) {
@@ -158,6 +161,7 @@ export default {
         } else {
           this.$message.info("生成失败")
         }
+        this.loading = false;
       })
 
     },
@@ -216,6 +220,22 @@ export default {
         this.remove();
       }
     },
+    exportRecords () {
+      if (this.selectedRows.length <= 0) {
+        this.$message.info("请勾选数据");
+        return
+      }
+      exportAttenceReport(this.selectedRows).then((res) => {
+
+        if (res.code === 0) {
+          this.$message.success("导出成功")
+          window.location.href = "/api/main/download?filename=" + res.data
+        } else {
+          this.$message.error(res.msg)
+        }
+      });
+
+    }
   },
 };
 </script>

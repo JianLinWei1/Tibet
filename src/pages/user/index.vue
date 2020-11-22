@@ -63,7 +63,8 @@
                :form="form"
                :visible="add_user_visible"
                :title="title"
-               :action="action"></addUser>
+               :action="action"
+               :checkedKeys="checkedKeys"></addUser>
     </a-modal>
 
   </a-card>
@@ -87,6 +88,7 @@ export default {
         routerIds: [1]
       },
       action: 1,
+      checkedKeys: []
 
     };
   },
@@ -144,16 +146,18 @@ export default {
       this.parentId = data.id;
 
       this.action = 1;
-      this.form = { routerIds: ["1"] }
+
+      this.checkedKeys.push("1")
     },
     editUserClick (data) {
       this.title = "编辑"
-      this.form = { routerIds: ["1"] }
+      //this.form = { routerIds: ["1"] }
       getUserById({ id: data.id }).then(res => {
         if (res.code === 0) {
           this.add_user_visible = true;
           this.form = res.data
-
+          this.form.routerIds.push("1")
+          this.checkedKeys = this.form.routerIds
 
           this.action = 2;
         } else {

@@ -31,20 +31,6 @@
         <slot v-bind="{ record, index, indent, expanded }"
               :name="$scopedSlots.expandedRowRender ? 'expandedRowRender' : ''"></slot>
       </template>
-      <viewer slot="photo"
-              style="width:10%"
-              slot-scope="text">
-        <img ref="img"
-             v-if="text !== null"
-             width="100"
-             :src="'/api/main/' + text" />
-      </viewer>
-      <div slot="role"
-           slot-scope="text">
-        <span v-if="text === 1">普通人员</span>
-        <span v-if="text === 2">白名单人员</span>
-        <span v-if="text === 3">黑名单人员</span>
-      </div>
 
     </a-table>
   </div>
@@ -53,79 +39,23 @@
 <script>
 
 const columns = [
-  {
-    title: "ID",
-    dataIndex: "id",
-    width: 100,
-  },
-  {
-    title: "姓名",
-    dataIndex: "name",
-    scopedSlots: { customRender: "name" },
-    width: 100,
-  },
-  {
-    title: "部门",
-    dataIndex: "department",
-
-    width: 100,
-  },
-  {
-    title: "身份证号",
-    dataIndex: "idCard",
-    width: 100,
-  },
-  {
-    title: "门禁卡号",
-    dataIndex: "accessId",
-
-    width: 100,
-  },
-  {
-    title: "车牌号",
-    dataIndex: "carId",
-    width: 100,
-  },
-  {
-    title: "电话",
-    dataIndex: "phone",
-    width: 100,
-  },
-  {
-    title: "照片",
-    dataIndex: "photo",
-    width: 100,
-    scopedSlots: { customRender: "photo" },
-  },
   /*  {
-     title: "角色",
-     dataIndex: "role",
+     title: "ID",
+     dataIndex: "id",
      width: 100,
-     scopedSlots: { customRender: "role" },
-   },
-   {
-     title: "生效时间",
-     dataIndex: "starTime",
- 
-     width: 100,
-   },
-   {
-     title: "失效时间",
-     dataIndex: "invalidTime",
- 
-     width: 100,
+     className: "notshow",
    }, */
   {
-    title: "注册时间",
-    dataIndex: "createTime",
-
-    width: 100,
+    title: "部门名称",
+    dataIndex: "name",
+    scopedSlots: { customRender: "name" },
+    width: 200,
   },
   {
-    title: "备注",
-    dataIndex: "content",
+    title: "属于机构",
+    dataIndex: "nickName",
+    width: 200,
   },
-
   {
     title: "操作",
 

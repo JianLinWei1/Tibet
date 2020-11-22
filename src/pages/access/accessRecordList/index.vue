@@ -1,76 +1,87 @@
 <template>
   <a-card>
-    <a-spin :spinning="spinning" tip="正在删除....">
+    <a-spin :spinning="spinning"
+            tip="正在删除....">
       <div :class="advanced ? 'search' : null">
         <a-form layout="horizontal">
           <div :class="advanced ? null : 'fold'">
             <a-row>
-              <a-col :md="8" :sm="24">
-                <a-form-item
-                  label="门禁卡号"
-                  :labelCol="{ span: 5 }"
-                  :wrapperCol="{ span: 18, offset: 1 }"
-                >
-                  <a-input v-model="form.icCard" placeholder="请输入" />
+              <a-col :md="8"
+                     :sm="24">
+                <a-form-item label="门禁卡号"
+                             :labelCol="{ span: 5 }"
+                             :wrapperCol="{ span: 18, offset: 1 }">
+                  <a-input v-model="form.icCard"
+                           placeholder="请输入" />
                 </a-form-item>
               </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item
-                  label="姓名"
-                  :labelCol="{ span: 5 }"
-                  :wrapperCol="{ span: 18, offset: 1 }"
-                >
-                  <a-input v-model="form.name" placeholder="请输入" />
+              <a-col :md="8"
+                     :sm="24">
+                <a-form-item label="姓名"
+                             :labelCol="{ span: 5 }"
+                             :wrapperCol="{ span: 18, offset: 1 }">
+                  <a-input v-model="form.name"
+                           placeholder="请输入" />
                 </a-form-item>
               </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item
-                  label="设备名称"
-                  :labelCol="{ span: 5 }"
-                  :wrapperCol="{ span: 18, offset: 1 }"
-                >
-                  <a-input v-model="form.dvName" placeholder="请输入" />
+              <a-col :md="8"
+                     :sm="24">
+                <a-form-item label="设备名称"
+                             :labelCol="{ span: 5 }"
+                             :wrapperCol="{ span: 18, offset: 1 }">
+                  <a-input v-model="form.dvName"
+                           placeholder="请输入" />
+                </a-form-item>
+              </a-col>
+              <a-col :md="8"
+                     :sm="24">
+                <a-form-item label="部门"
+                             :labelCol="{ span: 5 }"
+                             :wrapperCol="{ span: 18, offset: 1 }">
+                  <a-select v-model="form.department "
+                            style="width: 120px">
+                    <a-select-option v-for="(i,index) in departments"
+                                     :value="i.name"
+                                     :key="index">
+                      {{i.name}}
+                    </a-select-option>
+
+                  </a-select>
                 </a-form-item>
               </a-col>
             </a-row>
           </div>
           <span style="float: right; margin-top: 3px">
-            <a-button type="primary" @click="search">查询</a-button>
-            <a-button style="margin-left: 8px" @click="form = {}"
-              >重置</a-button
-            >
+            <a-button type="primary"
+                      @click="search">查询</a-button>
+            <a-button style="margin-left: 8px"
+                      @click="form = {}">重置</a-button>
           </span>
         </a-form>
       </div>
       <div>
         <div class="operator">
-          <a-button
-            @click="delList"
-            v-auth:permission="`del`"
-            ghost
-            type="danger"
-            >批量删除</a-button
-          >
-          <a-button
-            @click="exportRecords"
-            v-auth:permission="`export`"
-            style="margin-left: 10px"
-            type="primary"
-            >导出</a-button
-          >
+          <a-button @click="delList"
+                    v-auth:permission="`del`"
+                    ghost
+                    type="danger">批量删除</a-button>
+          <a-button @click="exportRecords"
+                    v-auth:permission="`export`"
+                    style="margin-left: 10px"
+                    type="primary">导出</a-button>
         </div>
 
-        <standard-table
-          :bordered="true"
-          :pagination="pagination"
-          :dataSource="dataSource"
-          :selectedRows.sync="selectedRows"
-          @change="onChange"
-          @selectedRowChange="onSelectChange"
-        >
-          <div slot="action" slot-scope="{ record }">
+        <standard-table :bordered="true"
+                        :pagination="pagination"
+                        :dataSource="dataSource"
+                        :selectedRows.sync="selectedRows"
+                        @change="onChange"
+                        @selectedRowChange="onSelectChange">
+          <div slot="action"
+               slot-scope="{ record }">
             <!-- <a style="margin-right: 8px"  @click="editRecord(record)"> <a-icon type="edit"  />编辑 </a> -->
-            <a @click="deleteRecord(record.id)" v-auth:permission="`del`">
+            <a @click="deleteRecord(record.id)"
+               v-auth:permission="`del`">
               <a-icon type="delete" />删除
             </a>
           </div>
@@ -83,11 +94,12 @@
 <script>
 import StandardTable from "./table/StandardTable";
 import { listRecords, delRecords, exportRecords } from "@/services/access";
+import { getList } from "@/services/department";
 
 export default {
   name: "QueryList",
   components: { StandardTable },
-  data() {
+  data () {
     return {
       advanced: true,
       dataSource: [],
@@ -105,6 +117,7 @@ export default {
       },
       visible: false,
       spinning: false,
+      departments: [],
     };
   },
   authorize: {
@@ -121,11 +134,15 @@ export default {
       type: "permission",
     },
   },
-  created() {
+  created () {
     this.listRecords();
+    getList({ page: 0, limit: 100 }).then(res => {
+      if (res.code === 0)
+        this.departments = res.data
+    })
   },
   methods: {
-    listRecords() {
+    listRecords () {
       this.form.page = this.pagination.current;
       this.form.limit = this.pagination.pageSize;
       listRecords(this.form).then((res) => {
@@ -137,17 +154,17 @@ export default {
         }
       });
     },
-    search() {
+    search () {
       this.form.id = null;
       this.listRecords();
     },
 
-    toggleAdvanced() {
+    toggleAdvanced () {
       this.advanced = !this.advanced;
     },
 
-    onClear() {},
-    deleteRecord(key) {
+    onClear () { },
+    deleteRecord (key) {
       let data = [];
       data.push(key);
       this.spinning = true;
@@ -163,20 +180,20 @@ export default {
       });
     },
 
-    editRecord(key) {
+    editRecord (key) {
       console.log(key);
       this.visible = true;
       this.issueFrom = key;
     },
 
-    onChange(page) {
+    onChange (page) {
       this.pagination = page;
       this.listRecords();
     },
-    onSelectChange() {
+    onSelectChange () {
       console.log(this.selectedRows);
     },
-    delList() {
+    delList () {
       let data = [];
       this.selectedRows.forEach((item) => {
         data.push(item.id);
@@ -192,24 +209,24 @@ export default {
         this.spinning = false;
       });
     },
-    exportRecords() {
-       
-      if (this.selectedRows.length<=0) {
-          this.$message.info("请勾选数据");
-          return
+    exportRecords () {
+
+      if (this.selectedRows.length <= 0) {
+        this.$message.info("请勾选数据");
+        return
       }
       exportRecords(this.selectedRows).then((res) => {
-        
-        if(res.code === 0){
-            this.$message.success("导出成功")
-            window.location.href="/api/api-auth/download?filename="+res.data
-        }else{
-            this.$message.error(res.msg)
+
+        if (res.code === 0) {
+          this.$message.success("导出成功")
+          window.location.href = "/api/main/download?filename=" + res.data
+        } else {
+          this.$message.error(res.msg)
         }
       });
     },
 
-    handleMenuClick(e) {
+    handleMenuClick (e) {
       if (e.key === "delete") {
         this.remove();
       }

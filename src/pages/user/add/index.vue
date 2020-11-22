@@ -32,11 +32,12 @@
                        show-checked-strategy="SHOW_ALL"
                        search-placeholder="请选择" @select="change" /> -->
         <a-tree checkable
-                v-model="form.routerIds"
-                :check-strictly="true"
+                v-model="checkedKeys"
                 v-if="treeData.length>0"
                 :auto-expand-parent="autoExpandParent"
-                :tree-data="treeData" />
+                :tree-data="treeData"
+                @check="onCheck" />
+
       </a-form-model-item>
 
       <a-form-model-item ref="description"
@@ -64,7 +65,6 @@ export default {
     return {
       labelCol: { span: 8 },
       wrapperCol: { span: 14 },
-
       treeData: [],
       SHOW_PARENT,
       autoExpandParent: true,
@@ -81,9 +81,9 @@ export default {
       },
     };
   },
-  props: { parentId: String, form: Object, action: Number },
+  props: { parentId: String, form: Object, checkedKeys: Array, action: Number },
   created () {
-    console.log(this.form);
+
     this.getAddUserTree();
   },
   methods: {
@@ -93,7 +93,7 @@ export default {
         if (valid) {
           console.log(this.form.routerIds)
           this.$message.info("正在提交数据请稍后..")
-          this.form.routerIds = this.form.routerIds.checked
+
 
           if (this.action == 2) {
             updateUser(this.form).then((res) => {
@@ -135,20 +135,20 @@ export default {
 
     getAddUserTree () {
       getAddUserTree().then((res) => {
-        console.log(res);
+
         if (res.code === 0) {
           this.treeData = res.data;
         }
       });
     },
-    /*    onCheck (checkedkey, info) {
-         console.log(checkedkey, info)
-         //this.form.routerIds = null;
-         let checkedKeysResult = [...checkedkey, ...info.halfCheckedKeys];
-         this._routerIds = checkedKeysResult;
-         console.log(this._routerIds)
-   
-       }, */
+    onCheck (checkedkey, info) {
+
+
+      let checkedKeysResult = [...checkedkey, ...info.halfCheckedKeys];
+      this.form.routerIds = checkedKeysResult;
+
+
+    },
 
   },
 
