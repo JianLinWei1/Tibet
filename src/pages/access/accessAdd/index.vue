@@ -9,6 +9,43 @@
                       v-model="searchIP"
                       size="large"
                       @search="onSearch" /> -->
+      <div :class="advanced ? 'search' : null">
+        <a-form layout="horizontal">
+          <div :class="advanced ? null : 'fold'">
+            <a-row>
+              <a-col :md="8"
+                     :sm="24">
+                <a-form-item label="组织"
+                             :labelCol="{ span: 5 }"
+                             :wrapperCol="{ span: 18, offset: 1 }">
+                  <a-tree-select style="width: 100%"
+                                 v-model="treeSel"
+                                 v-if="treeData.length >0"
+                                 tree-node-filter-prop="value"
+                                 :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                                 :tree-data="treeData"
+                                 placeholder="请选择"
+                                 @change="selTreeChange"
+                                 tree-default-expand-all>
+                  </a-tree-select>
+                </a-form-item>
+
+              </a-col>
+            </a-row>
+          </div>
+          <span style="float: right; margin-top: 3px">
+            <a-button type="primary"
+                      @click="listDevice">查询</a-button>
+            <a-button style="margin-left: 8px"
+                      @click="form={} ,treeSel=null">重置</a-button>
+            <a @click="toggleAdvanced"
+               style="margin-left: 8px">
+              {{ advanced ? "收起" : "展开" }}
+              <a-icon :type="advanced ? 'up' : 'down'" />
+            </a>
+          </span>
+        </a-form>
+      </div>
 
       <a-button type="primary"
                 size="large"
@@ -132,9 +169,11 @@
 import Cookie from "js-cookie";
 import { searchDevice, addDevice, listDevice, delDevice } from "@/services/access.js";
 import issued from "../issued";
+import { getAccountTree2 } from "@/services/user"
 export default {
   data () {
     return {
+      advanced: true,
       form: {},
       visible: false,
       token: null,
@@ -143,7 +182,15 @@ export default {
       dataSource: null,
       issueFrom: {},
       manualFrom: {},
-      pagination: {},
+      pagination: {
+        current: 0,
+        total: 0,
+        pageSize: 10,
+        showSizeChanger: true,
+        pageSizeOptions: ['10', '20', '30', '40'],
+        showTotal: total => `共 ${total} 条`,
+        showSizeChange: (current, pageSize) => this.pageSize = pageSize,
+      },
       columns: [
         {
           title: "ID",
@@ -195,7 +242,9 @@ export default {
       ],
       fileList: [],
       manual: false,
-      suLoad: false
+      suLoad: false,
+      treeData: [],
+      treeSel: null
     };
   },
   components: {
@@ -218,6 +267,10 @@ export default {
   created () {
     this.token = Cookie.get("token");
     this.listDevice();
+    getAccountTree2().then(res => {
+      if (res.code === 0)
+        this.treeData = res.data
+    })
   },
   computed: {},
   methods: {
@@ -286,8 +339,13 @@ export default {
       console.log(pagination);
     },
     listDevice () {
-      listDevice({ page: 0, limit: 10 }).then((res) => {
-        if (res.code === 0) this.dataSource = res.data;
+      this.form.page = this.pagination.current
+      this.form.limit = this.pagination.pageSize
+      listDevice(this.form).then((res) => {
+        if (res.code === 0) {
+          this.dataSource = res.data;
+          this.pagination.total = res.count
+        }
       });
     },
 
@@ -299,6 +357,14 @@ export default {
         this.dataSource = dataSource;
       }
     },
+    selTreeChange (value, label, ex) {
+      if (ex.triggerNode !== undefined)
+        this.form.userId = ex.triggerNode.eventKey
+    },
+    toggleAdvanced () {
+      this.advanced = !this.advanced;
+    },
+
   },
 };
 </script>

@@ -6,7 +6,7 @@
                   :label-col="labelCol"
                   :wrapper-col="wrapperCol">
       <a-form-model-item ref="userName"
-                         label="账号"
+                         label="组织"
                          prop="userName">
         <a-input v-model="form.userName" />
       </a-form-model-item>

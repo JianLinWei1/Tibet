@@ -24,6 +24,24 @@
                            placeholder="请输入" />
                 </a-form-item>
               </a-col>
+              <a-col :md="8"
+                     :sm="24">
+                <a-form-item label="组织"
+                             :labelCol="{ span: 5 }"
+                             :wrapperCol="{ span: 18, offset: 1 }">
+                  <a-tree-select style="width: 100%"
+                                 v-model="treeSel"
+                                 v-if="treeData.length >0"
+                                 tree-node-filter-prop="value"
+                                 :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                                 :tree-data="treeData"
+                                 placeholder="请选择"
+                                 @change="selTreeChange"
+                                 tree-default-expand-all>
+                  </a-tree-select>
+                </a-form-item>
+
+              </a-col>
             </a-row>
           </div>
           <span style="float: right; margin-top: 3px">
@@ -218,6 +236,8 @@ import {
   saveParkPersonInfo,
 } from "@/services/parking";
 
+import { getAccountTree2 } from "@/services/user"
+
 export default {
   name: "QueryList",
   components: { StandardTable },
@@ -252,6 +272,8 @@ export default {
         need_alarm: 0
       },
       issuedData: [],
+      treeData: [],
+      treeSel: null
     };
   },
   authorize: {
@@ -270,6 +292,10 @@ export default {
   },
   created () {
     this.listParking();
+    getAccountTree2().then(res => {
+      if (res.code === 0)
+        this.treeData = res.data
+    })
   },
   methods: {
     listParking () {
@@ -406,6 +432,11 @@ export default {
         }
       });
     },
+    selTreeChange (value, label, ex) {
+      if (ex.triggerNode !== undefined)
+        this.form.userId = ex.triggerNode.eventKey
+    }
+
   },
 };
 </script>

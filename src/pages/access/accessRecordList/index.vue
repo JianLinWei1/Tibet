@@ -33,6 +33,8 @@
                            placeholder="请输入" />
                 </a-form-item>
               </a-col>
+            </a-row>
+            <a-row v-if="advanced">
               <a-col :md="8"
                      :sm="24">
                 <a-form-item label="部门"
@@ -49,6 +51,24 @@
                   </a-select>
                 </a-form-item>
               </a-col>
+              <a-col :md="8"
+                     :sm="24">
+                <a-form-item label="组织"
+                             :labelCol="{ span: 5 }"
+                             :wrapperCol="{ span: 18, offset: 1 }">
+                  <a-tree-select style="width: 100%"
+                                 v-model="treeSel"
+                                 v-if="treeData.length >0"
+                                 tree-node-filter-prop="value"
+                                 :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                                 :tree-data="treeData"
+                                 placeholder="请选择"
+                                 @change="selTreeChange"
+                                 tree-default-expand-all>
+                  </a-tree-select>
+                </a-form-item>
+
+              </a-col>
             </a-row>
           </div>
           <span style="float: right; margin-top: 3px">
@@ -56,6 +76,11 @@
                       @click="search">查询</a-button>
             <a-button style="margin-left: 8px"
                       @click="form = {}">重置</a-button>
+            <a @click="toggleAdvanced"
+               style="margin-left: 8px">
+              {{ advanced ? "收起" : "展开" }}
+              <a-icon :type="advanced ? 'up' : 'down'" />
+            </a>
           </span>
         </a-form>
       </div>
@@ -96,6 +121,7 @@
 import StandardTable from "./table/StandardTable";
 import { listRecords, delRecords, exportRecords } from "@/services/access";
 import { getList } from "@/services/department";
+import { getAccountTree2 } from "@/services/user"
 
 export default {
   name: "QueryList",
@@ -119,7 +145,9 @@ export default {
       visible: false,
       spinning: false,
       departments: [],
-      listloading: false
+      listloading: false,
+      treeData: [],
+      treeSel: null
     };
   },
   authorize: {
@@ -141,6 +169,10 @@ export default {
     getList({ page: 0, limit: 100 }).then(res => {
       if (res.code === 0)
         this.departments = res.data
+    })
+    getAccountTree2().then(res => {
+      if (res.code === 0)
+        this.treeData = res.data
     })
   },
   methods: {
@@ -236,6 +268,10 @@ export default {
         this.remove();
       }
     },
+    selTreeChange (value, label, ex) {
+      if (ex.triggerNode !== undefined)
+        this.form.userId = ex.triggerNode.eventKey
+    }
   },
 };
 </script>

@@ -61,6 +61,11 @@ const columns = [
     width: 100,
   },
 
+  {
+    title: "部门",
+    dataIndex: "department",
+    width: 100,
+  },
 
   {
     title: "日期范围",

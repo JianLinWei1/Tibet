@@ -54,6 +54,40 @@
                                   v-model="form.times" />
                 </a-form-item>
               </a-col>
+              <a-col :md="8"
+                     :sm="24">
+                <a-form-item label="部门"
+                             :labelCol="{ span: 5 }"
+                             :wrapperCol="{ span: 18, offset: 1 }">
+                  <a-select v-model="form.department "
+                            style="width: 120px">
+                    <a-select-option v-for="(i,index) in departments"
+                                     :value="i.name"
+                                     :key="index">
+                      {{i.name}}
+                    </a-select-option>
+
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :md="8"
+                     :sm="24">
+                <a-form-item label="组织"
+                             :labelCol="{ span: 5 }"
+                             :wrapperCol="{ span: 18, offset: 1 }">
+                  <a-tree-select style="width: 100%"
+                                 v-model="treeSel"
+                                 v-if="treeData.length >0"
+                                 tree-node-filter-prop="value"
+                                 :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                                 :tree-data="treeData"
+                                 placeholder="请选择"
+                                 @change="selTreeChange"
+                                 tree-default-expand-all>
+                  </a-tree-select>
+                </a-form-item>
+
+              </a-col>
 
             </a-row>
           </div>
@@ -96,7 +130,8 @@
 <script>
 import StandardTable from "./table/StandardTable";
 import { getAttenceReport, exportAttenceReport } from "@/services/attence";
-
+import { getList } from "@/services/department";
+import { getAccountTree2 } from "@/services/user"
 
 
 export default {
@@ -122,7 +157,11 @@ export default {
       },
       visible: false,
       spinning: false,
-      loading: false
+      loading: false,
+      departments: [],
+      listloading: false,
+      treeData: [],
+      treeSel: null
     };
   },
   authorize: {
@@ -136,6 +175,14 @@ export default {
     }
   },
   created () {
+    getList({ page: 0, limit: 100 }).then(res => {
+      if (res.code === 0)
+        this.departments = res.data
+    })
+    getAccountTree2().then(res => {
+      if (res.code === 0)
+        this.treeData = res.data
+    })
 
   },
   methods: {
@@ -159,7 +206,7 @@ export default {
         if (res.code === 0) {
           this.dataSource = res.data
         } else {
-          this.$message.info("生成失败")
+          this.$message.info("生成失败," + res.msg)
         }
         this.loading = false;
       })
@@ -235,8 +282,15 @@ export default {
         }
       });
 
+    },
+    selTreeChange (value, label, ex) {
+      if (ex.triggerNode !== undefined)
+        this.form.userId = ex.triggerNode.eventKey
     }
+
+
   },
+
 };
 </script>
 

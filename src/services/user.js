@@ -22,6 +22,10 @@ export async function getRoutesConfig () {
 export async function getAccountTree () {
   return request(path + "/getAccountTree", METHOD.GET)
 }
+
+export async function getAccountTree2 () {
+  return request(path + "/getAccountTree2", METHOD.GET)
+}
 export async function addUser (params) {
   return request(path + "/addUser", METHOD.POST,
     params

@@ -69,8 +69,11 @@ export default {
     },
 
     handleOk () {
-      if (this.form.newPw !== this.form.newPw2)
+      if (this.form.newPw !== this.form.newPw2) {
         this.$message.error("两次密码不一致")
+        return
+      }
+
       updatePw(this.form).then((res) => {
         if (res.code !== 0) this.$message.error(res.msg);
         else this.$message.success("修改成功");

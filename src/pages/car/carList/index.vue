@@ -1,52 +1,74 @@
 <template>
   <a-card>
-    <a-spin :spinning="spinning" tip="请稍候....">
+    <a-spin :spinning="spinning"
+            tip="请稍候....">
       <div :class="advanced ? 'search' : null">
         <a-form layout="horizontal">
           <div :class="advanced ? null : 'fold'">
             <a-row>
-              <a-col :md="8" :sm="24">
-                <a-form-item
-                  label="姓名"
-                  :labelCol="{ span: 5 }"
-                  :wrapperCol="{ span: 18, offset: 1 }"
-                >
-                  <a-input v-model="form.name" placeholder="请输入" />
+              <a-col :md="8"
+                     :sm="24">
+                <a-form-item label="姓名"
+                             :labelCol="{ span: 5 }"
+                             :wrapperCol="{ span: 18, offset: 1 }">
+                  <a-input v-model="form.name"
+                           placeholder="请输入" />
                 </a-form-item>
               </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item
-                  label="车牌"
-                  :labelCol="{ span: 5 }"
-                  :wrapperCol="{ span: 18, offset: 1 }"
-                >
-                  <a-input v-model="form.carId" placeholder="请输入" />
+              <a-col :md="8"
+                     :sm="24">
+                <a-form-item label="车牌"
+                             :labelCol="{ span: 5 }"
+                             :wrapperCol="{ span: 18, offset: 1 }">
+                  <a-input v-model="form.carId"
+                           placeholder="请输入" />
                 </a-form-item>
+              </a-col>
+              <a-col :md="8"
+                     :sm="24">
+                <a-form-item label="组织"
+                             :labelCol="{ span: 5 }"
+                             :wrapperCol="{ span: 18, offset: 1 }">
+                  <a-tree-select style="width: 100%"
+                                 v-model="treeSel"
+                                 v-if="treeData.length >0"
+                                 tree-node-filter-prop="value"
+                                 :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                                 :tree-data="treeData"
+                                 placeholder="请选择"
+                                 @change="selTreeChange"
+                                 tree-default-expand-all>
+                  </a-tree-select>
+                </a-form-item>
+
               </a-col>
             </a-row>
           </div>
           <span style="float: right; margin-top: 3px">
-            <a-button type="primary" @click="search">查询</a-button>
-            <a-button style="margin-left: 8px" @click="form = {}"
-              >重置</a-button
-            >
+            <a-button type="primary"
+                      @click="search">查询</a-button>
+            <a-button style="margin-left: 8px"
+                      @click="form = {}">重置</a-button>
           </span>
         </a-form>
       </div>
       <div>
         <div class="operator">
-          <a-button @click="delList" v-auth:permission ="`del`" ghost type="danger">批量删除</a-button>
+          <a-button @click="delList"
+                    v-auth:permission="`del`"
+                    ghost
+                    type="danger">批量删除</a-button>
         </div>
-        <standard-table
-          :bordered="true"
-          :pagination="pagination"
-          :dataSource="dataSource"
-          :selectedRows.sync="selectedRows"
-          @change="onChange"
-          @selectedRowChange="onSelectChange"
-        >
-          <div slot="action" slot-scope="{ record }">
-            <a @click="deleteRecord(record.id)" v-auth:permission ="`del`">
+        <standard-table :bordered="true"
+                        :pagination="pagination"
+                        :dataSource="dataSource"
+                        :selectedRows.sync="selectedRows"
+                        @change="onChange"
+                        @selectedRowChange="onSelectChange">
+          <div slot="action"
+               slot-scope="{ record }">
+            <a @click="deleteRecord(record.id)"
+               v-auth:permission="`del`">
               <a-icon type="delete" />删除
             </a>
           </div>
@@ -60,10 +82,12 @@
 import StandardTable from "./table/StandardTable";
 import { listParkingPerson, delParkingPerson } from "@/services/parking";
 
+import { getAccountTree2 } from "@/services/user"
+
 export default {
   name: "QueryList",
   components: { StandardTable },
-  data() {
+  data () {
     return {
       advanced: true,
       dataSource: [],
@@ -87,24 +111,30 @@ export default {
       issuedvisible: false,
       issuedFrom: {},
       issuedData: [],
+      treeData: [],
+      treeSel: null
     };
   },
   authorize: {
-    
+
     deleteRecord: {
       check: "del",
       type: "permission",
     },
-    delList:{
-       check: "del",
+    delList: {
+      check: "del",
       type: "permission",
     }
   },
-  created() {
+  created () {
     this.listParkingPerson();
+    getAccountTree2().then(res => {
+      if (res.code === 0)
+        this.treeData = res.data
+    })
   },
   methods: {
-    listParkingPerson() {
+    listParkingPerson () {
       this.form.page = this.pagination.current;
       this.form.limit = this.pagination.pageSize;
       listParkingPerson(this.form).then((res) => {
@@ -116,17 +146,17 @@ export default {
         }
       });
     },
-    search() {
+    search () {
       this.form.id = null;
       this.listParkingPerson();
     },
 
-    toggleAdvanced() {
+    toggleAdvanced () {
       this.advanced = !this.advanced;
     },
 
-    onClear() {},
-    deleteRecord(key) {
+    onClear () { },
+    deleteRecord (key) {
       let data = [];
       data.push(key);
       this.spinning = true;
@@ -141,23 +171,23 @@ export default {
         this.spinning = false;
       });
     },
-    editRecord(key) {
+    editRecord (key) {
       this.visible = true;
       this.recordFrom = key;
     },
-    issuedRecord(key) {
+    issuedRecord (key) {
       this.issuedvisible = true;
       this.issuedFrom = key;
     },
 
-    onChange(page) {
+    onChange (page) {
       this.pagination = page;
       this.listParkingPerson();
     },
-    onSelectChange() {
+    onSelectChange () {
       console.log(this.selectedRows);
     },
-    delList() {
+    delList () {
       let data = [];
       this.selectedRows.forEach((item) => {
         data.push(item.id);
@@ -174,11 +204,15 @@ export default {
       });
     },
 
-    handleMenuClick(e) {
+    handleMenuClick (e) {
       if (e.key === "delete") {
         this.remove();
       }
     },
+    selTreeChange (value, label, ex) {
+      if (ex.triggerNode !== undefined)
+        this.form.userId = ex.triggerNode.eventKey
+    }
   },
 };
 </script>

@@ -144,8 +144,10 @@ export default {
     addUserClick (data) {
       this.add_user_visible = true;
       this.parentId = data.id;
-
+      this.title = "添加下级"
       this.action = 1;
+      this.form = {}
+      this.checkedKeys = []
 
       this.checkedKeys.push("1")
     },

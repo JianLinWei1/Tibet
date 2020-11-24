@@ -12,7 +12,7 @@ export async function addDevice (data) {
 }
 
 export async function listDevice (params) {
-  return request(url + "/listDevice", METHOD.GET,
+  return request(url + "/listDevice", METHOD.POST,
     params
   )
 }
