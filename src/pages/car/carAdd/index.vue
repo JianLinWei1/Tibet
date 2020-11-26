@@ -163,32 +163,31 @@
             <a-input disabled
                      v-model="issuedFrom.device_name" />
           </a-form-model-item>
-          <!-- <a-form-model-item label="选择人员" prop="personIds">
-            <a-select
-              show-search
-              mode="multiple"
-              v-model="issuedFrom.personIds"
-              placeholder="搜索"
-              style="width: 100%"
-              :filter-option="false"
-              :not-found-content="fetching ? undefined : null"
-              @search="fetchPerson"
-            >
-              <a-spin v-if="fetching" slot="notFoundContent" size="small" />
-              <a-select-option
-                v-for="d in issuedData"
-                :key="d.id"
-                :value="d.id"
-              >
+          <a-form-model-item label="选择人员"
+                             prop="personIds">
+            <a-select show-search
+                      mode="multiple"
+                      v-model="issuedFrom.personIds"
+                      placeholder="搜索"
+                      style="width: 100%"
+                      :filter-option="false"
+                      :not-found-content="fetching ? undefined : null"
+                      @search="fetchPerson">
+              <a-spin v-if="fetching"
+                      slot="notFoundContent"
+                      size="small" />
+              <a-select-option v-for="d in issuedData"
+                               :key="d.id"
+                               :value="d.id">
                 {{ d.name }}
               </a-select-option>
             </a-select>
-          </a-form-model-item> -->
-          <a-form-model-item ref="carId"
+          </a-form-model-item>
+          <!--   <a-form-model-item ref="carId"
                              label="车牌号"
                              prop="carId">
             <a-input v-model="issuedFrom.carId" />
-          </a-form-model-item>
+          </a-form-model-item> -->
           <!--  <a-form-model-item label="是否有效" prop="enable">
             <a-select style="width: 120px" v-model="issuedFrom.enable">
               <a-select-option value="0"> 无效 </a-select-option>

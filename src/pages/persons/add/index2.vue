@@ -22,8 +22,7 @@
       <a-form-model-item ref="department"
                          label="部门"
                          prop="department">
-        <a-select v-model="form.department "
-                  style="width: 120px">
+        <a-select v-model="form.department ">
           <a-select-option v-for="(i,index) in departments"
                            :value="i.name"
                            :key="index">

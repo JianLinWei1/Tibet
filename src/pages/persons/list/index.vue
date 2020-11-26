@@ -47,8 +47,7 @@
               <a-form-item label="部门"
                            :labelCol="{ span: 5 }"
                            :wrapperCol="{ span: 18, offset: 1 }">
-                <a-select v-model="form.department "
-                          style="width: 120px">
+                <a-select v-model="form.department ">
                   <a-select-option v-for="(i,index) in departments"
                                    :value="i.name"
                                    :key="index">

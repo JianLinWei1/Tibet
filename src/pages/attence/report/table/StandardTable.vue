@@ -67,6 +67,8 @@ const columns = [
     width: 100,
   },
 
+
+
   {
     title: "日期范围",
     dataIndex: "times",
@@ -89,6 +91,11 @@ const columns = [
     title: "早退次数",
     dataIndex: "earlyCount",
     width: 180,
+  },
+  {
+    title: "旷工次数",
+    dataIndex: "absentCount",
+    width: 100,
   },
 
 ];

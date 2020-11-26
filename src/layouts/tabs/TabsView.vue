@@ -1,24 +1,31 @@
 <template>
   <admin-layout>
-    <contextmenu :itemList="menuItemList" :visible.sync="menuVisible" @select="onMenuSelect" />
-    <a-tabs
-      v-if="multiPage"
-      type="editable-card"
-      :active-key="activePage"
-      :class="['tabs-view', layout, pageWidth]"
-      :hide-add="true"
-      @change="changePage"
-      @edit="editPage"
-      @contextmenu="onContextmenu"
-    >
-      <a-tab-pane :key="page.fullPath" v-for="page in pageList">
-        <span slot="tab" :pagekey="page.fullPath">{{pageName(page)}}</span>
+    <contextmenu :itemList="menuItemList"
+                 :visible.sync="menuVisible"
+                 @select="onMenuSelect" />
+    <a-tabs v-if="multiPage"
+            type="editable-card"
+            :active-key="activePage"
+            :class="['tabs-view', layout, pageWidth]"
+            :hide-add="true"
+            @change="changePage"
+            @edit="editPage"
+            @contextmenu="onContextmenu">
+      <a-tab-pane :key="page.fullPath"
+                  v-for="page in pageList">
+        <span slot="tab"
+              :pagekey="page.fullPath">{{pageName(page)}}</span>
       </a-tab-pane>
     </a-tabs>
-    <div class="tabs-view-content" :style="`margin-top: ${multiPage ? -24 : 0}px`">
-      <page-toggle-transition :disabled="animate.disabled" :animate="animate.name" :direction="animate.direction">
-        <a-keep-alive v-if="multiPage" v-model="clearCaches">
-          <router-view ref="tabContent" :key="$route.fullPath" />
+    <div class="tabs-view-content"
+         :style="`margin-top: ${multiPage ? -24 : 0}px`">
+      <page-toggle-transition :disabled="animate.disabled"
+                              :animate="animate.name"
+                              :direction="animate.direction">
+        <a-keep-alive v-if="multiPage"
+                      v-model="clearCaches">
+          <router-view ref="tabContent"
+                       :key="$route.fullPath" />
         </a-keep-alive>
         <router-view v-else />
       </page-toggle-transition>
@@ -30,14 +37,14 @@
 import AdminLayout from '@/layouts/AdminLayout'
 import Contextmenu from '@/components/menu/Contextmenu'
 import PageToggleTransition from '@/components/transition/PageToggleTransition'
-import {mapState, mapMutations} from 'vuex'
-import {getI18nKey} from '@/utils/routerUtil'
+import { mapState, mapMutations } from 'vuex'
+import { getI18nKey } from '@/utils/routerUtil'
 import AKeepAlive from '@/components/cache/AKeepAlive'
 
 export default {
   name: 'TabsView',
   i18n: require('./i18n'),
-  components: { PageToggleTransition, Contextmenu, AdminLayout , AKeepAlive },
+  components: { PageToggleTransition, Contextmenu, AdminLayout, AKeepAlive },
   data () {
     return {
       clearCaches: [],
@@ -49,14 +56,14 @@ export default {
   },
   computed: {
     ...mapState('setting', ['multiPage', 'animate', 'layout', 'pageWidth']),
-    menuItemList() {
+    menuItemList () {
       return [
         { key: '1', icon: 'vertical-right', text: this.$t('closeLeft') },
         { key: '2', icon: 'vertical-left', text: this.$t('closeRight') },
         { key: '3', icon: 'close', text: this.$t('closeOthers') }
       ]
     },
-    tabsOffset() {
+    tabsOffset () {
       return this.multiPage ? 24 : 0
     }
   },
@@ -70,11 +77,11 @@ export default {
   },
   mounted () {
     this.correctPageMinHeight(-this.tabsOffset)
-    if(this.multiPage){
+    if (this.multiPage) {
       this.cachedKeys.push(this.$refs.tabContent.$vnode.key)
     }
   },
-  beforeDestroy() {
+  beforeDestroy () {
     window.removeEventListener('page:close', this.closePageListener)
     this.correctPageMinHeight(this.tabsOffset)
   },
@@ -98,7 +105,7 @@ export default {
         window.addEventListener('page:close', this.closePageListener)
       }
     },
-    tabsOffset(newVal, oldVal) {
+    tabsOffset (newVal, oldVal) {
       this.correctPageMinHeight(oldVal - newVal)
     }
   },
@@ -170,7 +177,7 @@ export default {
       const index = this.pageList.findIndex(item => item.fullPath === pageKey)
       // 清除缓存
       this.clearCaches = this.cachedKeys.filter((item, i) => i > index)
-      this.cachedKeys = this.cachedKeys.slice(0, index+1)
+      this.cachedKeys = this.cachedKeys.slice(0, index + 1)
 
       this.pageList = this.pageList.slice(0, index + 1)
       if (!this.pageList.find(item => item.fullPath === this.activePage)) {
@@ -178,11 +185,11 @@ export default {
         this.$router.push(this.activePage)
       }
     },
-    pageName(page) {
+    pageName (page) {
       return this.$t(getI18nKey(page.matched[page.matched.length - 1].path))
     },
-    closePageListener(event) {
-      const {closeRoute, nextRoute} = event.detail
+    closePageListener (event) {
+      const { closeRoute, nextRoute } = event.detail
       const closePath = typeof closeRoute === 'string' ? closeRoute : closeRoute.path
       this.remove(closePath, nextRoute)
     },
@@ -206,13 +213,13 @@ function getPageKey (target, depth = 0) {
 </script>
 
 <style scoped lang="less">
-  .tabs-view{
-    margin: -16px auto 8px;
-    &.head.fixed{
-      max-width: 1400px;
-    }
+.tabs-view {
+  margin: -16px auto 8px;
+  &.head.fixed {
+    max-width: 1400px;
   }
-  .tabs-view-content{
-    position: relative;
-  }
+}
+.tabs-view-content {
+  position: relative;
+}
 </style>

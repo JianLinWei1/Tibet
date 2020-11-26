@@ -15,11 +15,19 @@
             </a-col>
             <a-col :md="8"
                    :sm="24">
-              <a-form-item label="属于机构"
+              <a-form-item label="组织"
                            :labelCol="{ span: 5 }"
                            :wrapperCol="{ span: 18, offset: 1 }">
-                <a-input v-model="form.nickName"
-                         placeholder="请输入" />
+                <a-tree-select style="width: 100%"
+                               v-model="treeSel"
+                               v-if="treeData.length >0"
+                               tree-node-filter-prop="value"
+                               :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                               :tree-data="treeData"
+                               placeholder="请选择"
+                               @change="selTreeChange"
+                               tree-default-expand-all>
+                </a-tree-select>
               </a-form-item>
             </a-col>
 
@@ -97,6 +105,7 @@
 <script>
 import StandardTable from "./table/StandardTable";
 import { insert, getList, del } from "@/services/department";
+import { getAccountTree2 } from "@/services/user"
 
 
 export default {
@@ -125,12 +134,18 @@ export default {
         name: [{ required: true, message: "必填", trigger: "blur" }]
       },
       title: "添加部门",
-      saveForm: {}
+      saveForm: {},
+      treeData: [],
+      treeSel: null
     };
   },
 
   created () {
     this.getList();
+    getAccountTree2().then(res => {
+      if (res.code === 0)
+        this.treeData = res.data
+    })
   },
   authorize: {
     editRecord: {
@@ -242,6 +257,10 @@ export default {
           return false;
         }
       });
+    },
+    selTreeChange (value, label, ex) {
+      if (ex.triggerNode !== undefined)
+        this.form.userId = ex.triggerNode.eventKey
     }
   },
 };
