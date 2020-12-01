@@ -106,7 +106,7 @@
 import StandardTable from "./table/StandardTable";
 import { insert, getList, del } from "@/services/department";
 import { getAccountTree2 } from "@/services/user"
-
+import { mapGetters } from "vuex";
 
 export default {
   name: "QueryList",
@@ -139,12 +139,14 @@ export default {
       treeSel: null
     };
   },
-
+ computed: { ...mapGetters("account", ["user"])},
   created () {
     this.getList();
     getAccountTree2().then(res => {
-      if (res.code === 0)
+       if (res.code === 0) {
+        this.treeSel = this.user
         this.treeData = res.data
+      }
     })
   },
   authorize: {

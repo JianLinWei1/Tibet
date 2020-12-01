@@ -1,8 +1,6 @@
 <template>
-  <a-spin :spinning="spinning"
-          tip="正在搜索门禁控制器请稍后.....">
-    <a-card :body-style="{ padding: '24px 32px' }"
-            :bordered="false">
+  <a-spin :spinning="spinning" tip="正在搜索门禁控制器请稍后.....">
+    <a-card :body-style="{ padding: '24px 32px' }" :bordered="false">
       <!--      <a-input-search style="padding: 20px"
                       placeholder="请输入门禁控制器服务地址ip"
                       enter-button="搜索门禁控制器"
@@ -13,20 +11,9 @@
         <a-form layout="horizontal">
           <div :class="advanced ? null : 'fold'">
             <a-row>
-              <a-col :md="8"
-                     :sm="24">
-                <a-form-item label="组织"
-                             :labelCol="{ span: 5 }"
-                             :wrapperCol="{ span: 18, offset: 1 }">
-                  <a-tree-select style="width: 100%"
-                                 v-model="treeSel"
-                                 v-if="treeData.length >0"
-                                 tree-node-filter-prop="value"
-                                 :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-                                 :tree-data="treeData"
-                                 placeholder="请选择"
-                                 @change="selTreeChange"
-                                 tree-default-expand-all>
+              <a-col :md="8" :sm="24">
+                <a-form-item label="组织" :labelCol="{ span: 5 }" :wrapperCol="{ span: 18, offset: 1 }">
+                  <a-tree-select style="width: 100%" v-model="treeSel" v-if="treeData.length >0" tree-node-filter-prop="value" :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }" :tree-data="treeData" placeholder="请选择" @change="selTreeChange" tree-default-expand-all>
                   </a-tree-select>
                 </a-form-item>
 
@@ -34,12 +21,9 @@
             </a-row>
           </div>
           <span style="float: right; margin-top: 3px">
-            <a-button type="primary"
-                      @click="listDevice">查询</a-button>
-            <a-button style="margin-left: 8px"
-                      @click="form={} ,treeSel=null">重置</a-button>
-            <a @click="toggleAdvanced"
-               style="margin-left: 8px">
+            <a-button type="primary" @click="listDevice">查询</a-button>
+            <a-button style="margin-left: 8px" @click="form={} ,treeSel=null">重置</a-button>
+            <a @click="toggleAdvanced" style="margin-left: 8px">
               {{ advanced ? "收起" : "展开" }}
               <a-icon :type="advanced ? 'up' : 'down'" />
             </a>
@@ -47,46 +31,26 @@
         </a-form>
       </div>
 
-      <a-button type="primary"
-                size="large"
-                icon="search"
-                v-auth:permission="`search`"
-                @click="onSearch">
+      <a-button type="primary" size="large" icon="search" v-auth:permission="`search`" @click="onSearch">
         搜索门禁控制器
       </a-button>
-      <a-button type="primary"
-                size="large"
-                icon="plus"
-                style="margin-left: 10px"
-                v-auth:permission="`search`"
-                @click="manual = true">
+      <a-button type="primary" size="large" icon="plus" style="margin-left: 10px" v-auth:permission="`search`" @click="manual = true">
         手动添加控制器
       </a-button>
-      <a-table bordered
-               :row-key="(row) => row.id"
-               :data-source="dataSource"
-               :pagination="pagination"
-               :columns="columns">
-        <div slot="action"
-             slot-scope="record">
-          <a style="margin-right: 8px"
-             v-auth:permission="`add`"
-             @click="addRecord(record)">
+      <a-table bordered :row-key="(row) => row.id" :data-source="dataSource" :pagination="pagination" :columns="columns">
+        <div slot="action" slot-scope="record">
+          <a style="margin-right: 8px" v-auth:permission="`add`" @click="addRecord(record)">
             <a-icon type="plus" />添加
           </a>
-          <a style="margin-right: 8px"
-             v-auth:permission="`issued`"
-             @click="issue(record)">
+          <a style="margin-right: 8px" v-auth:permission="`issued`" @click="issue(record)">
             <a-icon type="vertical-align-bottom" />发卡
           </a>
-          <a style="margin-right: 8px"
-             @click="delRecord(record.id)">
+          <a style="margin-right: 8px" @click="delRecord(record.id)">
             <a-icon type="delete" />删除
           </a>
         </div>
 
-        <template slot="name"
-                  slot-scope="text, record">
+        <template slot="name" slot-scope="text, record">
           <div class="editable-cell">
             <div class="editable-cell-input-wrapper">
               <a-input v-model="record.name" />
@@ -97,29 +61,18 @@
     </a-card>
 
     <!---->
-    <a-modal width="50%"
-             :footer="null"
-             v-model="visible"
-             title="下发卡号">
+    <a-modal width="50%" :footer="null" v-model="visible" title="下发卡号">
       <issued :issueFrom="issueFrom"></issued>
     </a-modal>
     <!-- -->
-    <a-modal width="50%"
-             :footer="null"
-             v-model="manual"
-             title="手动添加控制器">
-      <a-form-model ref="ruleForm"
-                    :model="manualFrom"
-                    :labelCol="{ span: 7 }"
-                    :wrapperCol="{ span: 10 }">
+    <a-modal width="50%" :footer="null" v-model="manual" title="手动添加控制器">
+      <a-form-model ref="ruleForm" :model="manualFrom" :labelCol="{ span: 7 }" :wrapperCol="{ span: 10 }">
         <!--   <a-form-model-item ref="sn"
                            label="设备序列号"
                            prop="sn">
           <a-input v-model="manualFrom.sn" />
         </a-form-model-item> -->
-        <a-form-model-item ref="ip"
-                           label="IP"
-                           prop="ip">
+        <a-form-model-item ref="ip" label="IP" prop="ip">
           <a-input v-model="manualFrom.ip" />
         </a-form-model-item>
         <!--  <a-form-model-item ref="gateipaddress"
@@ -147,17 +100,12 @@
                            prop="ver">
           <a-input v-model="manualFrom.ver" />
         </a-form-model-item> -->
-        <a-form-model-item ref="name"
-                           label="名称"
-                           prop="name">
+        <a-form-model-item ref="name" label="名称" prop="name">
           <a-input v-model="manualFrom.name" />
         </a-form-model-item>
 
-        <a-form-model-item style="margin-top: 24px"
-                           :wrapperCol="{ span: 10, offset: 7 }">
-          <a-button type="primary"
-                    @click="manualAdd"
-                    :loading="suLoad">提交</a-button>
+        <a-form-model-item style="margin-top: 24px" :wrapperCol="{ span: 10, offset: 7 }">
+          <a-button type="primary" @click="manualAdd" :loading="suLoad">提交</a-button>
           <a-button style="margin-left: 8px">重置</a-button>
         </a-form-model-item>
       </a-form-model>
@@ -170,8 +118,9 @@ import Cookie from "js-cookie";
 import { searchDevice, addDevice, listDevice, delDevice } from "@/services/access.js";
 import issued from "../issued";
 import { getAccountTree2 } from "@/services/user"
+import { mapGetters } from "vuex";
 export default {
-  data () {
+  data() {
     return {
       advanced: true,
       form: {},
@@ -247,6 +196,7 @@ export default {
       treeSel: null
     };
   },
+ 
   components: {
     issued,
   },
@@ -264,17 +214,20 @@ export default {
       type: "permission",
     },
   },
-  created () {
+  created() {
     this.token = Cookie.get("token");
     this.listDevice();
     getAccountTree2().then(res => {
-      if (res.code === 0)
+      if (res.code === 0) {
+        this.treeSel = this.user
         this.treeData = res.data
+      }
+
     })
   },
-  computed: {},
+  computed: { ...mapGetters("account", ["user"])},
   methods: {
-    onSearch () {
+    onSearch() {
       this.spinning = true;
       let params = {
         ip: this.searchIP,
@@ -294,7 +247,7 @@ export default {
           this.spinning = false;
         });
     },
-    delRecord (id) {
+    delRecord(id) {
       var ids = []
       ids.push(id)
       delDevice(ids).then(res => {
@@ -305,7 +258,7 @@ export default {
 
       })
     },
-    addRecord (record) {
+    addRecord(record) {
 
       addDevice(record).then((res) => {
 
@@ -318,7 +271,7 @@ export default {
 
       });
     },
-    manualAdd () {
+    manualAdd() {
       this.suLoad = true
       addDevice(this.manualFrom).then((res) => {
         if (res.code === 0) {
@@ -330,15 +283,15 @@ export default {
         this.suLoad = false
       });
     },
-    issue (record) {
+    issue(record) {
       this.issueFrom = record;
 
       this.visible = true;
     },
-    handleTableChange (pagination) {
+    handleTableChange(pagination) {
       console.log(pagination);
     },
-    listDevice () {
+    listDevice() {
       this.form.page = this.pagination.current
       this.form.limit = this.pagination.pageSize
       listDevice(this.form).then((res) => {
@@ -349,7 +302,7 @@ export default {
       });
     },
 
-    onCellChange (key, dataIndex, value) {
+    onCellChange(key, dataIndex, value) {
       const dataSource = [...this.dataSource];
       const target = dataSource.find((item) => item.key === key);
       if (target) {
@@ -357,11 +310,11 @@ export default {
         this.dataSource = dataSource;
       }
     },
-    selTreeChange (value, label, ex) {
+    selTreeChange(value, label, ex) {
       if (ex.triggerNode !== undefined)
         this.form.userId = ex.triggerNode.eventKey
     },
-    toggleAdvanced () {
+    toggleAdvanced() {
       this.advanced = !this.advanced;
     },
 

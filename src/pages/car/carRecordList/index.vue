@@ -94,6 +94,7 @@ import {
 } from "@/services/parking";
 
 import { getAccountTree2 } from "@/services/user"
+import { mapGetters } from "vuex";
 
 export default {
   name: "QueryList",
@@ -134,11 +135,14 @@ export default {
       type: "permission",
     },
   },
+  computed: { ...mapGetters("account", ["user"]) },
   created () {
     this.listParkingResult();
     getAccountTree2().then(res => {
-      if (res.code === 0)
+       if (res.code === 0) {
+        this.treeSel = this.user
         this.treeData = res.data
+      }
     })
 
   },

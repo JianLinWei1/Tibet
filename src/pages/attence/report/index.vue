@@ -1,34 +1,22 @@
 <template>
   <a-card>
-    <a-spin :spinning="spinning"
-            tip="正在从设备删除....">
+    <a-spin :spinning="spinning" tip="正在从设备删除....">
       <div :class="advanced ? 'search' : null">
         <a-form layout="horizontal">
           <div :class="advanced ? null : 'fold'">
             <a-row>
-              <a-col :md="8"
-                     :sm="24">
-                <a-form-item label="人员编号"
-                             :labelCol="{ span: 5 }"
-                             :wrapperCol="{ span: 18, offset: 1 }">
-                  <a-input v-model="form.personId"
-                           placeholder="请输入(精确查询)" />
+              <a-col :md="8" :sm="24">
+                <a-form-item label="人员编号" :labelCol="{ span: 5 }" :wrapperCol="{ span: 18, offset: 1 }">
+                  <a-input v-model="form.personId" placeholder="请输入(精确查询)" />
                 </a-form-item>
               </a-col>
-              <a-col :md="8"
-                     :sm="24">
-                <a-form-item label="姓名"
-                             :labelCol="{ span: 5 }"
-                             :wrapperCol="{ span: 18, offset: 1 }">
-                  <a-input v-model="form.name"
-                           placeholder="请输入" />
+              <a-col :md="8" :sm="24">
+                <a-form-item label="姓名" :labelCol="{ span: 5 }" :wrapperCol="{ span: 18, offset: 1 }">
+                  <a-input v-model="form.name" placeholder="请输入" />
                 </a-form-item>
               </a-col>
-              <a-col :md="8"
-                     :sm="24">
-                <a-form-item label="条件"
-                             :labelCol="{ span: 5 }"
-                             :wrapperCol="{ span: 18, offset: 1 }">
+              <a-col :md="8" :sm="24">
+                <a-form-item label="条件" :labelCol="{ span: 5 }" :wrapperCol="{ span: 18, offset: 1 }">
                   <a-radio-group v-model="form.con">
                     <a-radio value="1">
                       当天
@@ -45,44 +33,24 @@
 
             </a-row>
             <a-row>
-              <a-col :md="8"
-                     :sm="24">
-                <a-form-item label="自定义时间段"
-                             :labelCol="{ span: 5 }"
-                             :wrapperCol="{ span: 18, offset: 1 }">
-                  <a-range-picker format="YYYY-MM-DD"
-                                  v-model="form.times" />
+              <a-col :md="8" :sm="24">
+                <a-form-item label="自定义时间段" :labelCol="{ span: 5 }" :wrapperCol="{ span: 18, offset: 1 }">
+                  <a-range-picker format="YYYY-MM-DD" v-model="form.times" />
                 </a-form-item>
               </a-col>
-              <a-col :md="8"
-                     :sm="24">
-                <a-form-item label="部门"
-                             :labelCol="{ span: 5 }"
-                             :wrapperCol="{ span: 18, offset: 1 }">
+              <a-col :md="8" :sm="24">
+                <a-form-item label="部门" :labelCol="{ span: 5 }" :wrapperCol="{ span: 18, offset: 1 }">
                   <a-select v-model="form.department ">
-                    <a-select-option v-for="(i,index) in departments"
-                                     :value="i.name"
-                                     :key="index">
+                    <a-select-option v-for="(i,index) in departments" :value="i.name" :key="index">
                       {{i.name}}
                     </a-select-option>
 
                   </a-select>
                 </a-form-item>
               </a-col>
-              <a-col :md="8"
-                     :sm="24">
-                <a-form-item label="组织"
-                             :labelCol="{ span: 5 }"
-                             :wrapperCol="{ span: 18, offset: 1 }">
-                  <a-tree-select style="width: 100%"
-                                 v-model="treeSel"
-                                 v-if="treeData.length >0"
-                                 tree-node-filter-prop="value"
-                                 :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-                                 :tree-data="treeData"
-                                 placeholder="请选择"
-                                 @change="selTreeChange"
-                                 tree-default-expand-all>
+              <a-col :md="8" :sm="24">
+                <a-form-item label="组织" :labelCol="{ span: 5 }" :wrapperCol="{ span: 18, offset: 1 }">
+                  <a-tree-select style="width: 100%" v-model="treeSel" v-if="treeData.length >0" tree-node-filter-prop="value" :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }" :tree-data="treeData" placeholder="请选择" @change="selTreeChange" tree-default-expand-all>
                   </a-tree-select>
                 </a-form-item>
 
@@ -91,31 +59,19 @@
             </a-row>
           </div>
           <span style="float: right; margin-top: 3px">
-            <a-button type="primary"
-                      @click="search"
-                      :loading="loading">生成报表</a-button>
-            <a-button style="margin-left: 8px"
-                      @click="form = {}">重置</a-button>
+            <a-button type="primary" @click="search" :loading="loading">生成报表</a-button>
+            <a-button style="margin-left: 8px" @click="form = {}">重置</a-button>
           </span>
         </a-form>
       </div>
       <div>
         <div class="operator">
-          <a-button @click="exportRecords"
-                    v-auth:permission="`export`"
-                    type="primary">导出</a-button>
+          <a-button @click="exportRecords" v-auth:permission="`export`" type="primary">导出</a-button>
         </div>
-        <standard-table :bordered="true"
-                        :pagination="pagination"
-                        :dataSource="dataSource"
-                        :selectedRows.sync="selectedRows"
-                        @change="onChange"
-                        @selectedRowChange="onSelectChange">
-          <div slot="action"
-               slot-scope="{ record }">
+        <standard-table :bordered="true" :pagination="pagination" :dataSource="dataSource" :selectedRows.sync="selectedRows" @change="onChange" @selectedRowChange="onSelectChange">
+          <div slot="action" slot-scope="{ record }">
             <!-- <a style="margin-right: 8px"  @click="editRecord(record)"> <a-icon type="edit"  />编辑 </a> -->
-            <a @click="deleteRecord(record.id)"
-               v-auth:permission="`del`">
+            <a @click="deleteRecord(record.id)" v-auth:permission="`del`">
               <a-icon type="delete" />删除
             </a>
           </div>
@@ -136,7 +92,7 @@ import { getAccountTree2 } from "@/services/user"
 export default {
   name: "QueryList",
   components: { StandardTable },
-  data () {
+  data() {
     return {
       advanced: true,
       dataSource: [],
@@ -173,7 +129,7 @@ export default {
       type: "permission",
     }
   },
-  created () {
+  created() {
     getList({ page: 0, limit: 100 }).then(res => {
       if (res.code === 0)
         this.departments = res.data
@@ -185,7 +141,7 @@ export default {
 
   },
   methods: {
-    listAccessPersons () {
+    listAccessPersons() {
       /*   this.form.page = this.pagination.current;
         this.form.limit = this.pagination.pageSize;
         listAccessPersons(this.form).then((res) => {
@@ -197,7 +153,7 @@ export default {
           }
         }); */
     },
-    search () {
+    search() {
       console.log(this.form)
       this.loading = true;
       getAttenceReport(this.form).then(res => {
@@ -212,12 +168,12 @@ export default {
 
     },
 
-    toggleAdvanced () {
+    toggleAdvanced() {
       this.advanced = !this.advanced;
     },
 
-    onClear () { },
-    deleteRecord (key) {
+    onClear() { },
+    deleteRecord(key) {
       let data = [];
       data.push(key);
       this.spinning = true
@@ -232,19 +188,19 @@ export default {
            this.spinning = false
          }); */
     },
-    editRecord (key) {
+    editRecord(key) {
       console.log(key);
       this.visible = true;
       this.issueFrom = key;
     },
 
-    onChange (date, dateString) {
+    onChange(date, dateString) {
       console.log(date, dateString);
     },
-    onSelectChange () {
+    onSelectChange() {
       console.log(this.selectedRows);
     },
-    delList () {
+    delList() {
       let data = [];
       this.selectedRows.forEach((item) => {
         data.push(item.id);
@@ -261,12 +217,12 @@ export default {
        }); */
     },
 
-    handleMenuClick (e) {
+    handleMenuClick(e) {
       if (e.key === "delete") {
         this.remove();
       }
     },
-    exportRecords () {
+    exportRecords() {
       if (this.selectedRows.length <= 0) {
         this.$message.info("请勾选数据");
         return
@@ -282,9 +238,15 @@ export default {
       });
 
     },
-    selTreeChange (value, label, ex) {
-      if (ex.triggerNode !== undefined)
+    selTreeChange(value, label, ex) {
+      if (ex.triggerNode !== undefined) {
         this.form.userId = ex.triggerNode.eventKey
+        getList({ userId: ex.triggerNode.eventKey, page: 0, limit: 100 }).then(res => {
+          if (res.code === 0)
+            this.departments = res.data
+        })
+      }
+
     }
 
 
