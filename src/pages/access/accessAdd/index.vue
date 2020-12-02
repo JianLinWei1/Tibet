@@ -57,6 +57,15 @@
             </div>
           </div>
         </template>
+        <template slot="doors" slot-scope="text, record">
+          
+          <div class="editable-cell" v-for="(d,index) in record.doors" :key="index">
+            <div class="editable-cell-input-wrapper">
+             {{d.id}}号门  备注： <a-input v-model="record.doors[index].name" />
+            </div>
+          </div>
+          
+        </template>
       </a-table>
     </a-card>
 
@@ -150,7 +159,7 @@ export default {
         {
           title: "设备序列号",
           dataIndex: "sn",
-          width: "20%",
+          width: "10%",
           key: "sn",
         },
         {
@@ -182,6 +191,11 @@ export default {
           title: "自定义名称",
           dataIndex: "name",
           scopedSlots: { customRender: "name" },
+        },
+          {
+          title: "门设置",
+          dataIndex: "doors",
+          scopedSlots: { customRender: "doors" },
         },
         {
           title: "操作",

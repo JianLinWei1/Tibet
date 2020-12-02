@@ -91,7 +91,8 @@ export default {
       issuedFrom: {},
       issuedData: [],
       treeData: [],
-      treeSel: null
+      treeSel: null,
+      departments:[]
     };
   },
   authorize: {

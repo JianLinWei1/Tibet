@@ -1,97 +1,67 @@
 <template>
-  <a-card :body-style="{ padding: '24px 32px' }"
-          :bordered="false">
-    <a-form-model ref="ruleForm"
-                  :model="form"
-                  :rules="rules"
-                  :labelCol="{ span: 7 }"
-                  :wrapperCol="{ span: 10 }">
-      <a-form-model-item ref="id"
-                         label="人员编号ID"
-                         prop="id">
-        <a-input v-model="form.id"
-                 placeholder="ID" />
+  <a-card :body-style="{ padding: '24px 32px' }" :bordered="false">
+    <a-form-model ref="ruleForm" :model="form" :rules="rules" :labelCol="{ span: 7 }" :wrapperCol="{ span: 10 }">
+      <a-form-model-item ref="id" label="人员编号ID" prop="id">
+        <a-input v-model="form.id" placeholder="ID" />
       </a-form-model-item>
-      <a-form-model-item ref="name"
-                         label="姓名"
-                         prop="name">
-        <a-input v-model="form.name"
-                 placeholder="请输入姓名" />
+      <a-form-model-item ref="name" label="姓名" prop="name">
+        <a-input v-model="form.name" placeholder="请输入姓名" />
       </a-form-model-item>
 
-      <a-form-model-item ref="department"
-                         label="部门"
-                         prop="department">
+      <a-form-model-item ref="department" label="部门" prop="department">
         <a-select v-model="form.department ">
-          <a-select-option v-for="(i,index) in departments"
-                           :value="i.name"
-                           :key="index">
+          <a-select-option v-for="(i,index) in departments" :value="i.name" :key="index">
             {{i.name}}
           </a-select-option>
 
         </a-select>
       </a-form-model-item>
 
-      <a-form-model-item label="身份证"
-                         prop="idCard">
-        <a-input v-model="form.idCard"
-                 placeholder="身份证" />
+      <a-form-model-item label="身份证" prop="idCard">
+        <a-input v-model="form.idCard" placeholder="身份证" />
       </a-form-model-item>
-      <a-form-model-item label="门禁卡号"
-                         prop="accessId">
-        <a-input v-model="form.accessId"
-                 placeholder="门禁卡号" />
+      <a-form-model-item label="门禁卡号" prop="accessId">
+        <a-input v-model="form.accessId" placeholder="门禁卡号" />
 
         <!--    <a-button type="link"> 发卡 </a-button> -->
 
-        <a-button style="float: right; margin-right: -64px"
-                  type="primary"
-                  :loading="loading"
-                  @click="readCard">
+        <a-button style="float: right; margin-right: -64px" type="primary" :loading="loading" @click="readCard">
           读卡
         </a-button>
 
-        <a-button style="float: right; margin-right: -170px"
-                  type="link"
-                  @click="down">
+        <a-button style="float: right; margin-right: -170px" type="link" @click="down">
           下载读卡服务
         </a-button>
       </a-form-model-item>
-      <a-form-model-item label="门禁密码"
-                         prop="accessPw">
-        <a-input v-model="form.accessPw"
-                 placeholder="门禁卡号" />
+      <a-form-model-item label="门禁密码" prop="accessPw">
+        <a-input v-model="form.accessPw" placeholder="门禁卡号" />
       </a-form-model-item>
-      <a-form-model-item label="车牌号"
-                         prop="carId">
-        <a-input v-model="form.carId"
-                 placeholder="车牌号" />
+      <!-- <a-form-model-item label="车牌号" prop="carId">
+        <a-input v-model="form.carId" placeholder="车牌号" />
+      </a-form-model-item> -->
+      <a-form-model-item v-for="(domain, index) in form.carId" :key="index"  :label="'车牌号'+(index+1)"
+      >
+        <a-input v-model="form.carId[index]"  style="width: 96%; margin-right: 8px" />
+        <a-icon v-if="form.carId.length > 1" class="dynamic-delete-button" type="minus-circle-o" :disabled="form.carId.length === 1" @click="removeDomain(domain)" />
       </a-form-model-item>
-      <a-form-model-item label="电话号"
-                         prop="phone">
-        <a-input v-model="form.phone"
-                 placeholder="电话号" />
+      <a-form-model-item  label="点击添加车牌">
+        <a-button type="dashed" style="width:100%" @click="addDomain">
+          <a-icon type="plus" /> 添加车牌
+        </a-button>
       </a-form-model-item>
-      <a-form-model-item label="人脸照片"
-                         prop="photo">
-        <a-upload-dragger name="file"
-                          accept=".jpg,.png"
-                          action="/api/main/upload"
-                          :file-list="fileList"
-                          @change="handleChange"
-                          :beforeUpload="beforeUpload"
-                          :headers="{ token: token }"
-                          :multiple="true">
+
+      <a-form-model-item label="电话号" prop="phone">
+        <a-input v-model="form.phone" placeholder="电话号" />
+      </a-form-model-item>
+      <a-form-model-item label="人脸照片" prop="photo">
+        <a-upload-dragger name="file" accept=".jpg,.png" action="/api/main/upload" :file-list="fileList" @change="handleChange" :beforeUpload="beforeUpload" :headers="{ token: token }" :multiple="true">
           <p class="ant-upload-drag-icon">
-            <svg-icon icon-class="face"
-                      class-name="svgClass"></svg-icon>
+            <svg-icon icon-class="face" class-name="svgClass"></svg-icon>
           </p>
           <p class="ant-upload-text">点击或者拖拽上传</p>
         </a-upload-dragger>
         <!-- <a @click="takePhoto">拍照上传</a> -->
-        <img v-if="form.photo"
-             width="180"
-             :src="'api/main/' + form.photo" />
+        <img v-if="form.photo" width="180" :src="'api/main/' + form.photo" />
       </a-form-model-item>
       <!--   <a-form-model-item label="角色"
                          prop="role">
@@ -115,21 +85,15 @@
                        placeholder="选择失效日期" />
       </a-form-model-item> -->
       <a-form-model-item label="备注">
-        <a-input v-model="form.content"
-                 placeholder="备注" />
+        <a-input v-model="form.content" placeholder="备注" />
       </a-form-model-item>
-      <a-form-model-item style="margin-top: 24px"
-                         :wrapperCol="{ span: 10, offset: 7 }">
-        <a-button type="primary"
-                  @click="submit"
-                  :loading="suLoad">提交</a-button>
+      <a-form-model-item style="margin-top: 24px" :wrapperCol="{ span: 10, offset: 7 }">
+        <a-button type="primary" @click="submit" :loading="suLoad">提交</a-button>
         <a-button style="margin-left: 8px">重置</a-button>
       </a-form-model-item>
     </a-form-model>
     <!---->
-    <a-modal v-model="visible"
-             :footer="null"
-             title="拍照上传">
+    <a-modal v-model="visible" :footer="null" title="拍照上传">
       <camera></camera>
     </a-modal>
     <!-- -->
@@ -142,7 +106,7 @@ import Cookie from "js-cookie";
 import { insertPerson, editPerson } from "@/services/person.js";
 import { getList } from "@/services/department";
 export default {
-  data () {
+  data() {
     return {
       visible: false,
       token: null,
@@ -165,14 +129,30 @@ export default {
       websoket: new WebSocket("ws://127.0.0.1:50050"),
       loading: false,
       departments: [],
-      suLoad: false
+      suLoad: false,
+       formItemLayout: {
+        labelCol: {
+          xs: { span: 24 },
+          sm: { span: 24 },
+        },
+        wrapperCol: {
+          xs: { span: 24 },
+          sm: { span: 24 },
+        },
+      },
+      formItemLayoutWithOutLabel: {
+        wrapperCol: {
+          xs: { span: 24, offset: 0 },
+          sm: { span: 20, offset: 4 },
+        },
+      },
     };
   },
   props: { action: Number, form: Object },
   components: {
     camera,
   },
-  created () {
+  created() {
     this.token = Cookie.get("token");
     getList({ page: 0, limit: 100 }).then(res => {
       if (res.code === 0)
@@ -181,10 +161,10 @@ export default {
   },
   computed: {},
   methods: {
-    takePhoto () {
+    takePhoto() {
       this.visible = true;
     },
-    handleChange (info) {
+    handleChange(info) {
       const status = info.file.status;
       const res = info.file.response;
       this.fileList = [];
@@ -201,7 +181,7 @@ export default {
         this.$message.error(`${info.file.name} 上传失败`);
       }
     },
-    submit () {
+    submit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           this.suLoad = true
@@ -231,7 +211,7 @@ export default {
       });
     },
 
-    beforeUpload (file) {
+    beforeUpload(file) {
       return new Promise((resolve, reject) => {
         if (file.size / 1024 > 500) {
           this.$message.info("上传文件过大");
@@ -241,7 +221,7 @@ export default {
         }
       });
     },
-    readCard () {
+    readCard() {
       this.loading = true;
       var that = this;
       if (this.websoket.readyState === WebSocket.CLOSED)
@@ -275,9 +255,19 @@ export default {
       };
       this.websoket.send(JSON.stringify(obj));
     },
-    down () {
+    down() {
       window.location.href = "/api/main/download?filename=IcCardService.rar";
     },
+    addDomain() {
+      this.form.carId.push("");
+    },
+     removeDomain(item) {
+      let index = this.form.carId.indexOf(item);
+      if (index !== -1) {
+        this.form.carId.splice(index, 1);
+      }
+    },
+
   },
 };
 </script>

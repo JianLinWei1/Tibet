@@ -78,43 +78,44 @@
 
       <!--下发-->
       <a-modal v-model="issuedvisible" title="编辑" :footer="null">
-        <a-form-model ref="ruleForm" :model="issuedFrom" :rules="rules" :labelCol="{ span: 7 }" :wrapperCol="{ span: 10 }">
+        <a-form-model ref="ruleForm" :model="issuedCarFrom" :rules="rules" :labelCol="{ span: 7 }" :wrapperCol="{ span: 10 }">
           <a-form-model-item ref="serialno" label="序列号" prop="serialno">
-            <a-input disabled v-model="issuedFrom.serialno" placeholder="ip" />
+            <a-input disabled v-model="issuedCarFrom.serialno" placeholder="ip" />
           </a-form-model-item>
           <a-form-model-item ref="device_name" label="设备名称" prop="device_name">
-            <a-input disabled v-model="issuedFrom.device_name" />
+            <a-input disabled v-model="issuedCarFrom.device_name" />
           </a-form-model-item>
           <a-form-model-item label="选择人员" prop="personIds">
-            <a-select show-search mode="multiple" v-model="issuedFrom.personIds" placeholder="搜索" style="width: 100%" :filter-option="false" :not-found-content="fetching ? undefined : null" @search="fetchPerson">
+            <a-select show-search mode="multiple" v-model="issuedCarFrom.personIds" placeholder="搜索" style="width: 100%" :filter-option="false" :not-found-content="fetching ? undefined : null" @search="fetchPerson" @select="personSelect" @deselect="deselect">
               <a-spin v-if="fetching" slot="notFoundContent" size="small" />
               <a-select-option v-for="d in issuedData" :key="d.id" :value="d.id">
                 {{ d.name }}
               </a-select-option>
             </a-select>
           </a-form-model-item>
-          <!--   <a-form-model-item ref="carId"
-                             label="车牌号"
-                             prop="carId">
-            <a-input v-model="issuedFrom.carId" />
-          </a-form-model-item> -->
+          <a-form-model-item ref="carId" label="人员车牌号" prop="carId">
+            <a-input v-model="showCarid" disabled type="textarea" />
+          </a-form-model-item>
+          <a-form-model-item ref="carId" label="临时车牌号" prop="carId">
+            <a-input v-model="tempCarId" @change="tempCarIdChange" />
+          </a-form-model-item>
           <!--  <a-form-model-item label="是否有效" prop="enable">
-            <a-select style="width: 120px" v-model="issuedFrom.enable">
+            <a-select style="width: 120px" v-model="issuedCarFrom.enable">
               <a-select-option value="0"> 无效 </a-select-option>
               <a-select-option value="1"> 有效 </a-select-option>
             </a-select>
           </a-form-model-item>
           <a-form-model-item label="是否未黑名单" prop="need_alarm">
-            <a-select style="width: 120px" v-model="issuedFrom.need_alarm">
+            <a-select style="width: 120px" v-model="issuedCarFrom.need_alarm">
               <a-select-option value="0"> 否 </a-select-option>
               <a-select-option value="1"> 是 </a-select-option>
             </a-select>
           </a-form-model-item> -->
           <a-form-model-item label="生效日期">
-            <a-date-picker v-model="issuedFrom.enable_time" valueFormat="YYYY-MM-DD HH:mm:ss" show-time placeholder="选择生效日期" />
+            <a-date-picker v-model="issuedCarFrom.enable_time" valueFormat="YYYY-MM-DD HH:mm:ss" show-time placeholder="选择生效日期" />
           </a-form-model-item>
           <a-form-model-item label="失效日期">
-            <a-date-picker v-model="issuedFrom.overdue_time" valueFormat="YYYY-MM-DD HH:mm:ss" show-time placeholder="选择失效日期" />
+            <a-date-picker v-model="issuedCarFrom.overdue_time" valueFormat="YYYY-MM-DD HH:mm:ss" show-time placeholder="选择失效日期" />
           </a-form-model-item>
           <a-form-model-item style="margin-top: 24px" :wrapperCol="{ span: 10, offset: 7 }">
             <a-button type="primary" @click="submit2">提交</a-button>
@@ -164,18 +165,21 @@ export default {
       rules: {
         enable: [{ required: true, message: "必填！", trigger: "blur" }],
         need_alarm: [{ required: true, message: "必填！", trigger: "blur" }],
-        carId: [{ required: true, message: "必填！", trigger: "blur" }],
+        // carId: [{ required: true, message: "必填！", trigger: "blur" }],
       },
       fetching: false,
       data: [],
       issuedvisible: false,
-      issuedFrom: {
+      issuedCarFrom: {
         enable: 1,
-        need_alarm: 0
+        need_alarm: 0,
+        carId:[]
       },
       issuedData: [],
       treeData: [],
-      treeSel: null
+      treeSel: null,
+      showCarid: "",
+      tempCarId:""
     };
   },
   authorize: {
@@ -246,7 +250,8 @@ export default {
     },
     issuedRecord(key) {
       this.issuedvisible = true;
-      this.issuedFrom = key;
+      key.carId =[]
+      this.issuedCarFrom = key;
     },
 
     onChange(page) {
@@ -323,7 +328,7 @@ export default {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           this.spinning = true;
-          saveParkPersonInfo(this.issuedFrom).then((res) => {
+          saveParkPersonInfo(this.issuedCarFrom).then((res) => {
             this.spinning = false;
             if (res.code == 0) {
               this.$message.success("提交成功");
@@ -340,6 +345,20 @@ export default {
     selTreeChange(value, label, ex) {
       if (ex.triggerNode !== undefined)
         this.form.userId = ex.triggerNode.eventKey
+    },
+    personSelect(value, opt) {
+
+
+      if (opt.context.issuedData[0].carId !== null)
+        this.showCarid += opt.context.issuedData[0].carId + " ;"
+
+    },
+    deselect() {
+      this.showCarid = "";
+    }
+    ,tempCarIdChange(){
+      this.issuedCarFrom.carId =[]
+        this.issuedCarFrom.carId.push(this.tempCarId)
     }
 
   },

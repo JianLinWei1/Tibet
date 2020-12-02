@@ -1,49 +1,34 @@
 <template>
   <div class="standard-table">
-    <a-table :bordered="bordered"
-             :loading="loading"
-             :columns="columns"
-             :dataSource="dataSource"
-             :rowKey="rowKey"
-             :pagination="pagination"
-             :expandedRowKeys="expandedRowKeys"
-             :expandedRowRender="expandedRowRender"
-             @change="onChange"
-             :rowSelection="
+    <a-table :bordered="bordered" :loading="loading" :columns="columns" :dataSource="dataSource" :rowKey="rowKey" :pagination="pagination" :expandedRowKeys="expandedRowKeys" :expandedRowRender="expandedRowRender" @change="onChange" :rowSelection="
         selectedRows
           ? { selectedRowKeys: selectedRowKeys, onChange: updateSelect }
           : undefined
       ">
-      <template slot-scope="text, record, index"
-                :slot="slot"
-                v-for="slot in Object.keys($scopedSlots).filter(
+      <template slot-scope="text, record, index" :slot="slot" v-for="slot in Object.keys($scopedSlots).filter(
           (key) => key !== 'expandedRowRender'
         )">
-        <slot :name="slot"
-              v-bind="{ text, record, index }"></slot>
+        <slot :name="slot" v-bind="{ text, record, index }"></slot>
       </template>
-      <template :slot="slot"
-                v-for="slot in Object.keys($slots)">
+      <template :slot="slot" v-for="slot in Object.keys($slots)">
         <slot :name="slot"></slot>
       </template>
-      <template slot-scope="record, index, indent, expanded"
-                :slot="$scopedSlots.expandedRowRender ? 'expandedRowRender' : ''">
-        <slot v-bind="{ record, index, indent, expanded }"
-              :name="$scopedSlots.expandedRowRender ? 'expandedRowRender' : ''"></slot>
+      <template slot-scope="record, index, indent, expanded" :slot="$scopedSlots.expandedRowRender ? 'expandedRowRender' : ''">
+        <slot v-bind="{ record, index, indent, expanded }" :name="$scopedSlots.expandedRowRender ? 'expandedRowRender' : ''"></slot>
       </template>
-      <viewer slot="photo"
-              style="width:10%"
-              slot-scope="text">
-        <img ref="img"
-             v-if="text !== null"
-             width="100"
-             :src="'/api/main/' + text" />
+      <viewer slot="photo" style="width:10%" slot-scope="text">
+        <img ref="img" v-if="text !== null" width="100" :src="'/api/main/' + text" />
       </viewer>
-      <div slot="role"
-           slot-scope="text">
+      <div slot="role" slot-scope="text">
         <span v-if="text === 1">普通人员</span>
         <span v-if="text === 2">白名单人员</span>
         <span v-if="text === 3">黑名单人员</span>
+      </div>
+      <div slot="carId" slot-scope="record">
+        <a-tag v-for="(r ,index) in record" :key="index" color="green">
+          {{r}}
+        </a-tag>
+
       </div>
 
     </a-table>
@@ -85,6 +70,7 @@ const columns = [
     title: "车牌号",
     dataIndex: "carId",
     width: 100,
+      scopedSlots: { customRender: "carId" },
   },
   {
     title: "电话",
@@ -151,24 +137,24 @@ export default {
     expandedRowKeys: Array,
     expandedRowRender: Function,
   },
-  data () {
+  data() {
     return {
       needTotalList: [],
       columns: columns,
     };
   },
-  created () {
+  created() {
     // this.needTotalList = this.initTotalList(this.columns)
   },
-  beforeMount () {
+  beforeMount() {
 
   },
   methods: {
-    updateSelect (selectedRowKeys, selectedRows) {
+    updateSelect(selectedRowKeys, selectedRows) {
       this.$emit("update:selectedRows", selectedRows);
       this.$emit("selectedRowChange", selectedRowKeys, selectedRows);
     },
-    initTotalList (columns) {
+    initTotalList(columns) {
       const totalList = columns
         .filter((item) => item.needTotal)
         .map((item) => {
@@ -179,11 +165,11 @@ export default {
         });
       return totalList;
     },
-    onClear () {
+    onClear() {
       this.updateSelect([], []);
       this.$emit("clear");
     },
-    onChange (pagination, filters, sorter, { currentDataSource }) {
+    onChange(pagination, filters, sorter, { currentDataSource }) {
       this.$emit("change", pagination, filters, sorter, { currentDataSource });
     },
 
@@ -191,7 +177,7 @@ export default {
   },
 
   watch: {
-    selectedRows (selectedRows) {
+    selectedRows(selectedRows) {
       this.needTotalList = this.needTotalList.map((item) => {
         return {
           ...item,
@@ -203,7 +189,7 @@ export default {
     },
   },
   computed: {
-    selectedRowKeys () {
+    selectedRowKeys() {
       return this.selectedRows.map((record) => {
         return typeof this.rowKey === "function"
           ? this.rowKey(record)

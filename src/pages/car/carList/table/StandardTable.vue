@@ -41,6 +41,13 @@
        <span v-if="text">已被设备获取</span>
         <span v-else>未被设备获取</span>
       </div>
+
+      <div slot="carId" slot-scope="record">
+        <a-tag v-for="(r ,index) in record" :key="index" color="green">
+          {{r}}
+        </a-tag>
+
+      </div>
       
       
     </a-table>
@@ -76,15 +83,33 @@ const columns = [
     width: 80,
   },
   {
+    title: "部门",
+    dataIndex: "department",
+    width: 80,
+  },
+  {
     title: "车牌号",
     dataIndex: "carId",
     width: 180,
+     scopedSlots: { customRender: "carId" },
   },
   {
     title: "状态",
     dataIndex: "status",
     width: 80,
     scopedSlots: { customRender: "status" },
+  },
+  {
+    title: "生效日期",
+    dataIndex: "enable_time",
+    width: 180,
+  
+  },
+  {
+    title: "失效日期",
+    dataIndex: "overdue_time",
+    width: 180,
+ 
   },
  
   {

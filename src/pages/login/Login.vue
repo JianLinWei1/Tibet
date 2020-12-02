@@ -3,31 +3,17 @@
     <div class="logincontent">
       <div class="top">
         <div class="header">
-          <img alt="logo"
-               class="logo"
-               src="@/assets/img/logo.png" />
+          <img alt="logo" class="logo" src="@/assets/img/logo.png" />
           <span class="title">{{ systemName }}</span>
         </div>
       </div>
       <div class="login">
-        <a-form @submit="onSubmit"
-                :form="form">
-          <a-tabs size="large"
-                  :tabBarStyle="{ textAlign: 'center' }"
-                  style="padding: 0 2px">
-            <a-tab-pane tab="账户密码登录"
-                        key="1">
-              <a-alert type="error"
-                       :closable="false"
-                       v-show="error"
-                       :message="error"
-                       showIcon
-                       style="margin-bottom: 24px" />
+        <a-form @submit="onSubmit" :form="form">
+          <a-tabs size="large" :tabBarStyle="{ textAlign: 'center' }" style="padding: 0 2px">
+            <a-tab-pane tab="账户密码登录" key="1">
+              <a-alert type="error" :closable="false" v-show="error" :message="error" showIcon style="margin-bottom: 24px" />
               <a-form-item>
-                <a-input autocomplete="autocomplete"
-                         size="large"
-                         placeholder="admin"
-                         v-decorator="[
+                <a-input autocomplete="autocomplete" size="large" placeholder="admin" v-decorator="[
                     'name',
                     {
                       rules: [
@@ -39,16 +25,11 @@
                       ],
                     },
                   ]">
-                  <a-icon slot="prefix"
-                          type="user" />
+                  <a-icon slot="prefix" type="user" />
                 </a-input>
               </a-form-item>
               <a-form-item>
-                <a-input size="large"
-                         placeholder="admin"
-                         autocomplete="autocomplete"
-                         type="password"
-                         v-decorator="[
+                <a-input size="large" placeholder="admin" autocomplete="autocomplete" type="password" v-decorator="[
                     'password',
                     {
                       rules: [
@@ -60,8 +41,7 @@
                       ],
                     },
                   ]">
-                  <a-icon slot="prefix"
-                          type="lock" />
+                  <a-icon slot="prefix" type="lock" />
                 </a-input>
               </a-form-item>
             </a-tab-pane>
@@ -71,11 +51,7 @@
           <a style="float: right">忘记密码</a>
         </div> -->
           <a-form-item>
-            <a-button :loading="logging"
-                      style="width: 100%; margin-top: 24px"
-                      size="large"
-                      htmlType="submit"
-                      type="primary">登录</a-button>
+            <a-button :loading="logging" style="width: 100%; margin-top: 24px" size="large" htmlType="submit" type="primary">登录</a-button>
           </a-form-item>
         </a-form>
       </div>
@@ -93,7 +69,7 @@ import { mapMutations } from "vuex";
 export default {
   name: "Login",
   components: { CommonLayout },
-  data () {
+  data() {
     return {
       logging: false,
       error: "",
@@ -101,14 +77,14 @@ export default {
     };
   },
   computed: {
-    systemName () {
+    systemName() {
       return this.$store.state.setting.systemName;
     },
   },
   methods: {
     //, 'setPermissions', 'setRoles'
     ...mapMutations("account", ["setUser", "setPermissions"]),
-    onSubmit (e) {
+    onSubmit(e) {
       e.preventDefault();
       this.form.validateFields((err) => {
         if (!err) {
@@ -119,7 +95,7 @@ export default {
         }
       });
     },
-    afterLogin (res) {
+    async afterLogin(res) {
       this.logging = false;
       const loginRes = res;
 
@@ -130,21 +106,25 @@ export default {
         this.setUser(user);
         setAuthorization({ token: loginRes.data.token });
         this.$message.info("正在获取权限");
-        getUserPermission().then((res) => {
+        await getUserPermission().then((res) => {
           if (res.code === 0) {
             this.setPermissions(res.data);
             // this.setRoles(roles)
 
             // 获取路由配置
             getRoutesConfig().then((result) => {
-              console.log(result);
-              const routesConfig = result.data;
-              loadRoutes(
-                { router: this.$router, store: this.$store, i18n: this.$i18n },
-                routesConfig
-              );
-              this.$router.push("/index");
-              this.$message.success(loginRes.msg, 3);
+              if (result.code == 0) {
+                const routesConfig = result.data;
+                loadRoutes(
+                  { router: this.$router, store: this.$store, i18n: this.$i18n },
+                  routesConfig
+                );
+                this.$router.push("/index");
+                this.$message.success(loginRes.msg, 3);
+              } else {
+                this.$message.errr(result.msg)
+              }
+
             });
           } else {
             this.$message.error("权限获取失败" + res.msg);
@@ -176,7 +156,7 @@ export default {
       .title {
         font-size: 33px;
         color: @title-color;
-        font-family: "Myriad Pro", "Helvetica Neue", Arial, Helvetica,
+        font-family: 'Myriad Pro', 'Helvetica Neue', Arial, Helvetica,
           sans-serif;
         font-weight: 600;
         position: relative;

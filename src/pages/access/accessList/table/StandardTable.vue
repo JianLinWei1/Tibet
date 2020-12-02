@@ -34,7 +34,7 @@
       <div slot="doors"
            slot-scope="text">
         <span v-for="t in text"
-              :key="t">{{t}}号门||</span>
+              :key="t.id">{{t.name}}||</span>
       </div>
 
     </a-table>
@@ -87,7 +87,7 @@ const columns = [
   },
   {
     title: "门号权限",
-    dataIndex: "doors",
+    dataIndex: "doorsNum",
     width: 180,
     scopedSlots: { customRender: "doors" },
   },
