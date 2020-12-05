@@ -120,7 +120,7 @@ export default {
       },
       editFrom: {},
       pagination: {
-        current: 0,
+        current: 1,
         total: 0,
         pageSize: 10,
         showSizeChanger: true,
@@ -248,6 +248,7 @@ export default {
           insert(this.saveForm).then((res) => {
             if (res.code === 0) {
               this.$message.success("添加成功");
+              this.visible = false
               this.getList();
 
             } else {

@@ -107,7 +107,7 @@ export default {
       form: {},
       recordFrom: {},
       pagination: {
-        current: 0,
+        current: 1,
         total: 0,
         pageSize: 10,
         showSizeChanger: true,
@@ -226,7 +226,7 @@ export default {
 
         if (res.code === 0) {
           this.$message.success("导出成功")
-          window.location.href = "/api/api-auth/download?filename=" + res.data
+          window.location.href = "/api/main/download?filename=" + res.data
         } else {
           this.$message.error(res.msg)
         }

@@ -130,7 +130,7 @@ export default {
     }
   },
   created() {
-    getList({ page: 0, limit: 100 }).then(res => {
+    getList({ page: 1, limit: 100 }).then(res => {
       if (res.code === 0)
         this.departments = res.data
     })
@@ -241,7 +241,7 @@ export default {
     selTreeChange(value, label, ex) {
       if (ex.triggerNode !== undefined) {
         this.form.userId = ex.triggerNode.eventKey
-        getList({ userId: ex.triggerNode.eventKey, page: 0, limit: 100 }).then(res => {
+        getList({ userId: ex.triggerNode.eventKey, page: 1, limit: 100 }).then(res => {
           if (res.code === 0)
             this.departments = res.data
         })

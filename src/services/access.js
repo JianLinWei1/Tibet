@@ -11,6 +11,9 @@ export async function addDevice (data) {
   return request(url + "/addDevice", METHOD.POST, data)
 }
 
+export async function editDevice (data) {
+  return request(url + "/editDevice", METHOD.POST, data)
+}
 export async function listDevice (params) {
   return request(url + "/listDevice", METHOD.POST,
     params

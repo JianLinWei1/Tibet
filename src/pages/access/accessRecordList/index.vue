@@ -33,6 +33,12 @@
                 </a-form-item>
               </a-col>
               <a-col :md="8" :sm="24">
+                <a-form-item label="日期" :labelCol="{ span: 5 }" :wrapperCol="{ span: 18, offset: 1 }">
+                  <a-range-picker style="width:100%" :ranges="{ 今天: [moment().startOf('day'), moment().endOf('day')], '本月': [moment().startOf('month'), moment().endOf('month')] }" show-time format="YYYY-MM-DD HH:mm:ss" @change="onDateChange" />
+                </a-form-item>
+              </a-col>
+
+              <a-col :md="8" :sm="24">
                 <a-form-item label="组织" :labelCol="{ span: 5 }" :wrapperCol="{ span: 18, offset: 1 }">
                   <a-tree-select style="width: 100%" v-model="treeSel" v-if="treeData.length >0" tree-node-filter-prop="value" :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }" :tree-data="treeData" placeholder="请选择" @change="selTreeChange" tree-default-expand-all>
                   </a-tree-select>
@@ -76,7 +82,7 @@ import { listRecords, delRecords, exportRecords } from "@/services/access";
 import { getList } from "@/services/department";
 import { getAccountTree2 } from "@/services/user"
 import { mapGetters } from "vuex";
-
+import moment from 'moment';
 export default {
   name: "QueryList",
   components: { StandardTable },
@@ -88,11 +94,11 @@ export default {
       form: {},
       issueFrom: {},
       pagination: {
-        current: 0,
+        current: 1,
         total: 0,
         pageSize: 10,
         showSizeChanger: true,
-        pageSizeOptions: ["10", "20", "30", "40"],
+        pageSizeOptions: ["10", "20", "500", "1000"],
         showTotal: (total) => `共 ${total} 条`,
         showSizeChange: (current, pageSize) => (this.pageSize = pageSize),
       },
@@ -121,7 +127,7 @@ export default {
   computed: { ...mapGetters("account", ["user"]) },
   created() {
     this.listRecords();
-    getList({ page: 0, limit: 100 }).then(res => {
+    getList({ page: 1, limit: 100 }).then(res => {
       if (res.code === 0)
         this.departments = res.data
     })
@@ -133,7 +139,7 @@ export default {
     })
   },
   methods: {
-
+    moment,
     listRecords() {
       this.listloading = true;
       this.form.page = this.pagination.current;
@@ -209,6 +215,7 @@ export default {
         this.$message.info("请勾选数据");
         return
       }
+      this.$message.info("正在导出")
       exportRecords(this.selectedRows).then((res) => {
 
         if (res.code === 0) {
@@ -228,12 +235,17 @@ export default {
     selTreeChange(value, label, ex) {
       if (ex.triggerNode !== undefined) {
         this.form.userId = ex.triggerNode.eventKey
-        getList({ userId: ex.triggerNode.eventKey, page: 0, limit: 100 }).then(res => {
+        getList({ userId: ex.triggerNode.eventKey, page: 1, limit: 100 }).then(res => {
           if (res.code === 0)
             this.departments = res.data
         })
       }
 
+    },
+    onDateChange(dates ,dateStrings){
+      
+      this.form.dates = dateStrings
+      
     }
   },
 };

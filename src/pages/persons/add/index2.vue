@@ -34,7 +34,7 @@
         </a-button>
       </a-form-model-item>
       <a-form-model-item label="门禁密码" prop="accessPw">
-        <a-input v-model="form.accessPw" placeholder="门禁卡号" />
+        <a-input v-model="form.accessPw" placeholder="门禁密码" />
       </a-form-model-item>
       <!-- <a-form-model-item label="车牌号" prop="carId">
         <a-input v-model="form.carId" placeholder="车牌号" />
@@ -123,6 +123,7 @@ export default {
         //        message: '请输入正确手机号', trigger: 'blur' }],
         // photo: [{ required: true, message: "必填！", trigger: "blur" }],
         //role: [{ required: true, message: "必填！", trigger: "blur" }],
+        department: [{ required: true, message: "必填！", trigger: "blur" }]
       },
       fileList: [],
       img: null,
@@ -154,7 +155,7 @@ export default {
   },
   created() {
     this.token = Cookie.get("token");
-    getList({ page: 0, limit: 100 }).then(res => {
+    getList({ page: 1, limit: 100 }).then(res => {
       if (res.code === 0)
         this.departments = res.data
     })
@@ -189,6 +190,7 @@ export default {
             editPerson(this.form).then((res) => {
               if (res.code === 0) {
                 this.$message.success("编辑成功");
+                  this.$emit("closed");
               } else {
                 this.$message.error(res.msg);
               }
@@ -222,7 +224,9 @@ export default {
       });
     },
     readCard() {
-      this.loading = true;
+      
+      
+     this.loading = true;
       var that = this;
       if (this.websoket.readyState === WebSocket.CLOSED)
         setTimeout(() => {
@@ -246,14 +250,14 @@ export default {
       this.websoket.onmessage = function (mes) {
         console.log("Mes", mes.data);
         let data = JSON.parse(mes.data);
-        if (data.code === 0) that.form.accessId = data.uid;
+        if (data.code === 0) this.$set(this.form , "accessId" ,data.uid) 
         else that.$message.info("读卡失败" + JSON.stringify(data));
         that.loading = false;
       };
       var obj = {
         command: 1,
       };
-      this.websoket.send(JSON.stringify(obj));
+      this.websoket.send(JSON.stringify(obj)); 
     },
     down() {
       window.location.href = "/api/main/download?filename=IcCardService.rar";

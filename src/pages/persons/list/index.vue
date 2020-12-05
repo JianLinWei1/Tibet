@@ -59,6 +59,10 @@
         <a-button @click="delList" v-auth:permission="`del`" ghost type="danger">批量删除</a-button>
 
         <a-button @click="exportRecords" v-auth:permission="`export`" style="margin-left: 10px" type="primary">导出</a-button>
+
+        <a-upload name="file" :multiple="true" action="api/main/importPerson" :headers="{ token: token }" @change="handleUpLoadChange">
+          <a-button style="margin-left: 10px" type="primary">导入</a-button>
+        </a-upload>
       </div>
       <standard-table :bordered="true" :pagination="pagination" :dataSource="dataSource" :selectedRows.sync="selectedRows" :loading="tbLoad" @change="onChange" @selectedRowChange="onSelectChange">
         <div slot="action" slot-scope="{record}">
@@ -74,7 +78,7 @@
     </div>
     <!---->
     <a-modal width="50%" :footer="null" v-model="visible" title="编辑">
-      <edit :action="action" :form="editFrom"></edit>
+      <edit :action="action" @closed="visible = false" :form="editFrom"></edit>
     </a-modal>
   </a-card>
 </template>
@@ -87,6 +91,8 @@ import { getList } from "@/services/department";
 import { getAccountTree2 } from "@/services/user"
 import { mapGetters } from "vuex";
 
+import Cookie from "js-cookie";
+
 export default {
   name: "QueryList",
   components: { StandardTable, edit },
@@ -95,6 +101,7 @@ export default {
       advanced: true,
       dataSource: [],
       selectedRows: [],
+      token: null,
       form: {
       },
       editFrom: {},
@@ -117,8 +124,9 @@ export default {
   },
   computed: { ...mapGetters("account", ["user"]) },
   created() {
+    this.token = Cookie.get("token");
     this.queryPersonsList();
-    getList({ page: 0, limit: 100 }).then(res => {
+    getList({ page: 1, limit: 100 }).then(res => {
       if (res.code === 0)
         this.departments = res.data
     })
@@ -190,8 +198,11 @@ export default {
 
     },
     editRecord(key) {
-      console.log(key)
+
       this.visible = true
+      if (key.carId == undefined || key == null)
+        key.carId = []
+
       this.editFrom = key
       this.action = 2
       this.editFrom.oid = key.id
@@ -233,6 +244,7 @@ export default {
         this.$message.info("请勾选数据");
         return
       }
+
       exportPerson(this.selectedRows).then((res) => {
 
         if (res.code === 0) {
@@ -246,13 +258,27 @@ export default {
     selTreeChange(value, label, ex) {
       if (ex.triggerNode !== undefined) {
         this.form.userId = ex.triggerNode.eventKey
-        getList({ userId: ex.triggerNode.eventKey, page: 0, limit: 100 }).then(res => {
+        getList({ userId: ex.triggerNode.eventKey, page: 1, limit: 100 }).then(res => {
           if (res.code === 0)
             this.departments = res.data
         })
       }
 
-    }
+    },
+    handleUpLoadChange(info) {
+      
+      if (info.file.status !== 'uploading') {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === 'done') {
+        if (info.file.response.code === 0)
+          this.$message.success(`${info.file.name} 上传成功`);
+        else
+          this.$message.error(info.file.response.msg)
+      } else if (info.file.status === 'error') {
+        this.$message.error(`${info.file.name} file upload failed.`);
+      }
+    },
   },
 };
 </script>

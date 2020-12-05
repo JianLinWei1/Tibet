@@ -38,7 +38,7 @@
         ></slot>
       </template>
         <viewer slot="photo" slot-scope="text">
-        <img ref="img" width="100" :src="'/api/api-auth/' + text" />
+        <img ref="img" width="100" :src="'/api/main/' + text" />
       </viewer>
       
     </a-table>

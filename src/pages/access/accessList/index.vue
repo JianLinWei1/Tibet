@@ -60,6 +60,8 @@
       <div>
         <div class="operator">
           <a-button @click="delList" v-auth:permission="`del`" ghost type="danger">批量删除</a-button>
+
+             <a-button @click="batchIssueVisi = true" style="margin-left: 10px" type="primary">批量下发</a-button>
         </div>
         <standard-table :bordered="true" :pagination="pagination" :dataSource="dataSource" :selectedRows.sync="selectedRows" @change="onChange" @selectedRowChange="onSelectChange" :loading="listloading">
           <div slot="action" slot-scope="{ record }">
@@ -74,6 +76,9 @@
       <a-modal v-model="visible" title="编辑下发" footer="null">
         <issued :issueFrom="issueFrom"></issued>
       </a-modal>
+       <a-modal v-model="batchIssueVisi" width="90%" title="批量下发"   :footer="null">
+          <batchIssue> </batchIssue>
+       </a-modal>
     </a-spin>
   </a-card>
 </template>
@@ -82,13 +87,14 @@
 import StandardTable from "./table/StandardTable";
 import { listAccessPersons, DelAccessPerson } from "@/services/access";
 import issued from "../issued";
+import batchIssue from "../batchIssue";
 import { getList } from "@/services/department";
 import { getAccountTree2 } from "@/services/user"
 import { mapGetters } from "vuex";
 
 export default {
   name: "QueryList",
-  components: { StandardTable, issued },
+  components: { StandardTable, issued ,batchIssue },
   data() {
     return {
       advanced: true,
@@ -97,7 +103,7 @@ export default {
       form: {},
       issueFrom: {},
       pagination: {
-        current: 0,
+        current: 1,
         total: 0,
         pageSize: 10,
         showSizeChanger: true,
@@ -111,7 +117,8 @@ export default {
       searchLoad: false,
       listloading: false,
       treeData: [],
-      treeSel: null
+      treeSel: null,
+      batchIssueVisi: false
     };
   },
   authorize: {
@@ -127,7 +134,7 @@ export default {
    computed: { ...mapGetters("account", ["user"])},
   created() {
     this.listAccessPersons();
-    getList({ page: 0, limit: 100 }).then(res => {
+    getList({ page: 1, limit: 100 }).then(res => {
       if (res.code === 0)
         this.departments = res.data
     })
@@ -219,7 +226,7 @@ export default {
     selTreeChange(value, label, ex) {
       if (ex.triggerNode !== undefined) {
         this.form.userId = ex.triggerNode.eventKey
-        getList({ userId: ex.triggerNode.eventKey, page: 0, limit: 100 }).then(res => {
+        getList({ userId: ex.triggerNode.eventKey, page: 1, limit: 100 }).then(res => {
           if (res.code === 0)
             this.departments = res.data
         })

@@ -42,6 +42,9 @@
           <a style="margin-right: 8px" v-auth:permission="`add`" @click="addRecord(record)">
             <a-icon type="plus" />添加
           </a>
+          <a style="margin-right: 8px" v-auth:permission="`add`" @click="editDevice(record)">
+            <a-icon type="plus" />编辑
+          </a>
           <a style="margin-right: 8px" v-auth:permission="`issued`" @click="issue(record)">
             <a-icon type="vertical-align-bottom" />发卡
           </a>
@@ -58,20 +61,21 @@
           </div>
         </template>
         <template slot="doors" slot-scope="text, record">
-          
+
           <div class="editable-cell" v-for="(d,index) in record.doors" :key="index">
             <div class="editable-cell-input-wrapper">
-             {{d.id}}号门  备注： <a-input v-model="record.doors[index].name" />
+              {{d.id}}号门 备注：
+              <a-input v-model="record.doors[index].name" />
             </div>
           </div>
-          
+
         </template>
       </a-table>
     </a-card>
 
     <!---->
     <a-modal width="50%" :footer="null" v-model="visible" title="下发卡号">
-      <issued :issueFrom="issueFrom"></issued>
+      <issued :issueFrom="issueFrom"  @closed ="visible = false"></issued>
     </a-modal>
     <!-- -->
     <a-modal width="50%" :footer="null" v-model="manual" title="手动添加控制器">
@@ -124,7 +128,7 @@
 
 <script>
 import Cookie from "js-cookie";
-import { searchDevice, addDevice, listDevice, delDevice } from "@/services/access.js";
+import { searchDevice, addDevice, listDevice, delDevice, editDevice } from "@/services/access.js";
 import issued from "../issued";
 import { getAccountTree2 } from "@/services/user"
 import { mapGetters } from "vuex";
@@ -192,7 +196,7 @@ export default {
           dataIndex: "name",
           scopedSlots: { customRender: "name" },
         },
-          {
+        {
           title: "门设置",
           dataIndex: "doors",
           scopedSlots: { customRender: "doors" },
@@ -210,7 +214,7 @@ export default {
       treeSel: null
     };
   },
- 
+
   components: {
     issued,
   },
@@ -239,7 +243,7 @@ export default {
 
     })
   },
-  computed: { ...mapGetters("account", ["user"])},
+  computed: { ...mapGetters("account", ["user"]) },
   methods: {
     onSearch() {
       this.spinning = true;
@@ -285,11 +289,24 @@ export default {
 
       });
     },
+    editDevice(record) {
+      editDevice(record).then((res) => {
+
+        if (res.code === 0) {
+          this.$message.success("编辑成功");
+          this.listDevice();
+        } else {
+          this.$message.error(res.msg);
+        }
+
+      });
+    },
     manualAdd() {
       this.suLoad = true
       addDevice(this.manualFrom).then((res) => {
         if (res.code === 0) {
           this.$message.success("添加成功");
+          this.manual =false
           this.listDevice();
         } else {
           this.$message.error(res.msg);

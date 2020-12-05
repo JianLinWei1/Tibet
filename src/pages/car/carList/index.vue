@@ -74,7 +74,7 @@ export default {
       form: {},
       recordFrom: {},
       pagination: {
-        current: 0,
+        current: 1,
         total: 0,
         pageSize: 10,
         showSizeChanger: true,
@@ -109,7 +109,7 @@ export default {
   computed: { ...mapGetters("account", ["user"]) },
   created() {
     this.listParkingPerson();
-    getList({ page: 0, limit: 100 }).then(res => {
+    getList({ page:1, limit: 100 }).then(res => {
       if (res.code === 0)
         this.departments = res.data
     })
@@ -199,7 +199,7 @@ export default {
     selTreeChange(value, label, ex) {
       if (ex.triggerNode !== undefined) {
         this.form.userId = ex.triggerNode.eventKey
-        getList({ userId: ex.triggerNode.eventKey, page: 0, limit: 100 }).then(res => {
+        getList({ userId: ex.triggerNode.eventKey, page: 1, limit: 100 }).then(res => {
           if (res.code === 0)
             this.departments = res.data
         })
