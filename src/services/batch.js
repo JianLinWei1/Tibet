@@ -7,6 +7,13 @@ export async function getPersonTree (params) {
   )
 }
 
+export async function getDeviceTreeDoor (params) {
+  return request(url + "/access/getDeviceTreeDoor", METHOD.GET,
+    params
+  )
+}
+
+
 export async function queryPersonsList (data) {
   return request(url + "/queryPersonsList", METHOD.POST, data)
 }
