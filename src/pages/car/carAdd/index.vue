@@ -319,6 +319,7 @@ export default {
         this.spinning = false;
         if (res.code == 0) {
           this.$message.success("提交成功");
+          this.listParking()
              this.visible = false
         } else {
           this.$message.error(JSON.stringify(res.data));

@@ -70,12 +70,21 @@
           </div>
 
         </template>
+        <template slot="status" slot-scope="text">
+
+          <a-tag v-if="text" color="#87d068">
+           在线
+          </a-tag>
+          <a-tag v-else color="#7b7575">
+           离线
+          </a-tag>
+        </template>
       </a-table>
     </a-card>
 
     <!---->
     <a-modal width="50%" :footer="null" v-model="visible" title="下发卡号">
-      <issued :issueFrom="issueFrom"  @closed ="visible = false"></issued>
+      <issued :issueFrom="issueFrom" @closed="visible = false"></issued>
     </a-modal>
     <!-- -->
     <a-modal width="50%" :footer="null" v-model="manual" title="手动添加控制器">
@@ -165,6 +174,11 @@ export default {
           dataIndex: "sn",
           width: "10%",
           key: "sn",
+        },
+        {
+          title: "状态",
+          dataIndex: "status",
+          scopedSlots: { customRender: "status" },
         },
         {
           title: "IP地址",
@@ -306,7 +320,7 @@ export default {
       addDevice(this.manualFrom).then((res) => {
         if (res.code === 0) {
           this.$message.success("添加成功");
-          this.manual =false
+          this.manual = false
           this.listDevice();
         } else {
           this.$message.error(res.msg);

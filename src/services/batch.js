@@ -14,8 +14,8 @@ export async function getDeviceTreeDoor (params) {
 }
 
 
-export async function queryPersonsList (data) {
-  return request(url + "/queryPersonsList", METHOD.POST, data)
+export async function batchIssue (data) {
+  return request(url + "/access/batchIssue", METHOD.POST, data)
 }
 
 export async function editPerson (data) {

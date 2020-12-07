@@ -1,6 +1,6 @@
 <template>
   <a-card>
-    <a-row>
+    <!--    <a-row>
       <div :class="advanced ? 'search' : null">
         <a-form layout="horizontal">
           <div :class="advanced ? null : 'fold'">
@@ -14,20 +14,26 @@
               </a-col>
             </a-row>
           </div>
-          <!--   <span style="float: right; margin-top: 3px">
+            <span style="float: right; margin-top: 3px">
             <a-button type="primary" @click="getPersonTree">查询</a-button>
             <a-button style="margin-left: 8px" @click="form={} ,treeSel=null">重置</a-button>
             <a @click="toggleAdvanced" style="margin-left: 8px">
               {{ advanced ? "收起" : "展开" }}
               <a-icon :type="advanced ? 'up' : 'down'" />
             </a>
-          </span> -->
+          </span>
         </a-form>
       </div>
-    </a-row>
+    </a-row> -->
     <a-row>
       <a-col :md="12" :sm="24">
         <a-divider>人员选择</a-divider>
+         <a-row>
+          <a-form-item  >
+            <a-tree-select style="width: 100%" v-model="treeSel1" v-if="treeData.length >0" tree-node-filter-prop="value" :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }" :tree-data="treeData" placeholder="选择组织" @change="selTreeChangePerson" tree-default-expand-all>
+            </a-tree-select>
+          </a-form-item>
+        </a-row>
         <!--  <a-form layout="horizontal">
           <a-form-item label="部门" :labelCol="{ span: 5 }" :wrapperCol="{ span: 18, offset: 1 }">
             <a-select v-model="form.department ">
@@ -43,7 +49,13 @@
       </a-col>
       <a-col :md="12" :sm="24">
         <a-divider>设备选择</a-divider>
-        <a-tree style="height: 246px;overflow: auto;" v-model="checkedDevice" checkable v-if="treeDataDevice.length>0" :auto-expand-parent="autoExpandParent" :tree-data="treeDataDevice" />
+          <a-row>
+          <a-form-item  >
+            <a-tree-select style="width: 100%" v-model="treeSel2" v-if="treeData.length >0" tree-node-filter-prop="value" :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }" :tree-data="treeData" placeholder="选择组织" @change="selTreeChangeDevice" tree-default-expand-all>
+            </a-tree-select>
+          </a-form-item>
+        </a-row>
+        <a-tree style="height: 246px;overflow: auto;" @check="checkedDeviceFunc" v-model="checkedDevice" checkable v-if="treeDataDevice.length>0" :auto-expand-parent="autoExpandParent" :tree-data="treeDataDevice" />
       </a-col>
     </a-row>
     <a-row style="margin-top:20px">
@@ -51,7 +63,7 @@
         开始下发
       </a-button>
     </a-row>
-
+ 
     <a-table :columns="columns" :data-source="data">
       <a slot="name" slot-scope="text">{{ text }}</a>
       <span slot="customTitle">
@@ -62,62 +74,32 @@
           {{ tag.toUpperCase() }}
         </a-tag>
       </span>
-      <span slot="action" slot-scope="text, record">
-        <a>Invite 一 {{ record.name }}</a>
-        <a-divider type="vertical" />
-        <a>Delete</a>
-        <a-divider type="vertical" />
-        <a class="ant-dropdown-link"> More actions
-          <a-icon type="down" />
-        </a>
+      <span slot="action" slot-scope="">
+        
       </span>
-    </a-table>
+    </a-table> 
 
   </a-card>
 </template>
 <script>
-import { getPersonTree, getDeviceTreeDoor } from "@/services/batch"
+import { getPersonTree, getDeviceTreeDoor, batchIssue } from "@/services/batch"
 import { getAccountTree2 } from "@/services/user"
 import { getList } from "@/services/department";
 
 const columns = [
 
-  /*  {
-     title: '人员编号',
-     dataIndex: 'age',
-     key: 'age',
-   }, */
+   {
+     title: '设备IP',
+     dataIndex: 'ip',
+    
+   }, 
   {
-    title: '姓名',
-    dataIndex: 'address',
-    key: 'address',
-  },
-  {
-    title: '下发设备',
-    key: 'tags',
-    dataIndex: 'tags',
-    scopedSlots: { customRender: 'tags' },
-  },
-  /*  {
-     title: '控制器名称',
-     key: 'dvname',
- 
-   },
-    {
-     title: '门名称',
-     key: 'door',
- 
-   }, */
-  {
-    title: '下发状态',
-    key: 'status',
+    title: '消息',
+    dataIndex: 'msg',
 
-  },
-  {
-    title: '操作',
-    key: 'action',
-    scopedSlots: { customRender: 'action' },
-  },
+  }
+ 
+ 
 ];
 export default {
   data() {
@@ -135,7 +117,9 @@ export default {
       treeData: [],
       form: {},
       departments: [],
-      issueing: false
+      issueing: false,
+      treeSel1:null,
+      treeSel2:null
     }
   },
   created() {
@@ -143,7 +127,7 @@ export default {
     this.getDeviceTreeDoor(null)
     getAccountTree2().then(res => {
       if (res.code === 0) {
-        this.treeSel = this.user
+       
         this.treeData = res.data
       }
 
@@ -181,16 +165,32 @@ export default {
     startIssued() {
       this.issueing = true
       console.log(this.checkedPersons, this.checkedDevice)
-     
-
-
+      batchIssue({ pids: this.checkedPersons, dvIds: this.checkedDevice }).then(res => {
+        console.log(res)
+        if (res.code === 0) {
+          this.$message.success("处理完成")
+          this.data = res.data
+          this.$emit("fresh")
+        } else {
+          this.$message.error(res.msg)
+        }
+        this.issueing = false
+      })
     },
-    selTreeChange(value, label, ex) {
+    selTreeChangePerson(value, label, ex) {
       if (ex.triggerNode !== undefined) {
         this.form.userId = ex.triggerNode.eventKey
         this.getPersonTree(ex.triggerNode.eventKey)
+      }
+    },
+    selTreeChangeDevice(value, label, ex) {
+      if (ex.triggerNode !== undefined) {
+        this.form.userId = ex.triggerNode.eventKey
         this.getDeviceTreeDoor(ex.triggerNode.eventKey)
       }
+    },
+    checkedDeviceFunc(checkedKeys, info) {
+      console.log('onCheck', checkedKeys, info);
     },
   }
 }

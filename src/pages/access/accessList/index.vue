@@ -77,7 +77,7 @@
         <issued :issueFrom="issueFrom"></issued>
       </a-modal>
        <a-modal v-model="batchIssueVisi" width="90%" title="批量下发"   :footer="null">
-          <batchIssue> </batchIssue>
+          <batchIssue @fresh="listAccessPersons"> </batchIssue>
        </a-modal>
     </a-spin>
   </a-card>
