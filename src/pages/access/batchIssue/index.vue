@@ -74,8 +74,13 @@
           {{ tag.toUpperCase() }}
         </a-tag>
       </span>
-      <span slot="action" slot-scope="">
-        
+      <span slot="msg" slot-scope="text ,scope">
+         <span style="color:green" v-if="scope.status">
+           {{text}}
+         </span>
+         <span style="color:red" v-else>
+           {{text}}
+         </span>
       </span>
     </a-table> 
 
@@ -96,7 +101,7 @@ const columns = [
   {
     title: '消息',
     dataIndex: 'msg',
-
+    scopedSlots: { customRender: "msg" },
   }
  
  

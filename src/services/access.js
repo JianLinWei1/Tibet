@@ -69,3 +69,9 @@ export async function delDevice (params) {
     params
   )
 }
+
+export async function exportSearchRecords (params) {
+  return request(url + "/exportSearchRecords", METHOD.POST,
+    params
+  )
+}

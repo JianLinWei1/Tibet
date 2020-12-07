@@ -61,6 +61,7 @@
         <div class="operator">
           <a-button @click="delList" v-auth:permission="`del`" ghost type="danger">批量删除</a-button>
           <a-button @click="exportRecords" v-auth:permission="`export`" style="margin-left: 10px" type="primary">导出</a-button>
+          <a-button @click="exportSearchRecords" v-auth:permission="`export`" style="margin-left: 10px" type="primary">批量导出</a-button>
         </div>
 
         <standard-table :bordered="true" :pagination="pagination" :dataSource="dataSource" :selectedRows.sync="selectedRows" @change="onChange" @selectedRowChange="onSelectChange" :loading="listloading">
@@ -78,7 +79,7 @@
 
 <script>
 import StandardTable from "./table/StandardTable";
-import { listRecords, delRecords, exportRecords } from "@/services/access";
+import { listRecords, delRecords, exportRecords, exportSearchRecords } from "@/services/access";
 import { getList } from "@/services/department";
 import { getAccountTree2 } from "@/services/user"
 import { mapGetters } from "vuex";
@@ -216,7 +217,19 @@ export default {
         return
       }
       this.$message.info("正在导出")
-      exportRecords(this.selectedRows).then((res) => {
+      exportRecords(this.form).then((res) => {
+
+        if (res.code === 0) {
+          this.$message.success("导出成功")
+          window.location.href = "/api/main/download?filename=" + res.data
+        } else {
+          this.$message.error(res.msg)
+        }
+      });
+    },
+    exportSearchRecords() {
+      this.$message.info("正在导出")
+      exportSearchRecords(this.form).then((res) => {
 
         if (res.code === 0) {
           this.$message.success("导出成功")
@@ -242,10 +255,10 @@ export default {
       }
 
     },
-    onDateChange(dates ,dateStrings){
-      
+    onDateChange(dates, dateStrings) {
+
       this.form.dates = dateStrings
-      
+
     }
   },
 };
