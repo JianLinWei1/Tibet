@@ -116,7 +116,7 @@ export default {
         // idCard: [{ required: true, message: "必填！", trigger: "blur" },
         //       { pattern: new RegExp( /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/),
         //        message: '请输入正确身份证号码', trigger: 'blur' }],
-        accessId: [{ required: true, message: "必填！", trigger: "blur" }],
+      /*   accessId: [{ required: true, message: "必填！", trigger: "blur" }], */
         // carId: [{ required: true, message: "必填！", trigger: "blur" }],
         // phone: [{ required: true, message: "必填！", trigger: "blur" },
         //       { pattern: new RegExp(/^1(3|4|5|6|7|8|9)\d{9}$/),
@@ -250,8 +250,13 @@ export default {
       this.websoket.onmessage = function (mes) {
         console.log("Mes", mes.data);
         let data = JSON.parse(mes.data);
-        if (data.code === 0) this.$set(this.form , "accessId" ,data.uid) 
-        else that.$message.info("读卡失败" + JSON.stringify(data));
+        if (data.code === 0){
+        /*  this.$set(this.form , "accessId" ,data.uid)  */
+        that.form.accessId = data.uid
+        } 
+        else{
+         that.$message.info("读卡失败" + JSON.stringify(data));
+        } 
         that.loading = false;
       };
       var obj = {
