@@ -34,7 +34,7 @@
               </a-col>
               <a-col :md="8" :sm="24">
                 <a-form-item label="日期" :labelCol="{ span: 5 }" :wrapperCol="{ span: 18, offset: 1 }">
-                  <a-range-picker style="width:100%" :ranges="{ 今天: [moment().startOf('day'), moment().endOf('day')], '本月': [moment().startOf('month'), moment().endOf('month')] }" show-time format="YYYY-MM-DD HH:mm:ss" @change="onDateChange" />
+                  <a-range-picker style="width:100%" :ranges="{昨天:[moment().subtract(1, 'days').startOf('day'),moment().subtract(1, 'days').endOf('day')] ,今天: [moment().startOf('day'), moment().endOf('day')], '本月': [moment().startOf('month'), moment().endOf('month')] }" show-time format="YYYY-MM-DD HH:mm:ss" @change="onDateChange" />
                 </a-form-item>
               </a-col>
 
@@ -62,6 +62,7 @@
           <a-button @click="delList" v-auth:permission="`del`" ghost type="danger">批量删除</a-button>
           <a-button @click="exportRecords" v-auth:permission="`export`" style="margin-left: 10px" type="primary">导出</a-button>
           <a-button @click="exportSearchRecords" v-auth:permission="`export`" style="margin-left: 10px" type="primary">批量导出</a-button>
+           <a-button @click="exportSearchRecords2" v-auth:permission="`export`" style="margin-left: 10px" type="primary">格式导出</a-button>
         </div>
 
         <standard-table :bordered="true" :pagination="pagination" :dataSource="dataSource" :selectedRows.sync="selectedRows" @change="onChange" @selectedRowChange="onSelectChange" :loading="listloading">
@@ -79,7 +80,7 @@
 
 <script>
 import StandardTable from "./table/StandardTable";
-import { listRecords, delRecords, exportRecords, exportSearchRecords } from "@/services/access";
+import { listRecords, delRecords, exportRecords, exportSearchRecords ,exportSearchRecords2} from "@/services/access";
 import { getList } from "@/services/department";
 import { getAccountTree2 } from "@/services/user"
 import { mapGetters } from "vuex";
@@ -157,6 +158,7 @@ export default {
     },
     search() {
       this.form.id = null;
+        this.pagination.current=1
       this.listRecords();
     },
 
@@ -218,7 +220,6 @@ export default {
       }
       this.$message.info("正在导出")
       exportRecords(this.form).then((res) => {
-
         if (res.code === 0) {
           this.$message.success("导出成功")
           window.location.href = "/api/main/download?filename=" + res.data
@@ -238,6 +239,19 @@ export default {
           this.$message.error(res.msg)
         }
       });
+    },
+    exportSearchRecords2(){
+        this.$message.info("正在导出")
+         exportSearchRecords2(this.form).then((res) => {
+
+        if (res.code === 0) {
+          this.$message.success("导出成功")
+          window.location.href = "/api/main/download?filename=" + res.data
+        } else {
+          this.$message.error(res.msg)
+        }
+      });
+
     },
 
     handleMenuClick(e) {

@@ -194,8 +194,14 @@ export default {
         this.getDeviceTreeDoor(ex.triggerNode.eventKey)
       }
     },
-    checkedDeviceFunc(checkedKeys, info) {
-      console.log('onCheck', checkedKeys, info);
+    checkedDeviceFunc() {
+      console.log('onCheck',this.checkedDevice);
+    /*   var deviceIds = [];
+      for(var i in this.checkedDevice){
+            var tmps = this.checkedDevice[i].split("-")
+
+      } */
+
     },
   }
 }

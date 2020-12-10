@@ -48,11 +48,11 @@
 <script>
 
 const columns = [
-  {
+ /*  {
     title: "ID",
     dataIndex: "id",
     width: 180,
-  },
+  }, */
   {
     title: "门禁卡号",
     dataIndex: "icCard",
@@ -74,11 +74,11 @@ const columns = [
     dataIndex: "time",
     width: 180,
   },
-  {
+  /* {
     title: "设备序列号",
     dataIndex: "sn",
     width: 180,
-  },
+  }, */
   {
     title: "设备名称",
     dataIndex: "dvName",

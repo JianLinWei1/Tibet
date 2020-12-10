@@ -50,11 +50,11 @@
 <script>
 
 const columns = [
-  {
+ /*  {
     title: "ID",
     dataIndex: "id",
     width: 180,
-  },
+  }, */
   {
     title: "人员ID",
     dataIndex: "pid",

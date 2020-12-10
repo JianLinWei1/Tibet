@@ -75,3 +75,10 @@ export async function exportSearchRecords (params) {
     params
   )
 }
+
+export async function exportSearchRecords2 (params) {
+  return request(url + "/exportSearchRecords2", METHOD.POST,
+    params
+  )
+}
+

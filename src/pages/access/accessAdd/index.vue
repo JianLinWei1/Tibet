@@ -163,18 +163,18 @@ export default {
         showSizeChange: (current, pageSize) => this.pageSize = pageSize,
       },
       columns: [
-        {
+        /* {
           title: "ID",
           dataIndex: "id",
           width: "10%",
           key: "id",
-        },
-        {
+        }, */
+       /*  {
           title: "设备序列号",
           dataIndex: "sn",
           width: "10%",
           key: "sn",
-        },
+        }, */
         {
           title: "状态",
           dataIndex: "status",
