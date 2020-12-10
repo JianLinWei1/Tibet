@@ -111,6 +111,7 @@ export default {
     },
     search() {
       this.form.id = null;
+      this.pagination.current = 1
       this.getSysLogs();
     },
 

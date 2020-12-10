@@ -21,7 +21,7 @@
             </a-row>
           </div>
           <span style="float: right; margin-top: 3px">
-            <a-button type="primary" @click="listDevice">查询</a-button>
+            <a-button type="primary" @click="search">查询</a-button>
             <a-button style="margin-left: 8px" @click="form={} ,treeSel=null">重置</a-button>
             <a @click="toggleAdvanced" style="margin-left: 8px">
               {{ advanced ? "收起" : "展开" }}
@@ -338,6 +338,17 @@ export default {
     },
     listDevice() {
       this.form.page = this.pagination.current
+      this.form.limit = this.pagination.pageSize
+      listDevice(this.form).then((res) => {
+        if (res.code === 0) {
+          this.dataSource = res.data;
+          this.pagination.total = res.count
+        }
+      });
+    },
+    search(){
+       this.form.page = 1
+       this.pagination.current = 1
       this.form.limit = this.pagination.pageSize
       listDevice(this.form).then((res) => {
         if (res.code === 0) {

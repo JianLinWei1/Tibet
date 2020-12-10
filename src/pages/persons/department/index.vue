@@ -35,7 +35,7 @@
         </div>
         <span style="float: right; margin-top: 3px">
           <a-button type="primary"
-                    @click=" getList">查询</a-button>
+                    @click=" search">查询</a-button>
           <a-button style="margin-left: 8px"
                     @click="form={}">重置</a-button>
           <a @click="toggleAdvanced"
@@ -177,6 +177,10 @@ export default {
           this.$message.error(res.msg);
         }
       });
+    },
+    search(){
+       this.pagination.current = 1
+       this.getList()
     },
 
     toggleAdvanced () {

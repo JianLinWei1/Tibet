@@ -165,6 +165,7 @@ export default {
     search() {
       this.form.id = null;
       this.searchLoad = true;
+      this.pagination.current=1
       this.listAccessPersons();
     },
 
