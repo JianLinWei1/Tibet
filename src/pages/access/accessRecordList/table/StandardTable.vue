@@ -85,6 +85,11 @@ const columns = [
     width: 180,
   },
   {
+    title: "门名称",
+    dataIndex: "doorName",
+    width: 180,
+  },
+  {
     title: "操作",
 
     scopedSlots: { customRender: "action" },

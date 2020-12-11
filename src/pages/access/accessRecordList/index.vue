@@ -219,7 +219,7 @@ export default {
         return
       }
       this.$message.info("正在导出")
-      exportRecords(this.form).then((res) => {
+      exportRecords(this.selectedRows).then((res) => {
         if (res.code === 0) {
           this.$message.success("导出成功")
           window.location.href = "/api/main/download?filename=" + res.data

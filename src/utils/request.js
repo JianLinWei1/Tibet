@@ -5,7 +5,7 @@ import Cookie from 'js-cookie'
 
 const xsrfHeaderName = 'token'
 
-axios.defaults.timeout = 50000
+axios.defaults.timeout = 120000
 axios.defaults.withCredentials = true
 axios.defaults.xsrfHeaderName = xsrfHeaderName
 axios.defaults.xsrfCookieName = xsrfHeaderName
