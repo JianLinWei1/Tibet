@@ -347,8 +347,8 @@ export default {
       });
     },
     search(){
-       this.form.page = 1
-       this.pagination.current = 1
+       this.pagination.current = 0
+       this.form.page = this.pagination.current
       this.form.limit = this.pagination.pageSize
       listDevice(this.form).then((res) => {
         if (res.code === 0) {
