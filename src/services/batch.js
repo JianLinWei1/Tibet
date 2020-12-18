@@ -14,7 +14,7 @@ export async function getDeviceTreeDoor (params) {
 }
 
 
-export async function batchIssue (data) {
+export  function batchIssue (data) {
   return request(url + "/access/batchIssue", METHOD.POST, data)
 }
 

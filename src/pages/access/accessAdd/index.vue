@@ -66,7 +66,7 @@
           <div class="editable-cell" v-for="(d,index) in record.doors" :key="index">
             <div class="editable-cell-input-wrapper">
               {{d.id}}号门 备注：
-              <a-input style="width:110px" v-model="record.doors[index].name" />
+              <a-input style="width:60%" v-model="record.doors[index].name" />
               <a style="margin-right: 8px" v-auth:permission="`add`" @click="openDoor(record.ip ,d.id)">
                 <a-icon type="wallet" />远程开门
               </a>
@@ -353,7 +353,7 @@ export default {
     },
     openDoor(ip , id) {
       console.log(ip ,id)
-      openDoor(ip, id).then(res =>{
+      openDoor({ip:ip, id:id}).then(res =>{
         console.log(res)
         if(res.code === 0){
           this.$message.success("请求成功")

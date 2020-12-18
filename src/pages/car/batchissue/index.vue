@@ -175,15 +175,15 @@ export default {
       //console.log(this.checkedPersons, this.checkedDevice)
       //循环设备下发
       var the = this;
-      for (var i in this._checkDevs) {
-        the.$message.info("正在处理.."+this._checkDevs[i][0])
+      for (var i in this.checkedDevice) {
+        the.$message.info("正在处理..")
         var dvs = []
-        dvs.push(this._checkDevs[i])
+        dvs.push(this.checkedDevice[i])
         await batchIssue({ pids: the.checkedPersons, dvIds: dvs }).then(res => {
           //console.log(res)
           if (res.code === 0) {
             the.$message.success("处理完成")
-            the.data = the.data.concat(res.data)
+            the.data=res.data
             the.$emit("fresh")
           } else {
             the.$message.error(res.msg)
@@ -206,41 +206,33 @@ export default {
         this.getDeviceTreeDoor(ex.triggerNode.eventKey)
       }
     },
-    checkedDeviceFunc(checkedKeys, e) {
-      console.log(e)
-      this._checkedDevice = this.checkedDevice.concat(e.halfCheckedKeys)
-      console.log('onCheck', this._checkedDevice);
+    checkedDeviceFunc() {
+      //console.log(e)
+      console.log('onCheck', this.checkedDevice);
       var deviceIds = [];
-      this._checkDevs = []
-
-      for (var y in this._checkedDevice) {
-        if (this._checkedDevice[y] === "-")
-          continue
-        var tmps1 = this._checkedDevice[y].split("-")
-        if (tmps1.length < 3) {
-          deviceIds.push(this._checkedDevice[y])
+      for (var y in this.checkedDevice) {
+        var tmps1 = this.checkedDevice[y]
+        let b1 = deviceIds.includes(this.checkedDevice[y])
+        if (tmps1.length < 3 || b1)
+          continue;
+        var idsTmp = [this.checkedDevice[y]]
+        for (var i in this.checkedDevice) {
+          var tmps = this.checkedDevice[i].split("-")
+          let b = idsTmp.includes(this.checkedDevice[i])
+          if (tmps.length < 3 || !b)
+            continue;
+          idsTmp.push(this.checkedDevice[i])
         }
-      }
-      for (var i in deviceIds) {
-        var tmps = fif(this._checkedDevice, deviceIds[i])
-        this._checkDevs.push(tmps)
+
+        deviceIds.push(idsTmp)
       }
 
-      console.log("pp", this._checkDevs)
+      console.log("parse obj", deviceIds)
 
     },
   }
 }
 
-//过滤一个数组包含相同的id 返回数组
-function fif(objs, value) {
-  var tmps = []
-  objs.forEach(e => {
-    if (e.includes(value))
-      tmps.push(e)
-  });
-  return tmps;
-}
 
 
 </script>
