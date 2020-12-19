@@ -48,11 +48,11 @@
 <script>
 
 const columns = [
-  {
+ /*  {
     title: "ID",
     dataIndex: "id",
     width: 180,
-  },
+  }, */
   {
     title: "设备序列号",
     dataIndex: "serialno",

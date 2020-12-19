@@ -11,7 +11,7 @@
                 </a-form-item>
               </a-col>
               <a-col :md="8" :sm="24">
-                <a-form-item label="名称" :labelCol="{ span: 5 }" :wrapperCol="{ span: 18, offset: 1 }">
+                <a-form-item label="门禁名称" :labelCol="{ span: 5 }" :wrapperCol="{ span: 18, offset: 1 }">
                   <a-input v-model="form.advName" placeholder="请输入" />
                 </a-form-item>
               </a-col>

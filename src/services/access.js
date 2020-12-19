@@ -81,4 +81,9 @@ export async function exportSearchRecords2 (params) {
     params
   )
 }
+export async function openDoor (params) {
+  return request(url + "/openDoor", METHOD.GET,
+    params
+  )
+}
 

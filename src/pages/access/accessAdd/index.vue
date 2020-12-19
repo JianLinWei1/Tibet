@@ -45,6 +45,7 @@
           <a style="margin-right: 8px" v-auth:permission="`add`" @click="editDevice(record)">
             <a-icon type="plus" />编辑
           </a>
+
           <a style="margin-right: 8px" v-auth:permission="`issued`" @click="issue(record)">
             <a-icon type="vertical-align-bottom" />发卡
           </a>
@@ -65,18 +66,22 @@
           <div class="editable-cell" v-for="(d,index) in record.doors" :key="index">
             <div class="editable-cell-input-wrapper">
               {{d.id}}号门 备注：
-              <a-input v-model="record.doors[index].name" />
+              <a-input style="width:60%" v-model="record.doors[index].name" />
+              <a style="margin-right: 8px" v-auth:permission="`add`" @click="openDoor(record.ip ,d.id)">
+                <a-icon type="wallet" />远程开门
+              </a>
             </div>
+
           </div>
 
         </template>
         <template slot="status" slot-scope="text">
 
           <a-tag v-if="text" color="#87d068">
-           在线
+            在线
           </a-tag>
           <a-tag v-else color="#7b7575">
-           离线
+            离线
           </a-tag>
         </template>
       </a-table>
@@ -137,7 +142,7 @@
 
 <script>
 import Cookie from "js-cookie";
-import { searchDevice, addDevice, listDevice, delDevice, editDevice } from "@/services/access.js";
+import { searchDevice, addDevice, listDevice, delDevice, editDevice,openDoor } from "@/services/access.js";
 import issued from "../issued";
 import { getAccountTree2 } from "@/services/user"
 import { mapGetters } from "vuex";
@@ -169,12 +174,12 @@ export default {
           width: "10%",
           key: "id",
         }, */
-       /*  {
-          title: "设备序列号",
-          dataIndex: "sn",
-          width: "10%",
-          key: "sn",
-        }, */
+        /*  {
+           title: "设备序列号",
+           dataIndex: "sn",
+           width: "10%",
+           key: "sn",
+         }, */
         {
           title: "状态",
           dataIndex: "status",
@@ -184,7 +189,7 @@ export default {
           title: "IP地址",
           dataIndex: "ip",
         },
-        {
+        /* {
           title: "网关",
           dataIndex: "gateipaddress",
         },
@@ -195,7 +200,7 @@ export default {
         {
           title: "MAC地址",
           dataIndex: "mac",
-        },
+        }, */
         {
           title: "设备类型",
           dataIndex: "deviceType",
@@ -225,7 +230,7 @@ export default {
       manual: false,
       suLoad: false,
       treeData: [],
-      treeSel: null
+      treeSel: null,
     };
   },
 
@@ -346,9 +351,22 @@ export default {
         }
       });
     },
-    search(){
-       this.pagination.current = 0
-       this.form.page = this.pagination.current
+    openDoor(ip , id) {
+      console.log(ip ,id)
+      openDoor({ip:ip, id:id}).then(res =>{
+        console.log(res)
+        if(res.code === 0){
+          this.$message.success("请求成功")
+        }else{
+          this.$message.error(res.msg)
+        }
+      })
+      
+
+    },
+    search() {
+      this.pagination.current = 0
+      this.form.page = this.pagination.current
       this.form.limit = this.pagination.pageSize
       listDevice(this.form).then((res) => {
         if (res.code === 0) {
@@ -373,8 +391,12 @@ export default {
     toggleAdvanced() {
       this.advanced = !this.advanced;
     },
-
   },
+  filters: {
+    object2String: function (obj) {
+      return JSON.stringify(obj)
+    }
+  }
 };
 </script>
 

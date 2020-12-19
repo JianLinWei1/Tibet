@@ -33,6 +33,7 @@
       <div>
         <div class="operator">
           <a-button @click="delList" ghost type="danger">批量删除</a-button>
+           <a-button @click="batchIssueVisi = true" style="margin-left: 10px" type="primary">批量下发</a-button>
         </div>
         <standard-table :bordered="true" :pagination="pagination" :dataSource="dataSource" :selectedRows.sync="selectedRows" @change="onChange" @selectedRowChange="onSelectChange">
           <div slot="action" slot-scope="{ record }">
@@ -123,6 +124,9 @@
           </a-form-model-item>
         </a-form-model>
       </a-modal>
+       <a-modal v-model="batchIssueVisi" width="90%" title="批量下发"   :footer="null">
+          <batchIssue> </batchIssue>
+       </a-modal>
     </a-spin>
   </a-card>
 </template>
@@ -140,10 +144,11 @@ import {
 
 import { getAccountTree2 } from "@/services/user"
 import { mapGetters } from "vuex";
+import batchIssue from "../batchissue";
 
 export default {
   name: "QueryList",
-  components: { StandardTable },
+  components: { StandardTable ,batchIssue },
   data() {
     return {
       advanced: true,
@@ -173,13 +178,14 @@ export default {
       issuedCarFrom: {
         enable: 1,
         need_alarm: 0,
-        carId:[]
+        carId: []
       },
       issuedData: [],
       treeData: [],
       treeSel: null,
       showCarid: "",
-      tempCarId:""
+      tempCarId: "",
+      batchIssueVisi: false
     };
   },
   authorize: {
@@ -251,7 +257,7 @@ export default {
     },
     issuedRecord(key) {
       this.issuedvisible = true;
-      key.carId =[]
+      key.carId = []
       this.issuedCarFrom = key;
     },
 
@@ -292,7 +298,7 @@ export default {
         console.log(res);
         if (res.code === 0) {
           this.data = res.data;
-          console.log("fetching user", res.data);
+         /*  console.log("fetching user", res.data); */
         } else {
           this.$message.error("搜索异常");
         }
@@ -307,7 +313,7 @@ export default {
         console.log(res);
         if (res.code === 0) {
           this.issuedData = res.data;
-          console.log("fetching user", res.data);
+         /*  console.log("fetching user", res.data); */
         } else {
           this.$message.error("搜索异常");
         }
@@ -321,7 +327,7 @@ export default {
         if (res.code == 0) {
           this.$message.success("提交成功");
           this.listParking()
-             this.visible = false
+          this.visible = false
         } else {
           this.$message.error(JSON.stringify(res.data));
         }
@@ -331,13 +337,15 @@ export default {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           this.spinning = true;
+          this.issuedCarFrom.enable = 1
+          this.issuedCarFrom.need_alarm = 0
           saveParkPersonInfo(this.issuedCarFrom).then((res) => {
             this.spinning = false;
             if (res.code == 0) {
               this.$message.success("提交成功");
               this.issuedvisible = false
             } else {
-              this.$message.error(JSON.stringify(res.data));
+              this.$message.error(JSON.stringify(res.data) + res.msgs);
             }
           });
         } else {
@@ -351,18 +359,25 @@ export default {
         this.form.userId = ex.triggerNode.eventKey
     },
     personSelect(value, opt) {
-
-
-      if (opt.context.issuedData[0].carId !== null)
-        this.showCarid += opt.context.issuedData[0].carId + " ;"
+  
+      var that = this;
+      opt.context.issuedData.forEach((item) => {
+        if (value == item.id) {
+          if (item.carId !== null) {
+            for (var i in item.carId) {
+              that.showCarid += item.carId[i] +" ;"
+            }
+          }
+        }
+      })
 
     },
     deselect() {
       this.showCarid = "";
     }
-    ,tempCarIdChange(){
-      this.issuedCarFrom.carId =[]
-        this.issuedCarFrom.carId.push(this.tempCarId)
+    , tempCarIdChange() {
+      this.issuedCarFrom.carId = []
+      this.issuedCarFrom.carId.push(this.tempCarId)
     }
 
   },

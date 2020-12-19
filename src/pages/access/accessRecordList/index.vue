@@ -243,7 +243,6 @@ export default {
     exportSearchRecords2(){
         this.$message.info("正在导出")
          exportSearchRecords2(this.form).then((res) => {
-
         if (res.code === 0) {
           this.$message.success("导出成功")
           window.location.href = "/api/main/download?filename=" + res.data
@@ -270,7 +269,9 @@ export default {
 
     },
     onDateChange(dates, dateStrings) {
-
+        dateStrings[0] += " 00:00:00"
+        dateStrings[1] += " 23:59:59"
+     // console.log(dateStrings)
       this.form.dates = dateStrings
 
     }

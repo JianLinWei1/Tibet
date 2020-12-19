@@ -63,7 +63,7 @@
         开始下发
       </a-button>
     </a-row>
-
+    <!-- 
     <a-table :columns="columns" :data-source="data">
       <a slot="name" slot-scope="text">{{ text }}</a>
       <span slot="customTitle">
@@ -82,12 +82,12 @@
           {{text}}
         </span>
       </span>
-    </a-table>
+    </a-table> -->
 
   </a-card>
 </template>
 <script>
-import { getPersonTree, getDeviceTreeDoor, batchIssue } from "@/services/batch"
+import { getPersonTree, getDeviceTreeDoor, batchIssue } from "@/services/carBatch"
 import { getAccountTree2 } from "@/services/user"
 import { getList } from "@/services/department";
 import { mapGetters } from "vuex";
@@ -173,25 +173,20 @@ export default {
     async startIssued() {
       this.issueing = true
       //console.log(this.checkedPersons, this.checkedDevice)
-      //循环设备下发
-      var the = this;
-      for (var i in this._checkDevs) {
-        the.$message.info("正在处理.."+this._checkDevs[i][0])
-        var dvs = []
-        dvs.push(this._checkDevs[i])
-        await batchIssue({ pids: the.checkedPersons, dvIds: dvs }).then(res => {
-          //console.log(res)
-          if (res.code === 0) {
-            the.$message.success("处理完成")
-            the.data = the.data.concat(res.data)
-            the.$emit("fresh")
-          } else {
-            the.$message.error(res.msg)
-          }
-          the.issueing = false
-        })
 
-      }
+      this.$message.info("正在处理..")
+     
+      await batchIssue({ pids: this.checkedPersons, dvIds: this.checkedDevice }).then(res => {
+        //console.log(res)
+        if (res.code === 0) {
+          this.$message.success("处理完成")
+
+        } else {
+          this.$message.error(res.msg)
+        }
+        this.issueing = false
+
+      })
 
     },
     selTreeChangePerson(value, label, ex) {
@@ -206,41 +201,15 @@ export default {
         this.getDeviceTreeDoor(ex.triggerNode.eventKey)
       }
     },
-    checkedDeviceFunc(checkedKeys, e) {
-      console.log(e)
-      this._checkedDevice = this.checkedDevice.concat(e.halfCheckedKeys)
-      console.log('onCheck', this._checkedDevice);
-      var deviceIds = [];
-      this._checkDevs = []
-
-      for (var y in this._checkedDevice) {
-        if (this._checkedDevice[y] === "-")
-          continue
-        var tmps1 = this._checkedDevice[y].split("-")
-        if (tmps1.length < 3) {
-          deviceIds.push(this._checkedDevice[y])
-        }
-      }
-      for (var i in deviceIds) {
-        var tmps = fif(this._checkedDevice, deviceIds[i])
-        this._checkDevs.push(tmps)
-      }
-
-      console.log("pp", this._checkDevs)
+    checkedDeviceFunc() {
+      //console.log(e)
+      console.log('onCheck', this.checkedDevice);
+     
 
     },
   }
 }
 
-//过滤一个数组包含相同的id 返回数组
-function fif(objs, value) {
-  var tmps = []
-  objs.forEach(e => {
-    if (e.includes(value))
-      tmps.push(e)
-  });
-  return tmps;
-}
 
 
 </script>
