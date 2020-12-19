@@ -34,7 +34,7 @@
               </a-col>
               <a-col :md="8" :sm="24">
                 <a-form-item label="日期" :labelCol="{ span: 5 }" :wrapperCol="{ span: 18, offset: 1 }">
-                  <a-range-picker style="width:100%" :ranges="{昨天:[moment().subtract(1, 'days').startOf('day'),moment().subtract(1, 'days').endOf('day')] ,今天: [moment().startOf('day'), moment().endOf('day')], '本月': [moment().startOf('month'), moment().endOf('month')] }" show-time format="YYYY-MM-DD HH:mm:ss" @change="onDateChange" />
+                  <a-range-picker style="width:100%" :ranges="{昨天:[moment().subtract(1, 'days').startOf('day'),moment().subtract(1, 'days').endOf('day')] ,今天: [moment().startOf('day'), moment().endOf('day')], '本月': [moment().startOf('month'), moment().endOf('month')] }"  format="YYYY-MM-DD" @change="onDateChange" />
                 </a-form-item>
               </a-col>
 
