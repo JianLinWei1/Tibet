@@ -68,12 +68,12 @@ const routerMap = {
   },
   cameraAdd: {
     path: "/cameraAdd",
-    name: '添加摄像机',
+    name: '摄像机管理',
     component: () => import('@/pages/camera/cameraAdd')
   },
   cameraList: {
     path: "/cameraList",
-    name: '摄像机列表',
+    name: '视频查看',
     component: () => import('@/pages/camera/cameraList')
   },
   access: {

@@ -47,41 +47,31 @@
 
 const columns = [
   {
-    title: "序列号",
-    dataIndex: "serialno",
-    width: 180,
-  },
-  {
-    title: "设备名称",
-    dataIndex: "device_name",
-    width: 180,
-  },
-  {
     title: "摄像机编码",
     dataIndex: "user_name",
     width: 180,
   },
    {
-    title: "账号",
+    title: "摄像机名称",
     dataIndex: "pass_wd",
-    width: 80,
-  },
-{
-    title: "密码",
-    dataIndex: "port",
-    width: 80,
+    width: 180,
   },
   {
     title: "IP",
     dataIndex: "ipaddr",
     width: 180,
   },
-  {
-    title: "通道数",
+{
+    title: "分类名称",
+    dataIndex: "port",
+    width: 180,
+  },
+  /* {
+    title: "绑定门禁",
     dataIndex: "channel_num",
 
     width: 180,
-  },
+  }, */
   {
     title: "操作",
 
