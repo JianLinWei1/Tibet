@@ -48,22 +48,22 @@
 const columns = [
   {
     title: "摄像机编码",
-    dataIndex: "user_name",
+    dataIndex: "cameraCode",
     width: 180,
   },
    {
     title: "摄像机名称",
-    dataIndex: "pass_wd",
+    dataIndex: "cameraName",
     width: 180,
   },
-  {
+  /* {
     title: "IP",
     dataIndex: "ipaddr",
     width: 180,
-  },
+  }, */
 {
     title: "分类名称",
-    dataIndex: "port",
+    dataIndex: "orgName",
     width: 180,
   },
   /* {

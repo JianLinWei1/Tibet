@@ -14,8 +14,11 @@
       >
         <a-input v-model="form.accessServer" placeholder="门禁服务IP端口" />
       </a-form-model-item>
-      <a-form-model-item ref="uniServer" label="相机平台IP端口" prop="name">
-        <a-input v-model="form.uniServer" placeholder="相机平台IP端口" />
+      <a-form-model-item ref="uniServer" label="相机平台IP" prop="name">
+        <a-input v-model="form.uniServer" placeholder="相机平台IP" />
+      </a-form-model-item>
+       <a-form-model-item ref="uniPort" label="相机平台端口" prop="name">
+        <a-input v-model="form.uniPort" placeholder="相机平台端口" />
       </a-form-model-item>
       <a-form-model-item ref="admin" label="相机平台登录账号" prop="name">
         <a-input v-model="form.admin" placeholder="相机平台登录账号" />
