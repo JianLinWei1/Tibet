@@ -1,5 +1,6 @@
 let path = require('path')
 const ThemeColorReplacer = require('webpack-theme-color-replacer')
+//const CopyWebpackPlugin = require('copy-webpack-plugin')
 const { getThemeColors, modifyVars } = require('./src/utils/themeUtil')
 const { resolveCss } = require('./src/utils/theme-color-replacer-extend')
 function resolve (dir) {
@@ -25,7 +26,8 @@ module.exports = {
     }
   },
   configureWebpack: config => {
-    config.entry.app = ["babel-polyfill", "whatwg-fetch", "./src/main.js"];
+    //"babel-polyfill",
+    config.entry.app = [ "whatwg-fetch", "./src/main.js"];
     config.plugins.push(
       new ThemeColorReplacer({
         fileName: 'css/theme-colors-[contenthash:8].css',
@@ -33,7 +35,12 @@ module.exports = {
         injectCss: true,
         resolveCss
       })
-    )
+    )/* ,
+    config.plugins.push(
+      new CopyWebpackPlugin([
+        { from: path.resolve(__dirname, '../public'), to: config.build.assetsSubDirectory, ignore: ['.*'] },
+      ])
+    ) */
   },
   chainWebpack: config => {
     // 生产环境下关闭css压缩的 colormin 项，因为此项优化与主题色替换功能冲突

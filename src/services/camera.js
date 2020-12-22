@@ -20,6 +20,11 @@ export function listCamera(data) {
     return request(url + "/listCamera", METHOD.POST, data)
 }
 
+export function loginV2(data) {
+    return request(url + "/loginV2", METHOD.POST, data)
+}
+
+
 
 
 
