@@ -4,7 +4,7 @@
       <div :class="advanced ? 'search' : null">
         <a-form layout="horizontal">
           <div :class="advanced ? null : 'fold'">
-          <!--   <a-row>
+            <!--   <a-row>
               <a-col :md="8" :sm="24">
                 <a-form-item label="IP" :labelCol="{ span: 5 }" :wrapperCol="{ span: 18, offset: 1 }">
                   <a-input v-model="form.ipaddr" placeholder="请输入(精确查询)" />
@@ -48,26 +48,28 @@
           <a-button type="primary" size="large" @click="bindCamModal = true">
             绑定摄像机
           </a-button>
-         
+
         </div>
         <standard-table :bordered="true" :pagination="pagination" :dataSource="dataSource" :selectedRows.sync="selectedRows" @change="onChange" @selectedRowChange="onSelectChange">
           <div slot="action" slot-scope="{ record }">
 
-            <a style="margin-right: 8px"  @click="editRecord(record)">
+            <a style="margin-right: 8px" @click="editRecord(record)">
               <a-icon type="video-camera" />查看实况
             </a>
-            <a @click="deleteRecord(record.serialno)" >
+            <a @click="deleteRecord(record.serialno)">
               <a-icon type="play-circle" />查看回放
             </a>
           </div>
         </standard-table>
       </div>
       <!---->
-    
-      <a-modal width="50%" :footer="null" v-model="bindCamModal" title="摄像机绑定">
-       <bind > </bind>
-      </a-modal>
 
+      <a-modal width="50%" :footer="null" v-model="bindCamModal" title="摄像机绑定">
+        <bind> </bind>
+      </a-modal>
+      <a-modal width="100%" :footer="null" v-model="videoFlag" :title="title">
+        <videoc :cameraInfo="cameraInfo"> </videoc>
+      </a-modal>
     </a-spin>
   </a-card>
 </template>
@@ -75,6 +77,7 @@
 <script>
 import StandardTable from "./table/StandardTable";
 import bind from "../bind";
+import videoc from "../video"
 import { listCamera } from "@/services/camera";
 
 import { getAccountTree2 } from "@/services/user"
@@ -82,7 +85,7 @@ import { mapGetters } from "vuex";
 
 export default {
   name: "QueryList",
-  components: { StandardTable ,bind},
+  components: { StandardTable, bind, videoc },
   data() {
     return {
       advanced: true,
@@ -109,28 +112,29 @@ export default {
       fetching: false,
       data: [],
       bindCamModal: false,
-    
+
       issuedData: [],
       treeData: [],
       treeSel: null,
-      showCarid: "",
-      tempCarId: ""
+      title: "查看实况",
+      videoFlag: false,
+      cameraInfo:null
     };
   },
-  authorize: {
-    issuedRecord: {
-      check: "issued",
-      type: "permission",
-    },
-    editRecord: {
-      check: "edit",
-      type: "permission",
-    },
-    deleteRecord: {
-      check: "del",
-      type: "permission",
-    },
-  },
+  /*   authorize: {
+      issuedRecord: {
+        check: "issued",
+        type: "permission",
+      },
+      editRecord: {
+        check: "edit",
+        type: "permission",
+      },
+      deleteRecord: {
+        check: "del",
+        type: "permission",
+      },
+    }, */
   computed: { ...mapGetters("account", ["user"]) },
   created() {
     this.listCamera();
@@ -145,10 +149,10 @@ export default {
     listCamera() {
       this.form.page = this.pagination.current;
       this.form.limit = this.pagination.pageSize;
-      listCamera(this.form).then(res =>{
-        if(res.code ===0){
+      listCamera(this.form).then(res => {
+        if (res.code === 0) {
           this.dataSource = res.data
-        }else{
+        } else {
           this.$message.error(res.msg)
         }
       })
@@ -172,8 +176,9 @@ export default {
 
     },
     editRecord(key) {
-      this.visible = true;
-      this.recordFrom = key;
+      this.videoFlag = true;
+      this.title = "查看实况"
+      this.cameraInfo = key
     },
     issuedRecord(key) {
       this.issuedvisible = true;
@@ -205,7 +210,7 @@ export default {
     selTreeChange(value, label, ex) {
       if (ex.triggerNode !== undefined) {
         this.form.userId = ex.triggerNode.eventKey
-    
+
       }
 
     },
