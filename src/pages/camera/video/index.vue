@@ -1,6 +1,6 @@
 <template>
   <a-card ref="videoDom" v-html="videoDom">
-
+     <a-button @click="playLive">Bo播</a-button>
   </a-card>
 </template>
 <script>
@@ -14,7 +14,7 @@ export default {
     return {
       token: null,
       imosSdk: null,
-      //window: window,
+      window: window,
       iframeObj: null,
       videoDom: null
     }
@@ -39,10 +39,11 @@ export default {
           ).then(function (res) {
             console.log(res)
             the.$message.success("登录成功");
+
             the.iframeObj = the.imosSdk.createPanelWindow();
-            console.log(the.iframeObj)
-            the.iframeObj.width="100%"
-            the.iframeObj.height="720px"
+
+            /*  the.iframeObj.width = "100%"
+             the.iframeObj.height = "720px" */
             the.videoDom = the.nodeToString(the.iframeObj)
 
           }).catch(function (err) {
@@ -53,6 +54,20 @@ export default {
         }
 
       });
+    },
+    playLive() {
+      let cameraCode = this.cameraInfo.cameraCode
+      let iframeId = this.iframeObj.id
+      console.log(cameraCode, iframeId)
+      this.imosSdk.playLive(
+        iframeId,
+        cameraCode,
+        cameraCode,
+        function (e) {
+          console.log("播放", e);
+        }, 1
+      );
+      cameraCode = null;
     },
     nodeToString(node) {
       //createElement()返回一个Element对象
