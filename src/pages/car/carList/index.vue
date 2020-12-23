@@ -12,7 +12,7 @@
               </a-col>
               <a-col :md="8" :sm="24">
                 <a-form-item label="车牌" :labelCol="{ span: 5 }" :wrapperCol="{ span: 18, offset: 1 }">
-                  <a-input v-model="form.carId" placeholder="请输入" />
+                  <a-input v-model="form.carId[0]" placeholder="请输入" />
                 </a-form-item>
               </a-col>
               <a-col :md="8" :sm="24">
@@ -71,7 +71,9 @@ export default {
       advanced: true,
       dataSource: [],
       selectedRows: [],
-      form: {},
+      form: {
+        carId:[]
+      },
       recordFrom: {},
       pagination: {
         current: 1,

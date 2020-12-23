@@ -39,10 +39,15 @@
       <!-- <a-form-model-item label="车牌号" prop="carId">
         <a-input v-model="form.carId" placeholder="车牌号" />
       </a-form-model-item> -->
-      <a-form-model-item v-for="(domain, index) in form.carId" :key="index"  :label="'车牌号'+(index+1)"
+      <a-form-model-item ref="carId"   v-for="(domain, index) in form.carId" :key="index"  :prop="'carId.' + index "
+      :rules="{
+        required: true,
+        message: '不能为空',
+        trigger: 'blur',
+      }"  :label="'车牌号'+(index+1)"
       >
         <a-input v-model="form.carId[index]"  style="width: 96%; margin-right: 8px" />
-        <a-icon v-if="form.carId.length > 1" class="dynamic-delete-button" type="minus-circle-o" :disabled="form.carId.length === 1" @click="removeDomain(domain)" />
+        <a-icon v-if="form.carId.length > 0" class="dynamic-delete-button" type="minus-circle-o" :disabled="form.carId.length === 1" @click="removeDomain(domain)" />
       </a-form-model-item>
       <a-form-model-item  label="点击添加车牌">
         <a-button type="dashed" style="width:100%" @click="addDomain">
@@ -123,7 +128,8 @@ export default {
         //        message: '请输入正确手机号', trigger: 'blur' }],
         // photo: [{ required: true, message: "必填！", trigger: "blur" }],
         //role: [{ required: true, message: "必填！", trigger: "blur" }],
-        department: [{ required: true, message: "必填！", trigger: "blur" }]
+        department: [{ required: true, message: "必填！", trigger: "blur" }],
+        carId:[{ required: true, message: "必填！", trigger: "blur" }],
       },
       fileList: [],
       img: null,

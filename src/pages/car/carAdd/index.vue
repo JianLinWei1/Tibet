@@ -34,6 +34,8 @@
         <div class="operator">
           <a-button @click="delList" ghost type="danger">批量删除</a-button>
            <a-button @click="batchIssueVisi = true" style="margin-left: 10px" type="primary">批量下发</a-button>
+           <a-button @click="batchIssueVisi2 = true" style="margin-left: 10px" type="primary">临时批量下发</a-button>
+           <a href="/api/main/download?filename=importModel.xlsx">下载导入模板</a>
         </div>
         <standard-table :bordered="true" :pagination="pagination" :dataSource="dataSource" :selectedRows.sync="selectedRows" @change="onChange" @selectedRowChange="onSelectChange">
           <div slot="action" slot-scope="{ record }">
@@ -127,6 +129,9 @@
        <a-modal v-model="batchIssueVisi" width="90%" title="批量下发"   :footer="null">
           <batchIssue> </batchIssue>
        </a-modal>
+       <a-modal v-model="batchIssueVisi2" width="90%" title="临时批量下发"   :footer="null">
+          <batchIssue2> </batchIssue2>
+       </a-modal>
     </a-spin>
   </a-card>
 </template>
@@ -145,10 +150,11 @@ import {
 import { getAccountTree2 } from "@/services/user"
 import { mapGetters } from "vuex";
 import batchIssue from "../batchissue";
+import batchIssue2 from "../batchissue2";
 
 export default {
   name: "QueryList",
-  components: { StandardTable ,batchIssue },
+  components: { StandardTable ,batchIssue ,batchIssue2},
   data() {
     return {
       advanced: true,
@@ -185,7 +191,8 @@ export default {
       treeSel: null,
       showCarid: "",
       tempCarId: "",
-      batchIssueVisi: false
+      batchIssueVisi: false,
+      batchIssueVisi2:false
     };
   },
   authorize: {
