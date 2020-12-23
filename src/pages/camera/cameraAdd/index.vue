@@ -56,7 +56,7 @@
             <a style="margin-right: 8px" @click="editRecord(record)">
               <a-icon type="video-camera" />查看实况
             </a>
-            <a @click="deleteRecord(record.serialno)">
+            <a @click="deleteRecord(record)">
               <a-icon type="play-circle" />查看回放
             </a>
           </div>
@@ -67,8 +67,8 @@
       <a-modal width="50%" :footer="null" v-model="bindCamModal" title="摄像机绑定">
         <bind> </bind>
       </a-modal>
-      <a-modal width="100%" :footer="null" v-model="videoFlag" :title="title">
-        <videoc :cameraInfo="cameraInfo"> </videoc>
+      <a-modal width="100%" :dialog-style="{ top: '0px' }"  :footer="null" v-model="videoFlag" :title="title" :destroyOnClose="true">
+        <videoc :cameraInfo="cameraInfo" :replay="replay"> </videoc>
       </a-modal>
     </a-spin>
   </a-card>
@@ -118,7 +118,8 @@ export default {
       treeSel: null,
       title: "查看实况",
       videoFlag: false,
-      cameraInfo:null
+      cameraInfo:null,
+      replay:false
     };
   },
   /*   authorize: {
@@ -163,22 +164,22 @@ export default {
       this.pagination.current = 1
       this.listCamera();
     },
-
     toggleAdvanced() {
       this.advanced = !this.advanced;
     },
-
     onClear() { },
     deleteRecord(key) {
-      let data = [];
-      data.push(key);
-      this.spinning = true;
+      this.replay = true
+       this.videoFlag = true;
+      this.title = "查看回放"
+      this.cameraInfo = key
 
     },
     editRecord(key) {
       this.videoFlag = true;
       this.title = "查看实况"
       this.cameraInfo = key
+      this.replay = false
     },
     issuedRecord(key) {
       this.issuedvisible = true;

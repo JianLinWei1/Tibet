@@ -1,6 +1,22 @@
 <template>
-  <a-card ref="videoDom" v-html="videoDom">
-     <a-button @click="playLive">Bo播</a-button>
+  <a-card ref="videoDom">
+    <a-row :span="24" v-if="replay">
+      <a-col :span="8">
+        <a-date-picker style="width:90%" v-model="replayForm.start" format="yyyy-MM-DD HH:mm:ss" placeholder="请选择开始时间" showTime :showToday="false" />
+      </a-col>
+      <a-col :span="8">
+        <a-date-picker style="width:90%" v-model="replayForm.end" format="yyyy-MM-DD HH:mm:ss" placeholder="请选择结束时间" showTime :showToday="false" />
+      </a-col>
+      <a-col :span="8">
+        <a-button @click="replayClick" type="primary">
+          播放
+        </a-button>
+      </a-col>
+    </a-row>
+    <a-row :span="24" style="margin-top:20px">
+      <iframe v-if="ifa" width="100%" height="760px" :src="ifasrc"> </iframe>
+    </a-row>
+
   </a-card>
 </template>
 <script>
@@ -9,6 +25,7 @@ import { loginV2 } from "@/services/camera"
 export default {
   props: {
     cameraInfo: Object,
+    replay: Boolean
   },
   data() {
     return {
@@ -16,12 +33,19 @@ export default {
       imosSdk: null,
       window: window,
       iframeObj: null,
-      videoDom: null
+      videoDom: null,
+      ifa: false,
+      ifasrc: null,
+      replayForm: {}
     }
   },
   created() {
     this.imosSdk = window.imosSdk
+
+  },
+  mounted() {
     this.loginV2()
+
   },
   methods: {
     loginV2() {
@@ -39,13 +63,16 @@ export default {
           ).then(function (res) {
             console.log(res)
             the.$message.success("登录成功");
+            if (!the.replay) {
+              the.ifa = true
+              the.ifasrc = "/demo.html?token=" + the.token + "&vmip=" + the.cameraInfo.cameraBind.serverIp + "&cameraCode=" + the.cameraInfo.cameraCode
+              //the.iframeObj = the.imosSdk.createPanelWindow();
 
-            the.iframeObj = the.imosSdk.createPanelWindow();
-
-            /*  the.iframeObj.width = "100%"
-             the.iframeObj.height = "720px" */
-            the.videoDom = the.nodeToString(the.iframeObj)
-
+              /*  the.iframeObj.width = "100%"
+               the.iframeObj.height = "724px" */
+              //the.videoDom = the.iframeObj.outerHTML
+              //the.playLive()
+            }
           }).catch(function (err) {
             console.log(err);
             the.$message.error("调用失败" + err);
@@ -59,6 +86,7 @@ export default {
       let cameraCode = this.cameraInfo.cameraCode
       let iframeId = this.iframeObj.id
       console.log(cameraCode, iframeId)
+      console.log(this.imosSdk)
       this.imosSdk.playLive(
         iframeId,
         cameraCode,
@@ -69,15 +97,16 @@ export default {
       );
       cameraCode = null;
     },
-    nodeToString(node) {
-      //createElement()返回一个Element对象
-      var tmpNode = document.createElement("div");
-      //appendChild()  参数Node对象   返回Node对象  Element方法
-      //cloneNode()  参数布尔类型  返回Node对象   Element方法
-      tmpNode.appendChild(node.cloneNode(true));
-      var str = tmpNode.innerHTML;
-      tmpNode = node = null; // prevent memory leaks in IE  
-      return str;
+    replayClick() {
+      console.log(this.replayForm)
+      this.ifa = false
+      setTimeout(() => {
+        this.ifasrc = "/demo.html?token=" + this.token + "&vmip=" +
+          this.cameraInfo.cameraBind.serverIp + "&cameraCode=" + this.cameraInfo.cameraCode +
+          "&start=" + this.replayForm.start + "&end=" + this.replayForm.end
+        this.ifa = true
+      }, 1000);
+
     }
   }
 }

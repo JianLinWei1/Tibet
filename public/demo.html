@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>fuck the SDK lowB</title>
+    <link rel="shortcut icon" href="piv.ico" />
+    <script type="text/javascript" src="imosSdk.min.js"></script>
+</head>
+
+<body>
+    <div class="forVideo" style="display: flex;flex-flow: row wrap;"></div>
+    <script>
+        var vmip =  getQueryVariable("vmip")
+        var token = getQueryVariable("token")
+        var cameraCode = getQueryVariable("cameraCode")
+        var start = getQueryVariable("start")
+        var end = getQueryVariable("end")
+        var iframeObj;
+        var videoDom = document.getElementsByClassName("forVideo")[0];
+        var videoNum = 0; //video的数量
+       
+        init()
+       
+       
+        function init() {
+            let the = this
+            imosSdk.init(
+                vmip,
+                token,
+                9,
+                "/app/imosSdk.html"
+            ).then(function (res) {
+                console.log("登录成功");
+                creatWindow()
+                if(!start&& !end){
+                    playLive()
+                }else{
+                    replay()
+                }
+                
+            }).catch(function (err) {
+                console.log(err);
+                console.log("调用失败" + err);
+            });
+        }
+
+        function creatWindow() {
+           
+            if (!token) {
+                console.log("请先登录");
+                return;
+            }
+
+            iframeObj = imosSdk.createPanelWindow();
+            iframeObj.width = "100%"
+            iframeObj.height = "720px"
+            videoDom.appendChild(iframeObj)
+        }
+
+
+
+        function getQueryVariable(variable) {
+            
+            var query = window.location.search.substring(1);
+            console.log(query)
+            var vars = query.split("&");
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split("=");
+                if (pair[0] == variable) { 
+                  
+                    return pair[1]; }
+            }
+            return (false);
+        }
+
+        //#endregion
+
+        //#region 实况相关
+
+        function playLive() {
+            let iframeId = iframeObj.id
+            imosSdk.playLive(
+                iframeId,
+                cameraCode,
+                cameraCode,
+                function (e) {
+                    console.log(e);
+                }, 1
+            );
+            cameraCode = null;
+        }
+
+        function replay() {
+            let iframeId = iframeObj.id
+         
+           let startdate = new Date(parseFloat(start))
+           let enddate =new Date(parseFloat(end))
+        
+            imosSdk.playRecord(
+                iframeId,
+                cameraCode,
+                cameraCode,
+                startdate,
+                enddate,
+                function (e) {
+                    console.log("回放",e);
+                }
+            );
+        }
+
+    </script>
+
+</body>
+
+</html>

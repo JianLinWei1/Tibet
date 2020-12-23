@@ -71,11 +71,11 @@ const routerMap = {
     name: '摄像机管理',
     component: () => import('@/pages/camera/cameraAdd')
   },
-  cameraList: {
+  /* cameraList: {
     path: "/cameraList",
     name: '视频查看',
     component: () => import('@/pages/camera/cameraList')
-  },
+  }, */
   access: {
     path: '/access',
     name: '门禁管理',
