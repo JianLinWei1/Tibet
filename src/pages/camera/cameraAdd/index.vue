@@ -45,7 +45,7 @@
       </div>
       <div>
         <div class="operator">
-          <a-button type="primary" size="large" @click="bindCamModal = true">
+          <a-button type="link" size="large" v-auth:permission="`bind`" @click="bindCam">
             绑定摄像机
           </a-button>
 
@@ -67,7 +67,7 @@
       <a-modal width="50%" :footer="null" v-model="bindCamModal" title="摄像机绑定">
         <bind> </bind>
       </a-modal>
-      <a-modal width="100%" :dialog-style="{ top: '0px' }"  :footer="null" v-model="videoFlag" :title="title" :destroyOnClose="true">
+      <a-modal width="100%" :dialog-style="{ top: '0px' }" :footer="null" v-model="videoFlag" :title="title" :destroyOnClose="true">
         <videoc :cameraInfo="cameraInfo" :replay="replay"> </videoc>
       </a-modal>
     </a-spin>
@@ -118,24 +118,16 @@ export default {
       treeSel: null,
       title: "查看实况",
       videoFlag: false,
-      cameraInfo:null,
-      replay:false
+      cameraInfo: null,
+      replay: false
     };
   },
-  /*   authorize: {
-      issuedRecord: {
-        check: "issued",
-        type: "permission",
-      },
-      editRecord: {
-        check: "edit",
-        type: "permission",
-      },
-      deleteRecord: {
-        check: "del",
-        type: "permission",
-      },
-    }, */
+  authorize: {
+    bindCam: {
+      check: "bind",
+      type: "permission",
+    },
+  },
   computed: { ...mapGetters("account", ["user"]) },
   created() {
     this.listCamera();
@@ -170,7 +162,7 @@ export default {
     onClear() { },
     deleteRecord(key) {
       this.replay = true
-       this.videoFlag = true;
+      this.videoFlag = true;
       this.title = "查看回放"
       this.cameraInfo = key
 
@@ -228,9 +220,13 @@ export default {
     , tempCarIdChange() {
       this.issuedCarFrom.carId = []
       this.issuedCarFrom.carId.push(this.tempCarId)
+    },
+    bindCam() {
+      this.bindCamModal = true
     }
 
   },
+
 };
 </script>
 

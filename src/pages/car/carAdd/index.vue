@@ -352,7 +352,7 @@ export default {
               this.$message.success("提交成功");
               this.issuedvisible = false
             } else {
-              this.$message.error(JSON.stringify(res.data) + res.msgs);
+              this.$message.error(JSON.stringify(res.data) + res.msg);
             }
           });
         } else {

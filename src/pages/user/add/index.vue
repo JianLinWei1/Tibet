@@ -36,6 +36,7 @@
                 v-if="treeData.length>0"
                 :auto-expand-parent="autoExpandParent"
                 :tree-data="treeData"
+                :checkStrictly="true"
                 @check="onCheck" />
 
       </a-form-model-item>
@@ -142,11 +143,12 @@ export default {
       });
     },
     onCheck (checkedkey, info) {
+     console.log(checkedkey ,info)
 
-
-      let checkedKeysResult = [...checkedkey, ...info.halfCheckedKeys];
+      /* let checkedKeysResult = [...checkedkey, ...info.halfCheckedKeys];
       this.form.routerIds = checkedKeysResult;
-
+ */
+    this.form.routerIds = checkedkey.checked
 
     },
 

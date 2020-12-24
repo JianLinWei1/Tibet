@@ -68,7 +68,8 @@ const routerMap = {
   },
   cameraAdd: {
     path: "/cameraAdd",
-    name: '摄像机管理',
+    name: '摄像机列表',
+    authority: '8',
     component: () => import('@/pages/camera/cameraAdd')
   },
   /* cameraList: {
