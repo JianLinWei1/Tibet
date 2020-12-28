@@ -350,7 +350,9 @@ export default {
             this.spinning = false;
             if (res.code == 0) {
               this.$message.success("提交成功");
+              this.tempCarId = null
               this.issuedvisible = false
+              
             } else {
               this.$message.error(JSON.stringify(res.data) + res.msg);
             }

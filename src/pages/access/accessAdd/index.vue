@@ -37,7 +37,7 @@
       <a-button type="primary" size="large" icon="plus" style="margin-left: 10px" v-auth:permission="`search`" @click="manual = true">
         手动添加控制器
       </a-button>
-      <a-table bordered :row-key="(row) => row.id" :data-source="dataSource" :pagination="pagination" :columns="columns">
+      <a-table bordered :row-key="(row) => row.id" :data-source="dataSource" :pagination="pagination" :columns="columns"  @change="onChange">
         <div slot="action" slot-scope="record">
           <a style="margin-right: 8px" v-auth:permission="`add`" @click="addRecord(record)">
             <a-icon type="plus" />添加
@@ -159,7 +159,7 @@ export default {
       issueFrom: {},
       manualFrom: {},
       pagination: {
-        current: 0,
+        current: 1,
         total: 0,
         pageSize: 10,
         showSizeChanger: true,
@@ -320,6 +320,10 @@ export default {
 
       });
     },
+   onChange(page) {
+      this.pagination = page;
+      this.listDevice();
+    },
     manualAdd() {
       this.suLoad = true
       addDevice(this.manualFrom).then((res) => {
@@ -365,7 +369,7 @@ export default {
 
     },
     search() {
-      this.pagination.current = 0
+      this.pagination.current = 1
       this.form.page = this.pagination.current
       this.form.limit = this.pagination.pageSize
       listDevice(this.form).then((res) => {
