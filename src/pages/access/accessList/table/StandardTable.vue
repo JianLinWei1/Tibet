@@ -99,6 +99,11 @@ const columns = [
     scopedSlots: { customRender: "doors" },
   },
   {
+    title: "下发时间",
+    dataIndex: "time",
+    width: 180,
+  },
+  {
     title: "操作",
 
     scopedSlots: { customRender: "action" },
