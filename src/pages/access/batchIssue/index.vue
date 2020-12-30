@@ -62,6 +62,10 @@
       <a-button @click="startIssued" :loading="issueing" type="primary">
         开始下发
       </a-button>
+      <span v-if="totalDev !== 0"> {{finshDev}}/{{totalDev}} </span>
+      <a-button @click="data = []"  type="primary">
+        清空消息
+      </a-button>
     </a-row>
 
     <a-table :columns="columns" :data-source="data">
@@ -125,7 +129,9 @@ export default {
       departments: [],
       issueing: false,
       treeSel1: null,
-      treeSel2: null
+      treeSel2: null,
+      totalDev:0,
+      finshDev:0,
     }
   },
   created() {
@@ -175,6 +181,7 @@ export default {
       //console.log(this.checkedPersons, this.checkedDevice)
       //循环设备下发
       var the = this;
+       this.totalDev =this._checkDevs.length
       for (var i in this._checkDevs) {
         the.$message.info("正在处理.."+this._checkDevs[i][0])
         var dvs = []
@@ -183,15 +190,17 @@ export default {
           //console.log(res)
           if (res.code === 0) {
             the.$message.success("处理完成")
+            this.finshDev++
             the.data = the.data.concat(res.data)
             the.$emit("fresh")
           } else {
             the.$message.error(res.msg)
           }
-          the.issueing = false
+         
         })
 
       }
+       the.issueing = false
 
     },
     selTreeChangePerson(value, label, ex) {
