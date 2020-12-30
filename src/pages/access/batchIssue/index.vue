@@ -180,6 +180,12 @@ export default {
       this.issueing = true
       //console.log(this.checkedPersons, this.checkedDevice)
       //循环设备下发
+      if(this._checkDevs.length <=0){
+        this.$message.info("请选择设备")
+        return
+      }
+      this.totalDev =0
+      this.finshDev = 0
       var the = this;
        this.totalDev =this._checkDevs.length
       for (var i in this._checkDevs) {
@@ -197,6 +203,9 @@ export default {
             the.$message.error(res.msg)
           }
          
+        }).catch(err=>{
+          console.log(err)
+           the.issueing = false
         })
 
       }

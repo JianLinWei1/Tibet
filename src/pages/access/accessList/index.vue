@@ -73,10 +73,10 @@
         </standard-table>
       </div>
 
-      <a-modal v-model="visible" title="编辑下发" footer="null">
+      <a-modal v-model="visible" title="编辑下发"  footer="null">
         <issued :issueFrom="issueFrom"></issued>
       </a-modal>
-       <a-modal v-model="batchIssueVisi" width="90%" title="批量下发"   :footer="null">
+       <a-modal v-model="batchIssueVisi" width="90%" title="批量下发" :destroyOnClose="true"   :footer="null">
           <batchIssue @fresh="listAccessPersons"> </batchIssue>
        </a-modal>
     </a-spin>
