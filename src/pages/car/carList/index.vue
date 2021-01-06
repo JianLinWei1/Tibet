@@ -45,20 +45,68 @@
           <a-button @click="delList" v-auth:permission="`del`" ghost type="danger">批量删除</a-button>
         </div>
         <standard-table :bordered="true" :pagination="pagination" :dataSource="dataSource" :selectedRows.sync="selectedRows" @change="onChange" @selectedRowChange="onSelectChange">
+          
           <div slot="action" slot-scope="{ record }">
+            <a style="margin-right: 8px" v-auth:permission="`del`" @click="editRecord(record)">
+              <a-icon type="edit" />编辑
+            </a>
             <a @click="deleteRecord(record.id)" v-auth:permission="`del`">
               <a-icon type="delete" />删除
             </a>
+            
           </div>
         </standard-table>
       </div>
+
+         <!--编辑-->
+      <a-modal v-model="visible" title="编辑" :footer="null">
+        <a-form-model ref="ruleForm" :model="recordFrom" :rules="rules" :labelCol="{ span: 7 }" :wrapperCol="{ span: 10 }">
+          <a-form-model-item ref="serialno" label="序列号" prop="serialno">
+            <a-input disabled v-model="recordFrom.serialno" placeholder="ip" />
+          </a-form-model-item>
+          <a-form-model-item ref="device_name" label="设备名称" prop="device_name">
+            <a-input v-model="recordFrom.device_name" />
+          </a-form-model-item>
+          <a-form-model-item ref="serialno" label="人员ID" prop="ipaddr">
+            <a-input disabled v-model="recordFrom.personId" placeholder="ipaddr" />
+          </a-form-model-item>
+           <a-form-model-item ref="serialno" label="姓名" prop="ipaddr">
+            <a-input disabled v-model="recordFrom.name" placeholder="ipaddr" />
+          </a-form-model-item>
+          <a-form-model-item ref="carId" label="人员车牌号" prop="carId">
+            <a-tag v-for="(r ,index) in recordFrom.carId" :key="index" color="green">
+          {{r}}
+        </a-tag>
+          </a-form-model-item>
+          <a-form-model-item label="状态" prop="userId">
+            <a-select show-search mode="default" v-model="recordFrom.status"  style="width: 100%" >
+              <a-select-option  :value="false">
+                未被设备获取
+              </a-select-option>
+               <a-select-option  :value="true">
+                已被设备获取
+              </a-select-option>
+            </a-select>
+          </a-form-model-item>
+           <a-form-model-item label="生效日期">
+            <a-date-picker v-model="recordFrom.enable_time" valueFormat="YYYY-MM-DD HH:mm:ss" show-time placeholder="选择生效日期" />
+          </a-form-model-item>
+          <a-form-model-item label="失效日期">
+            <a-date-picker v-model="recordFrom.overdue_time" valueFormat="YYYY-MM-DD HH:mm:ss" show-time placeholder="选择失效日期" />
+          </a-form-model-item>
+          <a-form-model-item style="margin-top: 24px" :wrapperCol="{ span: 10, offset: 7 }">
+            <a-button type="primary" @click="submit">提交</a-button>
+            <a-button style="margin-left: 8px">重置</a-button>
+          </a-form-model-item>
+        </a-form-model>
+      </a-modal>
     </a-spin>
   </a-card>
 </template>
 
 <script>
 import StandardTable from "./table/StandardTable";
-import { listParkingPerson, delParkingPerson } from "@/services/parking";
+import { listParkingPerson, delParkingPerson ,updateParkPersonInfo} from "@/services/parking";
 import { getList } from "@/services/department";
 import { getAccountTree2 } from "@/services/user"
 import { mapGetters } from "vuex";
@@ -94,7 +142,8 @@ export default {
       issuedData: [],
       treeData: [],
       treeSel: null,
-      departments:[]
+      departments:[],
+     
     };
   },
   authorize: {
@@ -208,6 +257,22 @@ export default {
         })
       }
 
+    },
+    submit(){
+       this.spinning = true;
+          this.recordFrom.enable = 1
+          this.recordFrom.need_alarm = 0
+          updateParkPersonInfo(this.recordFrom).then((res) => {
+            this.spinning = false;
+            if (res.code == 0) {
+              this.$message.success("提交成功");
+              this.tempCarId = null
+              this.issuedvisible = false
+              
+            } else {
+              this.$message.error(JSON.stringify(res.data) + res.msg);
+            }
+          });
     }
   },
 };

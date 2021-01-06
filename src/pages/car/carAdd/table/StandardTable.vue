@@ -1,44 +1,30 @@
 <template>
   <div class="standard-table">
-    <a-table
-      :bordered="bordered"
-      :loading="loading"
-      :columns="columns"
-      :dataSource="dataSource"
-      :rowKey="rowKey"
-      :pagination="pagination"
-      :expandedRowKeys="expandedRowKeys"
-      :expandedRowRender="expandedRowRender"
-      @change="onChange"
-      :rowSelection="
+    <a-table :bordered="bordered" :loading="loading" :columns="columns" :dataSource="dataSource" :rowKey="rowKey" :pagination="pagination" :expandedRowKeys="expandedRowKeys" :expandedRowRender="expandedRowRender" @change="onChange" :rowSelection="
         selectedRows
           ? { selectedRowKeys: selectedRowKeys, onChange: updateSelect }
           : undefined
-      "
-    >
-      <template
-        slot-scope="text, record, index"
-        :slot="slot"
-        v-for="slot in Object.keys($scopedSlots).filter(
+      ">
+      <template slot-scope="text, record, index" :slot="slot" v-for="slot in Object.keys($scopedSlots).filter(
           (key) => key !== 'expandedRowRender'
-        )"
-      >
+        )">
         <slot :name="slot" v-bind="{ text, record, index }"></slot>
       </template>
       <template :slot="slot" v-for="slot in Object.keys($slots)">
         <slot :name="slot"></slot>
       </template>
-      <template
-        slot-scope="record, index, indent, expanded"
-        :slot="$scopedSlots.expandedRowRender ? 'expandedRowRender' : ''"
-      >
-        <slot
-          v-bind="{ record, index, indent, expanded }"
-          :name="$scopedSlots.expandedRowRender ? 'expandedRowRender' : ''"
-        ></slot>
+      <template slot-scope="record, index, indent, expanded" :slot="$scopedSlots.expandedRowRender ? 'expandedRowRender' : ''">
+        <slot v-bind="{ record, index, indent, expanded }" :name="$scopedSlots.expandedRowRender ? 'expandedRowRender' : ''"></slot>
       </template>
-      
-      
+      <template slot="status" slot-scope="text">
+        <a-tag v-if="text" color="#87d068">
+          在线
+        </a-tag>
+        <a-tag v-else color="#7b7575">
+          离线
+        </a-tag>
+      </template>
+
     </a-table>
   </div>
 </template>
@@ -57,16 +43,21 @@ const columns = [
     width: 180,
   },
   {
+    title: "状态",
+    dataIndex: "status",
+    scopedSlots: { customRender: "status" },
+  },
+  {
     title: "本地登录用户",
     dataIndex: "user_name",
     width: 80,
   },
-   {
+  {
     title: "本地登录密码",
     dataIndex: "pass_wd",
     width: 80,
   },
-{
+  {
     title: "本地端口",
     dataIndex: "port",
     width: 80,
@@ -117,7 +108,7 @@ export default {
     // this.needTotalList = this.initTotalList(this.columns)
   },
   beforeMount() {
-   
+
   },
   methods: {
     updateSelect(selectedRowKeys, selectedRows) {
@@ -142,8 +133,8 @@ export default {
     onChange(pagination, filters, sorter, { currentDataSource }) {
       this.$emit("change", pagination, filters, sorter, { currentDataSource });
     },
-    
-   
+
+
   },
 
   watch: {
