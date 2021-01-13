@@ -2,7 +2,7 @@
   <a-card :body-style="{ padding: '24px 32px' }" :bordered="false">
     <a-form-model ref="ruleForm" :model="form" :rules="rules" :labelCol="{ span: 7 }" :wrapperCol="{ span: 10 }">
       <a-form-model-item ref="id" label="人员编号ID" prop="id">
-        <a-input v-model="form.id" placeholder="ID" />
+        <a-input v-model="form.id" :disabled="idDisabled" placeholder="ID" />
       </a-form-model-item>
       <a-form-model-item ref="name" label="姓名" prop="name">
         <a-input v-model="form.name" placeholder="请输入姓名" />
@@ -155,7 +155,7 @@ export default {
       },
     };
   },
-  props: { action: Number, form: Object },
+  props: { action: Number, form: Object ,idDisabled:Boolean },
   components: {
     camera,
   },

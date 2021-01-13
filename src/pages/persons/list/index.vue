@@ -78,7 +78,7 @@
     </div>
     <!---->
     <a-modal width="50%" :footer="null" v-model="visible" title="编辑">
-      <edit :action="action" @closed="visible = false" :form="editFrom"></edit>
+      <edit :action="action" @closed="visible = false" :idDisabled="idDisabled" :form="editFrom"></edit>
     </a-modal>
   </a-card>
 </template>
@@ -116,6 +116,7 @@ export default {
       },
       visible: false,
       action: 0,
+      idDisabled:true,
       departments: [],
       tbLoad: false,
       treeData: [],
@@ -210,6 +211,7 @@ export default {
       this.editFrom = key
       this.action = 2
       this.editFrom.oid = key.id
+      this.idDisabled = true
     },
 
     onChange(page) {
