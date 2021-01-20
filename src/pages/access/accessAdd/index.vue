@@ -37,7 +37,7 @@
       <a-button type="primary" size="large" icon="plus" style="margin-left: 10px" v-auth:permission="`search`" @click="manual = true">
         手动添加控制器
       </a-button>
-      <a-table bordered :row-key="(row) => row.id" :data-source="dataSource" :pagination="pagination" :columns="columns"  @change="onChange">
+      <a-table bordered :row-key="(row) => row.id" :data-source="dataSource" :pagination="pagination" :columns="columns" :loading="tableLoad" @change="onChange">
         <div slot="action" slot-scope="record">
           <a style="margin-right: 8px" v-auth:permission="`add`" @click="addRecord(record)">
             <a-icon type="plus" />添加
@@ -231,6 +231,7 @@ export default {
       suLoad: false,
       treeData: [],
       treeSel: null,
+      tableLoad:false
     };
   },
 
@@ -348,11 +349,13 @@ export default {
     listDevice() {
       this.form.page = this.pagination.current
       this.form.limit = this.pagination.pageSize
+      this.tableLoad = true
       listDevice(this.form).then((res) => {
         if (res.code === 0) {
           this.dataSource = res.data;
           this.pagination.total = res.count
         }
+        this.tableLoad = false
       });
     },
     openDoor(ip , id) {
@@ -372,11 +375,13 @@ export default {
       this.pagination.current = 1
       this.form.page = this.pagination.current
       this.form.limit = this.pagination.pageSize
+      this.tableLoad = true
       listDevice(this.form).then((res) => {
         if (res.code === 0) {
           this.dataSource = res.data;
           this.pagination.total = res.count
         }
+        this.tableLoad = false
       });
     },
 
