@@ -204,7 +204,7 @@ export default {
         if (res.code === 0) {
           this.$message.success("删除成功");
         } else {
-          this.$message.error("删除失败：" + res.data);
+          this.$message.error("删除失败：" + res.msg);
         }
         this.listParkingPerson();
         this.spinning = false;
